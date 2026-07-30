@@ -1,0 +1,68 @@
+/*
+ * Ampliação das áreas de toque.
+ *
+ * Vários links do design são tipografia miúda — os do rodapé têm 16px de
+ * altura, os da nav 30px. Aumentar padding resolveria, mas moveria o layout,
+ * e a aparência não pode mudar. Em vez disso um pseudo-elemento sem fluxo
+ * estende a área clicável centrada sobre o link: nada se desloca, nada muda
+ * de cor, e o alvo cresce.
+ *
+ * A altura vem de --alvo, que cada caso ajusta conforme o espaço livre ao
+ * redor: um alvo maior que o passo entre irmãos criaria sobreposição, que
+ * troca um problema de precisão por outro.
+ *
+ * Referência: WCAG 2.2 SC 2.5.8 (nível AA) exige 24×24 CSS px; 44×44 é a
+ * recomendação de toque consolidada e o alvo perseguido aqui onde cabe.
+ */
+
+/*
+ * position:relative só onde o elemento é estático. .hero__so-desktop e
+ * .nav__link* já são posicionados pelo design; sobrescrever tiraria o "Role"
+ * do absoluto e ele voltaria ao fluxo, deslocando a grade do hero inteira.
+ */
+.rodape__link,
+.loja__link,
+.menu__link {
+  position: relative;
+}
+
+.nav__link::after,
+.nav__link-2::after,
+.rodape__link::after,
+.loja__link::after,
+.hero__so-desktop::after,
+.menu__link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  translate: 0 -50%;
+  height: var(--alvo, 44px);
+
+  /* Puramente uma área de acerto: invisível e atrás do conteúdo. */
+  z-index: -1;
+}
+
+/*
+ * Rodapé: as colunas empilham com gap de 12px sobre texto de 16px, ou seja,
+ * o passo entre links é 28px. Esticar até 44px faria alvos vizinhos se
+ * sobreporem em 8px de cada lado — pior do que o alvo pequeno. 28px é o
+ * máximo sem colisão e passa dos 24px exigidos em AA.
+ */
+.rodape__link {
+  --alvo: 28px;
+}
+
+/* "Role" no hero: 43px de largura, falta 1px. O alvo cresce na horizontal. */
+.hero__so-desktop::after {
+  left: -1px;
+  right: -1px;
+  height: 100%;
+}
+
+.pular-para-conteudo {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}

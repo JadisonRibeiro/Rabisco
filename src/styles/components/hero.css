@@ -261,3 +261,18 @@
   margin-top: -3px;
   opacity: 0.45;
 }
+
+/*
+ * Abaixo de ~430px o piso de 52px do clamp do título não cabe: "IDEIA
+ * COMEÇA" mede 347px numa viewport de 320, e como as linhas são nowrap o
+ * item de grid arrasta a trilha inteira junto — o parágrafo ao lado era
+ * cortado pelo mesmo motivo. O overflow-x:hidden do body escondia a perda.
+ *
+ * O piso menor só age onde 12vw < 52px; de 433px para cima o valor volta a
+ * ser exatamente o do export.
+ */
+@media (max-width: 620px) {
+  .hero__titulo {
+    font-size: clamp(38px, 12vw, 52px);
+  }
+}

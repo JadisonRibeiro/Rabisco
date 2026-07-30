@@ -44,3 +44,18 @@
     display: none;
   }
 }
+
+/*
+ * Itens de grid nascem com min-width:auto, ou seja, não encolhem abaixo do
+ * conteúdo. Um título em versalete condensado com piso de clamp alto arrasta
+ * a trilha inteira além da viewport e leva o texto vizinho junto — no export
+ * isso cortava conteúdo em 320px, escondido pelo overflow-x:hidden do body.
+ *
+ * Só dentro do empilhamento: em duas colunas esse alargamento é intencional,
+ * o título do hero em 1440px pede ~800px e a trilha de 1.02fr entrega 638px.
+ */
+@media (max-width: 900px) {
+  [data-stack] > * {
+    min-width: 0;
+  }
+}

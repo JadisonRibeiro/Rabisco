@@ -158,3 +158,12 @@
   display: block;
   background: var(--sand-deep);
 }
+
+/* Mesmo caso do título do hero: o piso de 32px do clamp não cabe em 320px
+   ("SETEMBRO, 36" mede 322px num espaço de 280px). Abaixo de 700px o piso
+   acompanha a viewport; acima disso o valor é o do export. */
+@media (max-width: 700px) {
+  .loja__titulo {
+    font-size: clamp(26px, 8vw, 32px);
+  }
+}
