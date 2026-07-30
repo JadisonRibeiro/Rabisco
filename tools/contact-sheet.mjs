@@ -25,7 +25,10 @@ const browser = await chromium.launch({
 });
 const p = await browser.newPage({ viewport: { width: 1040, height: 600 } });
 await p.goto(url.pathToFileURL(tmp).href);
-await p.screenshot({ path: path.resolve(import.meta.dirname, '../.work/contact.png'), fullPage: true });
+await p.screenshot({
+  path: path.resolve(import.meta.dirname, '../.work/contact.png'),
+  fullPage: true,
+});
 await browser.close();
 fs.unlinkSync(tmp);
 console.log(`folha de contato: .work/contact.png (${files.length} imagens)`);

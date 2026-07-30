@@ -168,7 +168,9 @@ function main() {
 
   const kept = Object.values(assets).reduce((s, a) => s + a.bytes, 0);
   console.log(`assets escritos: ${Object.keys(assets).length} (${(kept / 1024).toFixed(0)} KB)`);
-  console.log(`descartados: ${unnamed.length} — ${unnamed.map((u) => manifest[u].mime).join(', ')}`);
+  console.log(
+    `descartados: ${unnamed.length} — ${unnamed.map((u) => manifest[u].mime).join(', ')}`,
+  );
   console.log(`intermediário: .work/page.json`);
 }
 

@@ -1,3 +1,8 @@
+# Fontes da migracao one-shot: recuperaveis com
+#   git show e70e778:index.html > index.html
+index.html
+.image-slots.state.json
+
 node_modules/
 dist/
 .work/

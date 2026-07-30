@@ -88,4 +88,6 @@ for (let i = 0; i < Math.max(a.cards.length, b.cards.length); i++) {
   linha('    └ mídia', ca?.midiaInterna ?? ca?.midia, cb?.midia);
 }
 console.log('');
-console.log(`altura total: ${a.total} → ${b.total} (${b.total - a.total > 0 ? '+' : ''}${b.total - a.total})`);
+console.log(
+  `altura total: ${a.total} → ${b.total} (${b.total - a.total > 0 ? '+' : ''}${b.total - a.total})`,
+);

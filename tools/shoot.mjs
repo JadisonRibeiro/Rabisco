@@ -8,9 +8,9 @@ import { chromium } from 'playwright-core';
 import fs from 'node:fs';
 
 export const VIEWPORTS = [
-  { name: '320',  width: 320,  height: 640 },
-  { name: '375',  width: 375,  height: 812 },
-  { name: '768',  width: 768,  height: 1024 },
+  { name: '320', width: 320, height: 640 },
+  { name: '375', width: 375, height: 812 },
+  { name: '768', width: 768, height: 1024 },
   { name: '1024', width: 1024, height: 768 },
   { name: '1440', width: 1440, height: 900 },
   { name: '1920', width: 1920, height: 1080 },
@@ -72,13 +72,8 @@ export async function shoot(url, outDir, { viewports = VIEWPORTS } = {}) {
       // decode() além de load: numa página muito alta o Chrome adia a
       // decodificação do que está longe da viewport e a captura sai em branco.
       await page.evaluate(() => {
-        const prontas = [...document.images].map((i) =>
-          i.decode().catch(() => {}),
-        );
-        return Promise.race([
-          Promise.all(prontas),
-          new Promise((r) => setTimeout(r, 20000)),
-        ]);
+        const prontas = [...document.images].map((i) => i.decode().catch(() => {}));
+        return Promise.race([Promise.all(prontas), new Promise((r) => setTimeout(r, 20000))]);
       });
       await page.screenshot({ path: `${outDir}/${vp.name}.png`, fullPage: true });
 
@@ -89,8 +84,8 @@ export async function shoot(url, outDir, { viewports = VIEWPORTS } = {}) {
       }));
       console.log(
         `${vp.name.padEnd(20)} ${String(metrics.height).padStart(6)}px alto` +
-        `${metrics.scrollW > metrics.clientW ? `  ⚠ OVERFLOW-X (${metrics.scrollW} > ${metrics.clientW})` : ''}` +
-        `${errors.length ? `  ⚠ ${errors.length} erro(s): ${errors[0].slice(0, 80)}` : ''}`,
+          `${metrics.scrollW > metrics.clientW ? `  ⚠ OVERFLOW-X (${metrics.scrollW} > ${metrics.clientW})` : ''}` +
+          `${errors.length ? `  ⚠ ${errors.length} erro(s): ${errors[0].slice(0, 80)}` : ''}`,
       );
       await ctx.close();
     }
@@ -99,8 +94,15 @@ export async function shoot(url, outDir, { viewports = VIEWPORTS } = {}) {
   }
 }
 
-if (process.argv[1] && import.meta.url.endsWith('shoot.mjs') && process.argv[1].endsWith('shoot.mjs')) {
+if (
+  process.argv[1] &&
+  import.meta.url.endsWith('shoot.mjs') &&
+  process.argv[1].endsWith('shoot.mjs')
+) {
   const [url, outDir] = process.argv.slice(2);
-  if (!url || !outDir) { console.error('uso: node tools/shoot.mjs <url> <dir>'); process.exit(1); }
+  if (!url || !outDir) {
+    console.error('uso: node tools/shoot.mjs <url> <dir>');
+    process.exit(1);
+  }
   await shoot(url, outDir);
 }

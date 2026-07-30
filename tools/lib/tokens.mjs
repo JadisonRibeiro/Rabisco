@@ -105,11 +105,6 @@ export function tokenize(css) {
 
 /** Trocas que só fazem sentido quando a declaração inteira é o valor. */
 export function tokenizeWhole(prop, value) {
-  const table =
-    prop === 'border-radius'
-      ? RADIUS
-      : prop === 'box-shadow'
-        ? SHADOW
-        : null;
+  const table = prop === 'border-radius' ? RADIUS : prop === 'box-shadow' ? SHADOW : null;
   return table?.[value.trim()] ?? value;
 }

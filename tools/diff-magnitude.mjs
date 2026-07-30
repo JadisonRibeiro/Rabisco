@@ -11,7 +11,11 @@ const a = PNG.sync.read(fs.readFileSync(fileA));
 const b = PNG.sync.read(fs.readFileSync(fileB));
 const w = Math.min(a.width, b.width);
 const y0 = Number(y0Arg) || 0;
-const y1 = Math.min(Number(hArg) ? y0 + Number(hArg) : Math.min(a.height, b.height), a.height, b.height);
+const y1 = Math.min(
+  Number(hArg) ? y0 + Number(hArg) : Math.min(a.height, b.height),
+  a.height,
+  b.height,
+);
 
 const histograma = new Array(9).fill(0); // faixas de delta máximo por canal
 let total = 0;
@@ -39,7 +43,10 @@ console.log(`delta médio ${(soma / total).toFixed(2)} | delta máximo ${maximo}
 console.log('delta por canal      pixels        %');
 for (let k = 0; k < 9; k++) {
   if (!histograma[k]) continue;
-  const faixa = k === 0 ? '  0–31 (imperceptível)' : `${k * 32}–${k * 32 + 31}`.padStart(7) + '              ';
+  const faixa =
+    k === 0 ? '  0–31 (imperceptível)' : `${k * 32}–${k * 32 + 31}`.padStart(7) + '              ';
   const pct = (histograma[k] / total) * 100;
-  console.log(`${faixa.padEnd(22)} ${String(histograma[k]).padStart(9)}  ${pct.toFixed(3).padStart(7)}%`);
+  console.log(
+    `${faixa.padEnd(22)} ${String(histograma[k]).padStart(9)}  ${pct.toFixed(3).padStart(7)}%`,
+  );
 }

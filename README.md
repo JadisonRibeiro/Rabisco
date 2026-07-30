@@ -13,11 +13,11 @@ automaticamente na raiz do domínio.
 
 ## Estrutura
 
-| Arquivo | O que é |
-|---|---|
-| `index.html` | O site. Único arquivo necessário para funcionar. |
-| `.image-slots.state.json` | Estado das imagens do editor. O site funciona sem ele, mas mantê-lo evita um erro 404 no console. |
-| `marca/` | Arte-fonte da marca em alta resolução. **Não é usada pelo site** — é arquivo de referência para futuras peças. |
+| Arquivo                   | O que é                                                                                                        |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `index.html`              | O site. Único arquivo necessário para funcionar.                                                               |
+| `.image-slots.state.json` | Estado das imagens do editor. O site funciona sem ele, mas mantê-lo evita um erro 404 no console.              |
+| `marca/`                  | Arte-fonte da marca em alta resolução. **Não é usada pelo site** — é arquivo de referência para futuras peças. |
 
 ### marca/
 
@@ -27,7 +27,7 @@ automaticamente na raiz do domínio.
 
 ## Observações
 
-- O "R" da palavra *Rabisco* no título principal é o R oficial da marca,
+- O "R" da palavra _Rabisco_ no título principal é o R oficial da marca,
   desenhado em SVG inline: acompanha a cor de destaque e escala sem perder nitidez.
 - As imagens de produtos e galeria ainda são fotos genéricas de banco de imagens.
   Para trocá-las é preciso reabrir o projeto na ferramenta que o gerou — os

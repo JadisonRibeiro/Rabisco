@@ -37,8 +37,7 @@ const PROPS = {
 /** Texto alternativo das fotos. Vazio onde a imagem é decorativa ou onde o
  *  rótulo visível adjacente já nomeia a peça (alt redundante atrapalha). */
 const ALT = {
-  'rab-fachada':
-    'Fachada da Rabisco Papelaria: vitrine iluminada com o letreiro laranja da loja',
+  'rab-fachada': 'Fachada da Rabisco Papelaria: vitrine iluminada com o letreiro laranja da loja',
   'rab-arte': 'Vidros de tinta e pincéis sobre a bancada do ateliê',
   'rab-cat1': '',
   'rab-cat2': '',
@@ -98,13 +97,15 @@ function splitDeclarations(css) {
 
 /** Declarações normalizadas + tokenizadas, prontas para virar regra CSS. */
 function toRule(css) {
-  return splitDeclarations(css)
-    .map(([prop, value]) => [prop, tokenize(tokenizeWhole(prop, value))])
-    // `--accent: var(--accent)` sobrava da interpolação: o runtime injetava a
-    // cor aqui, mas agora ela já vem de :root e a redeclaração é circular.
-    .filter(([prop, value]) => !(prop.startsWith('--') && value === `var(${prop})`))
-    .map(([prop, value]) => `  ${prop}: ${value};`)
-    .join('\n');
+  return (
+    splitDeclarations(css)
+      .map(([prop, value]) => [prop, tokenize(tokenizeWhole(prop, value))])
+      // `--accent: var(--accent)` sobrava da interpolação: o runtime injetava a
+      // cor aqui, mas agora ela já vem de :root e a redeclaração é circular.
+      .filter(([prop, value]) => !(prop.startsWith('--') && value === `var(${prop})`))
+      .map(([prop, value]) => `  ${prop}: ${value};`)
+      .join('\n')
+  );
 }
 
 function main() {
@@ -175,8 +176,7 @@ function main() {
   const walk = (node) => {
     if (node.nodeType !== 1) return;
 
-    const sectionKey =
-      node.getAttribute?.('id') ?? node.getAttribute?.('data-screen-label');
+    const sectionKey = node.getAttribute?.('id') ?? node.getAttribute?.('data-screen-label');
     if (sectionKey && BLOCKS[sectionKey]) block = BLOCKS[sectionKey];
     if (node.rawTagName === 'header') block = 'nav';
     if (node.rawTagName === 'footer') block = 'rodape';

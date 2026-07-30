@@ -85,7 +85,7 @@ export function diffDirs(dirA, dirB, outDir = null) {
   return resultados;
 }
 
-if (process.argv[1]?.endsWith('diff.mjs')) {
+if (process.argv[1] && process.argv[1].endsWith('diff.mjs')) {
   const [dirA, dirB] = process.argv.slice(2);
   const resultados = diffDirs(dirA, dirB, '.baseline/diff');
   console.log('viewport              altura A   altura B   px difs      %   delta médio');
@@ -98,6 +98,8 @@ if (process.argv[1]?.endsWith('diff.mjs')) {
     );
   }
   const pior = Math.max(...resultados.map((r) => r.deltaMedio));
-  console.log(`\nlimiar: delta médio ≤ ${DELTA_MEDIO_MAX} e altura idêntica — pior caso ${pior.toFixed(2)}`);
+  console.log(
+    `\nlimiar: delta médio ≤ ${DELTA_MEDIO_MAX} e altura idêntica — pior caso ${pior.toFixed(2)}`,
+  );
   process.exit(resultados.every((r) => r.ok) ? 0 : 1);
 }

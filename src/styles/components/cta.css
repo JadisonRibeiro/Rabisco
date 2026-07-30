@@ -4,7 +4,7 @@
   position: relative;
   background: var(--accent);
   color: var(--cream);
-  padding: clamp(100px,16vh,190px) var(--gutter);
+  padding: clamp(100px, 16vh, 190px) var(--gutter);
   overflow: hidden;
   text-align: center;
 }
@@ -14,7 +14,7 @@
   left: -8%;
   bottom: -18%;
   width: 38%;
-  opacity: .14;
+  opacity: 0.14;
   animation: rabFloat 16s ease-in-out infinite;
 }
 
@@ -23,7 +23,7 @@
   right: -6%;
   top: -16%;
   width: 26%;
-  opacity: .12;
+  opacity: 0.12;
   animation: rabFloatB 13s ease-in-out infinite;
 }
 
@@ -35,24 +35,24 @@
 
 .cta__manuscrito {
   display: block;
-  font-family: Caveat,cursive;
-  font-size: clamp(22px,2vw,30px);
+  font-family: Caveat, cursive;
+  font-size: clamp(22px, 2vw, 30px);
   margin-bottom: 24px;
-  opacity: .95;
+  opacity: 0.95;
 }
 
 .cta__titulo {
   font-weight: 800;
   font-stretch: 76%;
   text-transform: uppercase;
-  font-size: clamp(42px,7.4vw,124px);
-  line-height: .86;
-  letter-spacing: -.03em;
+  font-size: clamp(42px, 7.4vw, 124px);
+  line-height: 0.86;
+  letter-spacing: -0.03em;
 }
 
 .cta__grafico {
   display: block;
-  width: min(560px,80%);
+  width: min(560px, 80%);
   height: 34px;
   margin: 22px auto 0;
   overflow: visible;
@@ -64,7 +64,7 @@
 }
 
 .cta__acoes {
-  margin-top: clamp(38px,5vh,60px);
+  margin-top: clamp(38px, 5vh, 60px);
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -81,10 +81,12 @@
   color: var(--ink);
   font-size: 13px;
   font-weight: 700;
-  letter-spacing: .12em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  box-shadow: 0 24px 50px -26px rgb(var(--ink-rgb)/60%);
-  transition: transform .4s var(--ease), background .4s ease;
+  box-shadow: 0 24px 50px -26px rgb(var(--ink-rgb) / 60%);
+  transition:
+    transform 0.4s var(--ease),
+    background 0.4s ease;
 }
 
 .cta__magnetico:hover {
@@ -98,16 +100,16 @@
   gap: 12px;
   padding: 20px 32px;
   border-radius: var(--r-pilula);
-  border: 1px solid rgb(var(--cream-rgb)/45%);
+  border: 1px solid rgb(var(--cream-rgb) / 45%);
   color: var(--cream);
   font-size: 13px;
   font-weight: 700;
-  letter-spacing: .12em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  transition: background .4s ease;
+  transition: background 0.4s ease;
 }
 
 .cta__link:hover {
-  background: rgb(var(--cream-rgb)/14%);
+  background: rgb(var(--cream-rgb) / 14%);
   color: var(--cream);
 }

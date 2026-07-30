@@ -2,9 +2,9 @@
 
 .loja {
   position: relative;
-  padding: clamp(90px,14vh,170px) var(--gutter);
+  padding: clamp(90px, 14vh, 170px) var(--gutter);
   background: var(--paper);
-  border-top: 1px solid rgb(var(--ink-rgb)/8%);
+  border-top: 1px solid rgb(var(--ink-rgb) / 8%);
 }
 
 .loja__grade {
@@ -12,7 +12,7 @@
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: clamp(36px,5vw,80px);
+  gap: clamp(36px, 5vw, 80px);
   align-items: center;
 }
 
@@ -21,7 +21,7 @@
   height: 1px;
   flex: 1;
   max-width: 140px;
-  background: rgb(var(--ink-rgb)/25%);
+  background: rgb(var(--ink-rgb) / 25%);
   transform-origin: left;
 }
 
@@ -29,20 +29,20 @@
   font-weight: 800;
   font-stretch: 78%;
   text-transform: uppercase;
-  font-size: clamp(32px,4.6vw,78px);
-  line-height: .9;
-  letter-spacing: -.025em;
+  font-size: clamp(32px, 4.6vw, 78px);
+  line-height: 0.9;
+  letter-spacing: -0.025em;
 }
 
 .loja__texto {
   margin-top: 20px;
-  font-size: clamp(16px,1.2vw,20px);
+  font-size: clamp(16px, 1.2vw, 20px);
   line-height: 1.6;
-  color: rgb(var(--ink-rgb)/62%);
+  color: rgb(var(--ink-rgb) / 62%);
 }
 
 .loja__lista {
-  margin-top: clamp(32px,4vh,48px);
+  margin-top: clamp(32px, 4vh, 48px);
   display: grid;
   gap: 0;
   max-width: 520px;
@@ -53,15 +53,15 @@
   justify-content: space-between;
   gap: 20px;
   padding: 16px 0;
-  border-top: 1px solid rgb(var(--ink-rgb)/14%);
+  border-top: 1px solid rgb(var(--ink-rgb) / 14%);
   font-size: 15px;
 }
 
 .loja__rotulo {
-  letter-spacing: .14em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   font-size: 11.5px;
-  opacity: .5;
+  opacity: 0.5;
   align-self: center;
 }
 
@@ -74,18 +74,18 @@
   justify-content: space-between;
   gap: 20px;
   padding: 16px 0;
-  border-top: 1px solid rgb(var(--ink-rgb)/14%);
-  border-bottom: 1px solid rgb(var(--ink-rgb)/14%);
+  border-top: 1px solid rgb(var(--ink-rgb) / 14%);
+  border-bottom: 1px solid rgb(var(--ink-rgb) / 14%);
   font-size: 15px;
 }
 
 .loja__link {
   font-weight: 700;
-  border-bottom: 1px solid rgb(var(--ink-rgb)/30%);
+  border-bottom: 1px solid rgb(var(--ink-rgb) / 30%);
 }
 
 .loja__acoes {
-  margin-top: clamp(30px,4vh,44px);
+  margin-top: clamp(30px, 4vh, 44px);
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
@@ -101,9 +101,11 @@
   color: var(--cream);
   font-size: 12.5px;
   font-weight: 700;
-  letter-spacing: .12em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  transition: background .4s ease, transform .4s var(--ease);
+  transition:
+    background 0.4s ease,
+    transform 0.4s var(--ease);
 }
 
 .loja__magnetico:hover {
@@ -117,17 +119,19 @@
   gap: 12px;
   padding: 18px 28px;
   border-radius: var(--r-pilula);
-  border: 1px solid rgb(var(--ink-rgb)/20%);
+  border: 1px solid rgb(var(--ink-rgb) / 20%);
   font-size: 12.5px;
   font-weight: 700;
-  letter-spacing: .12em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  transition: border-color .4s ease, background .4s ease;
+  transition:
+    border-color 0.4s ease,
+    background 0.4s ease;
 }
 
 .loja__link-2:hover {
   border-color: var(--ink);
-  background: rgb(var(--ink-rgb)/4%);
+  background: rgb(var(--ink-rgb) / 4%);
   color: var(--ink);
 }
 
@@ -135,8 +139,8 @@
   position: relative;
   border-radius: var(--r-lg);
   overflow: hidden;
-  border: 1px solid rgb(var(--ink-rgb)/10%);
-  box-shadow: 0 60px 90px -60px rgb(var(--ink-rgb)/60%);
+  border: 1px solid rgb(var(--ink-rgb) / 10%);
+  box-shadow: 0 60px 90px -60px rgb(var(--ink-rgb) / 60%);
 }
 
 .loja__moldura-2 {

@@ -92,9 +92,15 @@ export const BY_TAG = {
 const BY_DECLARATIONS = [
   // Camadas decorativas em inset:0 — assinaturas inconfundíveis.
   [/position:\s*absolute[\s\S]*inset:\s*0[\s\S]*repeating-linear-gradient/, 'textura'],
-  [/position:\s*absolute[\s\S]*inset:\s*0[\s\S]*radial-gradient[\s\S]*pointer-events:\s*none/, 'halo'],
+  [
+    /position:\s*absolute[\s\S]*inset:\s*0[\s\S]*radial-gradient[\s\S]*pointer-events:\s*none/,
+    'halo',
+  ],
   [/position:\s*absolute[\s\S]*inset:\s*0[\s\S]*linear-gradient\(180deg/, 'veu'],
-  [/position:\s*absolute[\s\S]*inset:\s*0[\s\S]*linear-gradient[\s\S]*pointer-events:\s*none/, 'verniz'],
+  [
+    /position:\s*absolute[\s\S]*inset:\s*0[\s\S]*linear-gradient[\s\S]*pointer-events:\s*none/,
+    'verniz',
+  ],
   [/stroke-dasharray/, 'traco'],
   [/animation:\s*rabCue/, 'cursor'],
 
@@ -111,7 +117,10 @@ const BY_DECLARATIONS = [
   [/text-align:\s*center[\s\S]*max-width:\s*820px[\s\S]*margin:\s*0 auto/, 'intro'],
   [/max-width:\s*1560px[\s\S]*border-top:[\s\S]*flex-wrap:\s*wrap/, 'creditos'],
   [/display:\s*grid[\s\S]*gap:\s*0/, 'lista'],
-  [/display:\s*flex[\s\S]*justify-content:\s*space-between[\s\S]*border-top:[\s\S]*font-size/, 'linha'],
+  [
+    /display:\s*flex[\s\S]*justify-content:\s*space-between[\s\S]*border-top:[\s\S]*font-size/,
+    'linha',
+  ],
   [/display:\s*flex[\s\S]*flex-direction:\s*column[\s\S]*gap:\s*12px[\s\S]*font-size/, 'coluna'],
   [/display:\s*flex[\s\S]*flex-direction:\s*column[\s\S]*line-height:\s*1/, 'identidade'],
 
@@ -127,7 +136,10 @@ const BY_DECLARATIONS = [
   // Agrupamentos e posições.
   [/margin-top:[\s\S]*display:\s*flex[\s\S]*flex-wrap:\s*wrap/, 'acoes'],
   [/display:\s*flex[\s\S]*align-items:\s*center[\s\S]*gap[\s\S]*margin-bottom/, 'eyebrow'],
-  [/display:\s*flex[\s\S]*justify-content:\s*space-between[\s\S]*align-items:\s*flex-start/, 'topo'],
+  [
+    /display:\s*flex[\s\S]*justify-content:\s*space-between[\s\S]*align-items:\s*flex-start/,
+    'topo',
+  ],
   [/display:\s*flex[\s\S]*align-items:\s*center[\s\S]*justify-content:\s*space-between/, 'topo'],
   [/position:\s*absolute[\s\S]*top:[\s\S]*left:[\s\S]*letter-spacing/, 'indice'],
   [/^\s*font-size:\s*12px;[\s\S]*letter-spacing:\s*\.2em/, 'indice'],
