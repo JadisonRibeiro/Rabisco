@@ -1,0 +1,54 @@
+/*
+ * Estados de interação que atravessam componentes.
+ *
+ * Ficam juntos porque todos seguem o mesmo padrão: o pai marcado com data-*
+ * dirige a transformação de um filho. Espalhá-los pelos arquivos de
+ * componente esconderia a relação.
+ */
+
+/* Cards da galeria: a foto aproxima, o véu escurece, a seta sobe. */
+[data-card]:hover [data-media] {
+  transform: scale(1.06);
+}
+
+[data-card]:hover [data-veil] {
+  opacity: 0.78;
+}
+
+[data-card]:hover [data-dot] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Links da nav: sublinhado cresce da esquerda. */
+[data-navlink]:hover [data-underline] {
+  transform: scaleX(1);
+}
+
+/* Chips de categoria. */
+[data-chip]:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 28px 44px -22px rgb(var(--ink-rgb) / 62%);
+}
+
+[data-chip]:active {
+  transform: translateY(-3px);
+}
+
+[data-chip]:hover [data-chipimg] {
+  transform: scale(1.055);
+  box-shadow: 0 0 0 1.5px rgb(var(--ink-rgb) / 22%);
+}
+
+[data-chip]:hover [data-chiptxt] {
+  color: var(--ink);
+}
+
+/* Botão flutuante de WhatsApp. */
+[data-wafab]:hover {
+  transform: translateY(-3px) scale(1.05);
+}
+
+[data-wafab]:active {
+  transform: translateY(-1px) scale(1.01);
+}

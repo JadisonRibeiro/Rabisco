@@ -1,0 +1,27 @@
+/*
+ * Folha raiz. A ordem é a cascata: tokens antes de quem os usa, componentes
+ * antes das interações que os modificam, quebras por último.
+ */
+
+@import './tokens.css';
+@import './fonts.css';
+@import './base.css';
+@import './animations.css';
+
+@import './components/pagina.css';
+@import './components/foto.css';
+@import './components/nav.css';
+@import './components/menu.css';
+@import './components/hero.css';
+@import './components/rail.css';
+@import './components/manifesto.css';
+@import './components/servicos.css';
+@import './components/presentes.css';
+@import './components/galeria.css';
+@import './components/loja.css';
+@import './components/cta.css';
+@import './components/rodape.css';
+@import './components/utilitarias.css';
+
+@import './interactions.css';
+@import './responsive.css';

@@ -1,0 +1,77 @@
+/*
+ * Tokens de design da Rabisco Papelaria.
+ *
+ * Os valores vieram do export original medidos um a um; nenhum foi
+ * arredondado ou "melhorado". Cores base ficam em canais RGB soltos para que
+ * as dezenas de variações com alpha do design (rgb(... / 55%)) derivem de um
+ * único ponto de troca.
+ */
+
+:root {
+  /* ── Cor ──────────────────────────────────────────────────────────────── */
+  --ink-rgb: 20 16 14;
+  --cream-rgb: 250 246 240;
+  --preto-rgb: 0 0 0;
+
+  /* Laranja da marca — #E23A12, valor do export.
+     Contraste 4.02:1 sobre o creme: reprova AA para texto normal.
+     Trocado por #C7300C (5.06:1) na Fase 4, em commit isolado. */
+  --accent-rgb: 226 58 18;
+
+  /* Os brilhos e halos do design foram desenhados sobre #F63E0B, um laranja
+     mais claro que a superfície. Mantidos como token próprio: amarrá-los ao
+     --accent mudaria a aparência das seções laranja. */
+  --glow-rgb: 246 62 11;
+  --ember-rgb: 255 180 120;
+  --ember-claro-rgb: 255 196 146;
+  --ember-quente-rgb: 255 168 64;
+  --ember-suave-rgb: 255 185 128;
+
+  --ink: rgb(var(--ink-rgb));
+  --cream: rgb(var(--cream-rgb));
+  --accent: rgb(var(--accent-rgb));
+  --sand: #f1eae1;
+  --sand-deep: #efe7dc;
+  --paper: #fffdfa;
+
+  /* ── Tipografia ───────────────────────────────────────────────────────── */
+  --font-sans: Archivo, 'Helvetica Neue', Helvetica, sans-serif;
+  --font-hand: Caveat, cursive;
+
+  /* ── Ritmo vertical e gutters ─────────────────────────────────────────── */
+  --gutter: clamp(20px, 4vw, 64px);
+  --gutter-nav: clamp(96px, 9vw, 146px);
+  --secao-y: clamp(146px, 12.4vw, 186px);
+  --gap-md: clamp(16px, 3vw, 48px);
+  --gap-sm: clamp(14px, 2vw, 28px);
+  --pad-linha: clamp(22px, 3vw, 44px);
+  --largura-max: 1560px;
+
+  /* ── Raios ────────────────────────────────────────────────────────────── */
+  --r-xs: 2px;
+  --r-sm: 16px;
+  --r-md: 20px;
+  --r-lg: 24px;
+  --r-xl: 26px;
+  --r-pilula: 999px;
+  --r-circulo: 50%;
+
+  /* ── Sombras ──────────────────────────────────────────────────────────── */
+  --aro: 0 0 0 1px rgb(var(--ink-rgb) / 9%);
+  --sombra-chip: 0 14px 26px -20px rgb(var(--ink-rgb) / 55%);
+  --sombra-media: 0 40px 70px -50px rgb(var(--ink-rgb) / 70%);
+  --sombra-alta: 0 60px 90px -50px rgb(var(--ink-rgb) / 80%);
+
+  /* ── Movimento ────────────────────────────────────────────────────────── */
+  --ease: cubic-bezier(0.16, 0.84, 0.24, 1);
+  --ease-pulso: cubic-bezier(0.2, 0.7, 0.3, 1);
+  --t-xs: 0.25s;
+  --t-sm: 0.35s;
+  --t-md: 0.4s;
+  --t-md-2: 0.45s;
+  --t-lg: 0.5s;
+  --t-lg-2: 0.55s;
+  --t-xl: 0.6s;
+  --t-xl-2: 0.7s;
+  --t-xxl: 0.9s;
+}

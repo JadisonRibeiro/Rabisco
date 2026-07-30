@@ -1,0 +1,113 @@
+/* Chamada final */
+
+.cta {
+  position: relative;
+  background: var(--accent);
+  color: var(--cream);
+  padding: clamp(100px,16vh,190px) var(--gutter);
+  overflow: hidden;
+  text-align: center;
+}
+
+.cta__flutuante {
+  position: absolute;
+  left: -8%;
+  bottom: -18%;
+  width: 38%;
+  opacity: .14;
+  animation: rabFloat 16s ease-in-out infinite;
+}
+
+.cta__flutuante-2 {
+  position: absolute;
+  right: -6%;
+  top: -16%;
+  width: 26%;
+  opacity: .12;
+  animation: rabFloatB 13s ease-in-out infinite;
+}
+
+.cta__container {
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.cta__manuscrito {
+  display: block;
+  font-family: Caveat,cursive;
+  font-size: clamp(22px,2vw,30px);
+  margin-bottom: 24px;
+  opacity: .95;
+}
+
+.cta__titulo {
+  font-weight: 800;
+  font-stretch: 76%;
+  text-transform: uppercase;
+  font-size: clamp(42px,7.4vw,124px);
+  line-height: .86;
+  letter-spacing: -.03em;
+}
+
+.cta__grafico {
+  display: block;
+  width: min(560px,80%);
+  height: 34px;
+  margin: 22px auto 0;
+  overflow: visible;
+}
+
+.cta__traco {
+  stroke-dasharray: 1100;
+  stroke-dashoffset: 1100;
+}
+
+.cta__acoes {
+  margin-top: clamp(38px,5vh,60px);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+}
+
+.cta__magnetico {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 34px;
+  border-radius: var(--r-pilula);
+  background: var(--cream);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  box-shadow: 0 24px 50px -26px rgb(var(--ink-rgb)/60%);
+  transition: transform .4s var(--ease), background .4s ease;
+}
+
+.cta__magnetico:hover {
+  background: var(--ink);
+  color: var(--cream);
+}
+
+.cta__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 32px;
+  border-radius: var(--r-pilula);
+  border: 1px solid rgb(var(--cream-rgb)/45%);
+  color: var(--cream);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  transition: background .4s ease;
+}
+
+.cta__link:hover {
+  background: rgb(var(--cream-rgb)/14%);
+  color: var(--cream);
+}

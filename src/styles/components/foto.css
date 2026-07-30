@@ -1,0 +1,40 @@
+/* Fotos de conteúdo — o que o <image-slot> do editor fazia em shadow DOM */
+
+/*
+ * O componente original posicionava a imagem em absoluto e calculava
+ * left/top/width/height em JavaScript a cada resize:
+ *
+ *   base = fit === 'contain' ? min(fw/iw, fh/ih) : max(fw/iw, fh/ih)
+ *   w = iw * base * s ; h = ih * base * s
+ *   left = (50 + x)% ; top = (50 + y)%   com translate(-50%, -50%)
+ *
+ * Os 18 slots da página guardavam s=1, x=0, y=0 — o recorte identidade.
+ * Nesse caso a fórmula degenera exatamente em object-fit com
+ * object-position centralizado, que o navegador resolve sozinho.
+ */
+.foto {
+  display: block;
+  object-position: center;
+
+  /*
+   * Mesma proporção de reserva que o :host do componente original declarava.
+   * Não é decoração: onde o contêiner tem altura indefinida — os cards do
+   * manifesto usam height:56%, que só resolve numa segunda passada — é esta
+   * razão que dimensiona a linha do grid na primeira. Sem ela o navegador
+   * cai na proporção intrínseca de cada arquivo e a altura do card passa a
+   * depender da foto que estiver ali (aqui, +96px por card).
+   */
+  aspect-ratio: 3 / 2;
+
+  /* O .frame do shadow DOM pintava este cinza atrás da imagem: aparece nas
+     bordas do fit contain e durante o carregamento. */
+  background: rgb(127 127 127 / 8%);
+}
+
+.foto--cover {
+  object-fit: cover;
+}
+
+.foto--contain {
+  object-fit: contain;
+}

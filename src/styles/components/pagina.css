@@ -1,0 +1,8 @@
+/* Raiz da página — variáveis de instância do tema */
+
+.pagina__raiz {
+  position: relative;
+  background: var(--cream);
+  color: var(--ink);
+  overflow: hidden;
+}

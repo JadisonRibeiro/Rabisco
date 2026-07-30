@@ -1,0 +1,102 @@
+/* Rodapé */
+
+.rodape__rodape {
+  background: var(--ink);
+  color: var(--cream);
+  padding: clamp(56px,8vh,90px) var(--gutter) 34px;
+}
+
+.rodape__grade {
+  max-width: 1560px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: clamp(28px,4vw,60px);
+}
+
+.rodape__grupo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rodape__foto {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+
+.rodape__marca {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  font-stretch: 88%;
+}
+
+.rodape__texto {
+  margin-top: 20px;
+  font-size: 15px;
+  line-height: 1.62;
+  color: rgb(var(--cream-rgb)/55%);
+  max-width: 34ch;
+}
+
+.rodape__coluna {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 14.5px;
+}
+
+.rodape__rotulo {
+  font-size: 10.5px;
+  letter-spacing: .34em;
+  text-transform: uppercase;
+  opacity: .45;
+  margin-bottom: 6px;
+}
+
+.rodape__link {
+  color: rgb(var(--cream-rgb)/75%);
+}
+
+.rodape__rotulo-2 {
+  max-width: 1560px;
+  margin: clamp(40px,6vh,70px) auto 0;
+  padding-top: 22px;
+  border-top: 1px solid rgb(var(--cream-rgb)/14%);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 14px;
+  font-size: 11.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgb(var(--cream-rgb)/40%);
+}
+
+.rodape__whatsapp-fab {
+  position: fixed;
+  right: clamp(16px,2vw,26px);
+  bottom: clamp(16px,2vw,26px);
+  z-index: 70;
+  width: clamp(54px,4.4vw,62px);
+  height: clamp(54px,4.4vw,62px);
+  border-radius: var(--r-circulo);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  color: var(--cream);
+  box-shadow: 0 16px 30px -12px rgb(var(--ink-rgb)/45%), 0 0 0 1px rgb(var(--cream-rgb)/30%) inset;
+  transition: transform .45s var(--ease), box-shadow .45s ease;
+}
+
+.rodape__whatsapp-pulso {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-circulo);
+  border: 1.6px solid var(--accent);
+  pointer-events: none;
+}

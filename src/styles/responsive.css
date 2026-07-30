@@ -1,0 +1,46 @@
+/*
+ * Quebras globais.
+ *
+ * A base do layout é fluida (clamp em 143 lugares), então só duas larguras
+ * precisam de decisão explícita: onde a nav horizontal deixa de caber e onde
+ * as grades de duas colunas passam a uma.
+ *
+ * Vem por último no main.css para vencer as regras de componente sem
+ * !important — o export dependia de !important justamente por não controlar
+ * a ordem de carga.
+ */
+
+/* A nav desktop deixa de caber junto com a aba "Pedido". */
+@media (max-width: 1040px) {
+  [data-hide-nav] {
+    display: none;
+  }
+
+  [data-burger] {
+    display: flex;
+  }
+
+  [data-menu-open] [data-mobilemenu] {
+    display: flex;
+    opacity: 1;
+  }
+}
+
+[data-menu-open] [data-bl='1'] {
+  transform: translateY(3.3px) rotate(45deg);
+}
+
+[data-menu-open] [data-bl='2'] {
+  transform: translateY(-3.3px) rotate(-45deg);
+}
+
+/* Grades de duas colunas viram uma; textos de apoio saem. */
+@media (max-width: 900px) {
+  [data-stack] {
+    grid-template-columns: 1fr;
+  }
+
+  [data-hide-sm] {
+    display: none;
+  }
+}

@@ -1,0 +1,156 @@
+/* Endereço, horários e mapa */
+
+.loja {
+  position: relative;
+  padding: clamp(90px,14vh,170px) var(--gutter);
+  background: var(--paper);
+  border-top: 1px solid rgb(var(--ink-rgb)/8%);
+}
+
+.loja__grade {
+  max-width: 1560px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(36px,5vw,80px);
+  align-items: center;
+}
+
+.loja__regua {
+  display: block;
+  height: 1px;
+  flex: 1;
+  max-width: 140px;
+  background: rgb(var(--ink-rgb)/25%);
+  transform-origin: left;
+}
+
+.loja__titulo {
+  font-weight: 800;
+  font-stretch: 78%;
+  text-transform: uppercase;
+  font-size: clamp(32px,4.6vw,78px);
+  line-height: .9;
+  letter-spacing: -.025em;
+}
+
+.loja__texto {
+  margin-top: 20px;
+  font-size: clamp(16px,1.2vw,20px);
+  line-height: 1.6;
+  color: rgb(var(--ink-rgb)/62%);
+}
+
+.loja__lista {
+  margin-top: clamp(32px,4vh,48px);
+  display: grid;
+  gap: 0;
+  max-width: 520px;
+}
+
+.loja__linha {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px 0;
+  border-top: 1px solid rgb(var(--ink-rgb)/14%);
+  font-size: 15px;
+}
+
+.loja__rotulo {
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-size: 11.5px;
+  opacity: .5;
+  align-self: center;
+}
+
+.loja__destaque {
+  font-weight: 700;
+}
+
+.loja__linha-2 {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px 0;
+  border-top: 1px solid rgb(var(--ink-rgb)/14%);
+  border-bottom: 1px solid rgb(var(--ink-rgb)/14%);
+  font-size: 15px;
+}
+
+.loja__link {
+  font-weight: 700;
+  border-bottom: 1px solid rgb(var(--ink-rgb)/30%);
+}
+
+.loja__acoes {
+  margin-top: clamp(30px,4vh,44px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.loja__magnetico {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 28px;
+  border-radius: var(--r-pilula);
+  background: var(--ink);
+  color: var(--cream);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  transition: background .4s ease, transform .4s var(--ease);
+}
+
+.loja__magnetico:hover {
+  background: var(--accent);
+  color: var(--cream);
+}
+
+.loja__link-2 {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 28px;
+  border-radius: var(--r-pilula);
+  border: 1px solid rgb(var(--ink-rgb)/20%);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  transition: border-color .4s ease, background .4s ease;
+}
+
+.loja__link-2:hover {
+  border-color: var(--ink);
+  background: rgb(var(--ink-rgb)/4%);
+  color: var(--ink);
+}
+
+.loja__moldura {
+  position: relative;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  border: 1px solid rgb(var(--ink-rgb)/10%);
+  box-shadow: 0 60px 90px -60px rgb(var(--ink-rgb)/60%);
+}
+
+.loja__moldura-2 {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1/1;
+  min-height: 320px;
+  background: var(--sand-deep);
+}
+
+.loja__mapa {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  background: var(--sand-deep);
+}

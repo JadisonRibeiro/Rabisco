@@ -1,0 +1,99 @@
+/* Reset e padrões do documento */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-wrap: pretty;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+figure {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--cream);
+}
+
+img {
+  max-width: 100%;
+}
+
+/* O trilho do carrossel rola sozinho; a barra desenhada abaixo dele conta a
+   posição, então a barra nativa seria informação repetida. */
+[data-noscroll]::-webkit-scrollbar {
+  height: 0;
+  width: 0;
+}
+
+[data-clipgrad] {
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ── Foco ─────────────────────────────────────────────────────────────────
+   O export não tinha estilo de foco: o anel do navegador sumia sobre os
+   fundos escuros e laranja. Aqui o anel usa duas camadas para ficar visível
+   sobre qualquer uma das superfícies da paleta. */
+:focus-visible {
+  outline: 2px solid var(--cream);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgb(var(--ink-rgb) / 85%);
+  border-radius: var(--r-xs);
+}
+
+/* Sobre creme e papel a lógica se inverte. */
+.hero :focus-visible,
+.manifesto :focus-visible,
+.presentes :focus-visible,
+.loja :focus-visible {
+  outline-color: var(--ink);
+  box-shadow: 0 0 0 4px rgb(var(--cream-rgb) / 90%);
+}
+
+.pular-para-conteudo {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 12px 20px;
+  background: var(--ink);
+  color: var(--cream);
+  font-size: 14px;
+  font-weight: 700;
+  border-bottom-right-radius: var(--r-sm);
+}
+
+.pular-para-conteudo:focus {
+  left: 0;
+  color: var(--cream);
+}
