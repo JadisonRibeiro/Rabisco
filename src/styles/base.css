@@ -97,3 +97,16 @@ img {
   left: 0;
   color: var(--cream);
 }
+
+/*
+ * O iframe do mapa recebe foco por tabulação e o anel padrão do navegador
+ * some sobre o cinza dele. Usa :focus, não :focus-visible: ao tabular para
+ * dentro de um iframe o foco atravessa para o documento embutido e o
+ * elemento hospedeiro nunca chega a casar com :focus-visible.
+ */
+.loja__mapa:focus,
+.loja__mapa:focus-within {
+  outline: 3px solid var(--ink);
+  outline-offset: -3px;
+  box-shadow: none;
+}

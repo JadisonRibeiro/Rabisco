@@ -181,7 +181,7 @@
   font-size: clamp(14px, 1vw, 17px);
   line-height: 1.6;
   max-width: 38ch;
-  color: rgb(var(--cream-rgb) / 86%);
+  color: rgb(var(--cream-rgb) / 93%);
 }
 
 .manifesto__card-2 {

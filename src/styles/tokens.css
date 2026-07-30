@@ -13,10 +13,12 @@
   --cream-rgb: 250 246 240;
   --preto-rgb: 0 0 0;
 
-  /* Laranja da marca — #E23A12, valor do export.
-     Contraste 4.02:1 sobre o creme: reprova AA para texto normal.
-     Trocado por #C7300C (5.06:1) na Fase 4, em commit isolado. */
-  --accent-rgb: 226 58 18;
+  /* Laranja da marca. O export usava #E23A12, que dá 4.02:1 sobre o creme e
+     reprova o mínimo de 4.5:1 da WCAG AA para texto normal — e não havia
+     como corrigir pelo texto: #14100E sobre aquele laranja dá 4.37:1, também
+     insuficiente. #C7300C sobe para 5.06:1 com o menor desvio de matiz que
+     resolve com folga. */
+  --accent-rgb: 199 48 12;
 
   /* Os brilhos e halos do design foram desenhados sobre #F63E0B, um laranja
      mais claro que a superfície. Mantidos como token próprio: amarrá-los ao
@@ -27,9 +29,15 @@
   --ember-quente-rgb: 255 168 64;
   --ember-suave-rgb: 255 185 128;
 
+  /* O mesmo laranja não serve nas duas superfícies: o tom que passa AA sobre
+     o creme (#C7300C, 5.06:1) só alcança 3.47:1 sobre o ink, e o que passa
+     sobre o ink é claro demais para o creme. Um token por superfície. */
+  --accent-claro-rgb: 224 90 34; /* #E05A22 — 5.09:1 sobre o ink */
+
   --ink: rgb(var(--ink-rgb));
   --cream: rgb(var(--cream-rgb));
   --accent: rgb(var(--accent-rgb));
+  --accent-claro: rgb(var(--accent-claro-rgb));
   --sand: #f1eae1;
   --sand-deep: #efe7dc;
   --paper: #fffdfa;

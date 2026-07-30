@@ -156,7 +156,36 @@
   left: 20px;
   font-size: 10.5px;
   letter-spacing: 0.34em;
-  color: rgb(var(--cream-rgb) / 70%);
+
+  /*
+   * Era creme a 70% direto sobre a foto. O véu do card é um gradiente que
+   * só escurece de verdade na base, então aqui em cima o número dependia da
+   * foto: sobre a área clara do primeiro card a razão caía para 1.00 — texto
+   * literalmente invisível. Opaco, com um véu local logo abaixo.
+   */
+  color: var(--cream);
+
+  /* Contexto de empilhamento próprio: sem ele o véu com z-index negativo
+     cairia atrás da foto do card em vez de ficar entre foto e número. */
+  isolation: isolate;
+}
+
+/*
+ * Véu localizado atrás do número. Escurecer o topo do card inteiro para
+ * resolver 10 caracteres mudaria as cinco fotos; este gradiente cobre só o
+ * canto e se dissolve antes de encostar na imagem que importa.
+ */
+.galeria__indice::before {
+  content: '';
+  position: absolute;
+  inset: -24px -44px -22px -28px;
+  z-index: -1;
+  background: radial-gradient(
+    150% 180% at 26% 42%,
+    rgb(var(--ink-rgb) / 88%) 18%,
+    rgb(var(--ink-rgb) / 0%) 80%
+  );
+  pointer-events: none;
 }
 
 .galeria__legenda {

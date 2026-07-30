@@ -132,7 +132,7 @@
   margin-top: 14px;
   font-size: 15px;
   line-height: 1.6;
-  color: rgb(var(--cream-rgb) / 86%);
+  color: rgb(var(--cream-rgb) / 93%);
 }
 
 .presentes__card-3 {
@@ -156,4 +156,10 @@
   font-size: 15px;
   line-height: 1.6;
   color: rgb(var(--cream-rgb) / 62%);
+}
+
+/* O card escuro inverte a superfície: o laranja das superfícies claras cai
+   para 3.47:1 sobre o ink. Aqui vale o tom claro do mesmo laranja. */
+.presentes__card-3 .presentes__manuscrito {
+  color: var(--accent-claro);
 }
