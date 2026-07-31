@@ -8,3 +8,6 @@ dist/
 .work/
 .baseline/
 *.log
+
+# Variaveis locais; .env.example fica versionado como referencia
+.env
