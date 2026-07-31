@@ -92,15 +92,28 @@ function auditar(alvoMinimo) {
     }
 
     // Texto transbordando a própria caixa (quebra impossível / nowrap).
-    if (el.children.length === 0 && (el.textContent || '').trim()) {
+    //
+    // Medido por Range sobre o nó de texto, e não por scrollWidth: um
+    // pseudo-elemento posicionado com inset negativo — o recurso usado aqui
+    // para véus e áreas de toque — infla o scrollWidth sem que uma única
+    // letra tenha saído do lugar.
+    // Elementos inline não têm caixa de conteúdo própria — clientWidth é 0 e
+    // o texto flui e quebra na caixa do pai. A pergunta só faz sentido para
+    // quem gera bloco.
+    const geraCaixa = cs.display !== 'inline' && el.clientWidth > 0;
+    if (geraCaixa && el.children.length === 0 && (el.textContent || '').trim()) {
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      const larguraDoTexto = range.getBoundingClientRect().width;
+      range.detach?.();
       if (
-        el.scrollWidth > el.clientWidth + 2 &&
+        larguraDoTexto > el.clientWidth + 2 &&
         cs.overflow !== 'auto' &&
         cs.overflow !== 'scroll'
       ) {
         problemas.textoVazando.push({
           el: rotulo(el),
-          conteudo: el.scrollWidth,
+          conteudo: Math.round(larguraDoTexto),
           caixa: el.clientWidth,
         });
       }
