@@ -54,12 +54,6 @@ img {
   width: 0;
 }
 
-[data-clipgrad] {
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
 /* ── Foco ─────────────────────────────────────────────────────────────────
    O export não tinha estilo de foco: o anel do navegador sumia sobre os
    fundos escuros e laranja. Aqui o anel usa duas camadas para ficar visível

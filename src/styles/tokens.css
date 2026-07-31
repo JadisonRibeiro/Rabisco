@@ -44,7 +44,6 @@
 
   /* ── Tipografia ───────────────────────────────────────────────────────── */
   --font-sans: Archivo, 'Helvetica Neue', Helvetica, sans-serif;
-  --font-hand: Caveat, cursive;
 
   /* ── Ritmo vertical e gutters ─────────────────────────────────────────── */
   --gutter: clamp(20px, 4vw, 64px);

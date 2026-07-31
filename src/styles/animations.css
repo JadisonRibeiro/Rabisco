@@ -265,13 +265,8 @@
 
 /* ── Pulso do botão de WhatsApp ──────────────────────────────────────────── */
 
-[data-pulse],
 [data-wapulse] {
   animation: rabPulse 3.6s var(--ease-pulso) infinite both;
-}
-
-[data-pd='1'] {
-  animation-delay: 1.8s;
 }
 
 /* ── Modo "sutil" ────────────────────────────────────────────────────────── */
@@ -316,7 +311,6 @@
     stroke-dashoffset: 0 !important;
   }
 
-  [data-pulse],
   [data-wapulse] {
     animation: none;
   }
