@@ -38,7 +38,6 @@ function montar(raiz, { on, add }) {
   const controles = raiz.querySelector('[data-carrossel-controles]');
   const anterior = raiz.querySelector('[data-anterior]');
   const proximo = raiz.querySelector('[data-proximo]');
-  const progresso = raiz.querySelector('[data-progresso]');
   if (!itens.length) return;
 
   // Nascem escondidos no HTML: só existem se houver quem os opere.
@@ -73,14 +72,6 @@ function montar(raiz, { on, add }) {
     // frações, e comparar com o extremo exato deixaria a seta acesa no fim.
     if (anterior) anterior.disabled = pos <= 1;
     if (proximo) proximo.disabled = pos >= max - 1;
-
-    if (progresso && trilho.scrollWidth > 0) {
-      const fatia = (trilho.clientWidth / trilho.scrollWidth) * 100;
-      // Em porcentagem da própria largura da barra — ver o cálculo no CSS.
-      const avanco = trilho.clientWidth ? (pos / trilho.clientWidth) * 100 : 0;
-      progresso.style.setProperty('--carrossel-fatia', `${fatia}%`);
-      progresso.style.setProperty('--carrossel-avanco', `${avanco}%`);
-    }
 
     const atual = itemAtual(itens, trilho);
     itens.forEach((item, i) => {

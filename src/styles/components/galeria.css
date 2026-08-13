@@ -405,37 +405,81 @@
   box-shadow: inset 0 0 0 1px var(--cream);
 }
 
-/* ── Trilho no celular ───────────────────────────────────────────────────── */
+/* ── Vitrine de duas colunas no celular ──────────────────────────────────── */
 
 /*
- * Empilhados, os cinco cards somavam 2437px em 375px de largura: três telas
- * de rolagem só para atravessar uma seção, mais de um terço da página
- * inteira. Deitados num trilho, a seção cabe em pouco mais de uma tela e o
- * quinto produto fica a quatro gestos de distância em vez de a três telas.
+ * Uma coluna só, os cinco cards somavam 2437px em 375px de largura: três
+ * telas de rolagem, mais de um terço da página. Em duas colunas a seção cabe
+ * em pouco mais de uma tela e mostra quatro produtos de uma vez — que é como
+ * se olha uma vitrine, comparando, e não um de cada vez.
  */
 @media (max-width: 900px) {
-  .galeria {
-    --carrossel-gap: 14px;
-
-    /* Um card domina a tela e o seguinte aparece pela beirada — o suficiente
-       para prometer continuação sem dividir a atenção entre dois produtos. */
-    --carrossel-item: 82%;
-
-    /* Sobre o laranja da seção, o contorno das setas precisa ser o creme. */
-    --carrossel-linha: rgb(var(--cream-rgb) / 42%);
-    --carrossel-cor: var(--cream);
-    --carrossel-fundo: var(--accent);
+  /*
+   * Os spans de 5, 7 e 4 colunas desenham o mosaico do desktop. Aqui a grade
+   * tem duas trilhas e cada card ocupa uma: mantido o span original, o
+   * primeiro card sozinho pediria cinco colunas de uma grade que só tem duas.
+   */
+  .galeria__grade-2 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
 
-  /*
-   * Os três formatos de card viram um só. Os spans de 5, 7 e 4 colunas
-   * desenhavam o mosaico do desktop; num trilho eles não têm o que dizer, e
-   * alturas diferentes lado a lado quebrariam a linha de base do encaixe.
-   */
   .galeria__card,
   .galeria__card-2,
   .galeria__card-3 {
-    height: clamp(330px, 48vh, 430px);
+    grid-column: span 1;
+
+    /*
+     * Cinco linhas de legenda (nome em duas, descrição em duas, preço em uma)
+     * comem ~90px do pé do card. A 230px sobrava pouca foto e a peça lia como
+     * rótulo com imagem ao fundo; a 74vw a proporção volta a ser de produto
+     * fotografado, com a legenda apoiada nele.
+     */
+    height: clamp(258px, 74vw, 340px);
+  }
+
+  /*
+   * Número ímpar de produtos deixa o último sozinho, com um buraco do lado —
+   * o mesmo defeito de diagramação que a vitrine de categorias tinha. Em vez
+   * de cravar "o quinto ocupa a linha toda", a regra pergunta se ele CAIRIA
+   * sozinho: só o último, e só quando a contagem é ímpar. Assim continua certa
+   * quando entrarem mochilas e estojos e o total virar par de novo.
+   */
+  /*
+   * Deitado, ele ganha o dobro de largura para a mesma legenda: mantida a
+   * altura dos outros, viraria um painel e destoaria da fileira.
+   */
+  .galeria__grade-2 > :last-child:nth-child(odd) {
+    grid-column: span 2;
+    height: clamp(190px, 52vw, 250px);
+  }
+
+  /*
+   * E recupera o véu original. O reforço abaixo existe para card estreito e
+   * alto, onde a legenda ocupa proporção grande da peça; neste, que é baixo e
+   * largo, um gradiente começando a 22% escurece quase a foto inteira e sobra
+   * um retângulo escuro no lugar do produto.
+   */
+  .galeria__grade-2 > :last-child:nth-child(odd) .galeria__card-veu {
+    background: linear-gradient(
+      180deg,
+      rgb(var(--ink-rgb) / 0%) 40%,
+      rgb(var(--ink-rgb) / 80%) 100%
+    );
+  }
+
+  /*
+   * O véu só escurece de verdade a partir de 40% da altura. Num card estreito
+   * a legenda é mais alta em proporção e a primeira linha do nome caía ainda
+   * na parte clara da foto — subir o início do gradiente devolve o contraste
+   * sem escurecer a imagem inteira.
+   */
+  .galeria__card-veu {
+    background: linear-gradient(
+      180deg,
+      rgb(var(--ink-rgb) / 0%) 22%,
+      rgb(var(--ink-rgb) / 88%) 100%
+    );
   }
 
   /*
@@ -445,21 +489,54 @@
    * O rótulo "Tenho interesse" continua fora. Ele é posicionado em
    * `right: 44px; bottom: 0`, na mesma faixa da linha de descrição — no
    * desktop os dois nunca coincidem porque o rótulo só existe durante o
-   * hover, mas fixo no celular ele cai por cima de descrições longas
-   * ("Ponta 0.1 a 0.8 · traço uniforme"). A seta sozinha diz o mesmo sem
-   * disputar espaço, e o alvo continua sendo o card inteiro.
+   * hover, mas fixo no celular ele cai por cima das descrições. A seta
+   * sozinha diz o mesmo sem disputar espaço, e o alvo continua sendo o card
+   * inteiro.
    */
   .galeria__card-seta {
     opacity: 1;
     transform: none;
+    width: 28px;
+    height: 28px;
   }
 
   /*
-   * A barra de avanço fica sobre o laranja, onde o próprio laranja do
-   * --accent não teria contraste nenhum.
+   * `display: none`, não `opacity: 0`: invisível ele continuava ocupando
+   * caixa, e como é `nowrap` ancorado em `right: 44px`, num card estreito
+   * "Tenho interesse" começava 28px à ESQUERDA da borda — estouro de largura
+   * real, que só não aparecia por ser transparente.
+   *
+   * Nada se perde: o link que cobre o card já carrega o mesmo texto no
+   * aria-label, então quem usa leitor de tela continua ouvindo a intenção.
    */
-  .galeria .carrossel__progresso {
-    background: var(--cream);
+  .galeria__interesse {
+    display: none;
+  }
+
+  /*
+   * A caixa de texto agora tem ~110px. A tipografia do card largo não cabe
+   * nela: o nome quebrava em três linhas e encostava na descrição.
+   */
+  .galeria__legenda {
+    inset: auto 12px 12px;
+    gap: 8px;
+  }
+
+  .galeria__nome {
+    font-size: 14px;
+    line-height: 1.12;
+  }
+
+  .galeria__texto-2 {
+    margin-top: 5px;
+    font-size: 11px;
+    line-height: 1.35;
+  }
+
+  .galeria__indice {
+    top: 12px;
+    left: 13px;
+    font-size: 9.5px;
   }
 
   .galeria__acoes {

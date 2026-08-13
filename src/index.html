@@ -773,11 +773,6 @@
                     />
                   </svg>
                 </button>
-                <!-- Reflete o avanço do trilho; o conteúdo já diz o mesmo a
-                     quem usa leitor de tela, então aqui é só desenho. -->
-                <div aria-hidden="true" class="carrossel__medidor">
-                  <span data-progresso class="carrossel__progresso"></span>
-                </div>
               </div>
             </div>
 
@@ -856,13 +851,12 @@
             </div>
 
             <!--
-              Mosaico de doze colunas no desktop, trilho horizontal no celular.
-              Saiu o data-stack: ele empilhava a grade abaixo de 900px, que é
-              exatamente a faixa onde o trilho assume.
+              Mosaico de doze colunas no desktop, vitrine de duas no celular.
+              Sem data-stack: ele empilharia em coluna única abaixo de 900px, e
+              a vitrine de duas colunas mora em galeria.css.
             -->
-            <div data-carrossel class="carrossel">
-              <div data-trilho class="galeria__grade-2 carrossel__trilho">
-              <figure data-card="1" class="galeria__card carrossel__item">
+            <div class="galeria__grade-2">
+              <figure data-card="1" class="galeria__card">
                 <div data-media="1" class="galeria__card-media">
                   <img
                     src="/assets/images/gal-canetas-tecnicas.jpg"
@@ -900,7 +894,7 @@
                   class="galeria__card-link"
                 ></a>
               </figure>
-              <figure data-card="1" class="galeria__card-2 carrossel__item">
+              <figure data-card="1" class="galeria__card-2">
                 <div data-media="1" class="galeria__card-media">
                   <img
                     src="/assets/images/gal-cadernos-pontilhados.jpg"
@@ -938,7 +932,7 @@
                   class="galeria__card-link"
                 ></a>
               </figure>
-              <figure data-card="1" class="galeria__card-3 carrossel__item">
+              <figure data-card="1" class="galeria__card-3">
                 <div data-media="1" class="galeria__card-media">
                   <img
                     src="/assets/images/gal-aquarela.jpg"
@@ -976,7 +970,7 @@
                   class="galeria__card-link"
                 ></a>
               </figure>
-              <figure data-card="1" class="galeria__card-3 carrossel__item">
+              <figure data-card="1" class="galeria__card-3">
                 <div data-media="1" class="galeria__card-media">
                   <img
                     src="/assets/images/gal-planners.jpg"
@@ -1014,7 +1008,7 @@
                   class="galeria__card-link"
                 ></a>
               </figure>
-              <figure data-card="1" class="galeria__card-3 carrossel__item">
+              <figure data-card="1" class="galeria__card-3">
                 <div data-media="1" class="galeria__card-media">
                   <img
                     src="/assets/images/gal-mesa-de-teste.jpg"
@@ -1052,45 +1046,6 @@
                   class="galeria__card-link"
                 ></a>
               </figure>
-              </div>
-
-              <div hidden data-carrossel-controles class="carrossel__controles">
-                <button
-                  type="button"
-                  data-anterior
-                  aria-label="Ver produtos anteriores"
-                  class="carrossel__seta"
-                >
-                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M15 5 8 12l7 7"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </button>
-                <button
-                  type="button"
-                  data-proximo
-                  aria-label="Ver mais produtos"
-                  class="carrossel__seta"
-                >
-                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="m9 5 7 7-7 7"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </button>
-                <div aria-hidden="true" class="carrossel__medidor">
-                  <span data-progresso class="carrossel__progresso"></span>
-                </div>
-              </div>
             </div>
 
             <div data-anim="fade" class="galeria__acoes">
