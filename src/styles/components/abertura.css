@@ -1,0 +1,201 @@
+/* Abertura: o rabisco sendo desenhado */
+
+/*
+ * Três decisões governam este arquivo.
+ *
+ * 1. A animação é toda CSS, e a cortina se retira sozinha ao fim dela. Se o
+ *    JS falhar, não carregar ou for bloqueado, o site aparece do mesmo jeito.
+ *    Uma cortina que depende de script para sair é uma forma de perder a
+ *    página inteira por causa de um arquivo.
+ *
+ * 2. O conteúdo atrás nunca é escondido — a cortina só cobre. Nada de
+ *    display:none na página: as fontes, as imagens e o texto seguem
+ *    carregando durante os 3s, de modo que a espera é usada, não perdida.
+ *
+ * 3. Quem já viu não vê de novo. O atributo em <html> é escrito por um script
+ *    inline no <head>, antes da primeira pintura, senão a cortina apareceria
+ *    por um quadro antes de ser retirada — que é pior que não ter.
+ */
+
+.abertura {
+  position: fixed;
+  inset: 0;
+
+  /* Acima da barra (60) e do menu em tela cheia (55). */
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  background: var(--cream);
+
+  /* A saída é o último ato: 2,72s de desenho, 0,62s de dissolução. */
+  animation: rabAberturaSai 0.62s var(--ease) 2.72s both;
+}
+
+/*
+ * `visibility` anima em degrau e trocaria na metade do percurso, apagando a
+ * cortina no meio da dissolução. Declarada só no último quadro, ela troca
+ * quando a opacidade já chegou a zero — e aí tira a peça do fluxo de leitores
+ * de tela e do caminho do toque de vez.
+ */
+@keyframes rabAberturaSai {
+  0% {
+    opacity: 1;
+    visibility: visible;
+  }
+  99% {
+    opacity: 0;
+    visibility: visible;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* Deixa de interceptar o toque assim que começa a sair. */
+.abertura__cena {
+  position: relative;
+  width: min(58vw, 260px);
+  pointer-events: none;
+}
+
+.abertura__marca {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/*
+ * O "R" é o mesmo caminho do hero — o contorno da letra, não uma linha de
+ * centro. Traçá-lo desenha a letra pela borda, que é exatamente o gesto de
+ * quem contorna antes de preencher. Primeiro corre o traço, depois o miolo
+ * chega.
+ *
+ * pathLength normaliza o caminho para 1, então o dasharray não precisa saber o
+ * comprimento real — que aqui seria um número medido à mão e refeito a cada
+ * ajuste da forma.
+ */
+.abertura__contorno {
+  fill: none;
+  stroke: var(--accent);
+
+  /* Em unidades do viewBox, que tem ~1180 de largura — pathLength normaliza o
+     comprimento para o dasharray, não a espessura. */
+  stroke-width: 9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: rabAberturaTraco 1.35s ease-in-out 0.34s both;
+}
+
+@keyframes rabAberturaTraco {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* O preenchimento entra atrasado e por baixo do contorno, como tinta que
+   alcança a linha já feita. */
+.abertura__miolo {
+  fill: var(--accent);
+  opacity: 0;
+  animation: rabAberturaMiolo 0.72s var(--ease) 1.32s both;
+}
+
+@keyframes rabAberturaMiolo {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/*
+ * Os dois rabiscos ao redor. São o assinatura da marca aparecendo à mão —
+ * entram depois do "R" para que a leitura seja "a letra, e então o gesto em
+ * volta", e não uma confusão de linhas simultâneas.
+ */
+.abertura__rabisco {
+  fill: none;
+  stroke: var(--accent);
+
+  /* A 7 eles saíam como fio de cabelo ao lado da massa do "R" e liam como
+     defeito de renderização. 14 é a espessura em que voltam a ser caneta. */
+  stroke-width: 14;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: rabAberturaTraco 0.78s ease-in-out both;
+}
+
+.abertura__rabisco--um {
+  animation-delay: 1.06s;
+}
+
+.abertura__rabisco--dois {
+  animation-delay: 1.4s;
+  opacity: 0.5;
+}
+
+.abertura__nome {
+  margin-top: 18px;
+  text-align: center;
+  font-size: clamp(10px, 2.8vw, 12px);
+  font-weight: 700;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: rgb(var(--ink-rgb) / 62%);
+
+  /* O deslocamento é de 8px: o suficiente para o olho ler "chegou", pouco o
+     bastante para não virar mais um movimento numa tela que já teve três. */
+  animation: rabAberturaNome 0.62s var(--ease) 1.86s both;
+}
+
+@keyframes rabAberturaNome {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/*
+ * Quem já viu nesta aba não vê de novo, e quem pede menos movimento não vê
+ * nunca. Nos dois casos a cortina não chega a existir: `display: none` em vez
+ * de opacidade zero, para não deixar uma camada de tela cheia no caminho do
+ * toque nem no leitor de tela.
+ */
+html[data-abertura='vista'] .abertura {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .abertura {
+    display: none;
+  }
+}
+
+/*
+ * Enquanto a cortina está na frente, a entrada do hero espera por ela. Sem
+ * isso o hero gastaria seus 1,2s de subida por trás de uma tela opaca, e a
+ * cortina se abriria sobre uma página parada — a transição prometida vira um
+ * corte seco.
+ *
+ * 2,55s começa a subida um pouco antes de a cortina terminar de sair (2,72s a
+ * 3,34s): os dois movimentos se cruzam, que é o que faz um parecer causa do
+ * outro em vez de dois eventos em fila.
+ *
+ * Quando o visitante pula a abertura, o atributo passa a 'vista', esta regra
+ * deixa de valer e os atrasos voltam a zero — as animações retomam do ponto
+ * em que o relógio já está, em vez de ficarem esperando um tempo que não
+ * existe mais.
+ */
+html:not([data-abertura='vista']) {
+  --entrada-atraso: 2.55s;
+}

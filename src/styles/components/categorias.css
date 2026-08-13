@@ -93,11 +93,20 @@
   background: rgb(var(--ink-rgb) / 22%);
 }
 
+/*
+ * A 0,55 este rótulo dava 4,14:1 sobre o --paper e reprovava o mínimo de
+ * 4,5:1 da WCAG AA — a única violação que sobrava na página, herdada do
+ * export. 0,62 sobe para 5,29:1, que é folga suficiente para 10,5px em
+ * versalete espaçado, sem tirar dele o tom de legenda.
+ *
+ * Os rótulos das outras seções ficam sobre laranja ou sobre creme e já
+ * passavam; por isso o ajuste é aqui e não no .u-rotulo compartilhado.
+ */
 .categorias__rotulo {
   font-size: 10.5px;
   letter-spacing: 0.4em;
   text-transform: uppercase;
-  opacity: 0.55;
+  opacity: 0.62;
 }
 
 .categorias__titulo {
@@ -336,8 +345,67 @@
   }
 }
 
-@media (max-width: 560px) {
+/*
+ * No celular a grade vira trilho. Empilhadas em três colunas, as oito
+ * categorias comiam uma tela inteira e a última fileira ficava órfã com dois
+ * itens e um buraco — uma vitrine que abre com um defeito de diagramação.
+ * Deitadas, ocupam pouco mais de um terço disso e o corte da terceira peça na
+ * borda já diz que há mais, sem precisar de instrução escrita.
+ */
+@media (max-width: 900px) {
+  .categorias {
+    --carrossel-gap: 14px;
+
+    /* ~2,7 discos por tela: o terceiro entra cortado, que é o que convida ao
+       arrasto. Em 4 inteiros a faixa parece completa e ninguém desliza. */
+    --carrossel-item: clamp(104px, 30vw, 132px);
+  }
+
   .categorias__lista {
-    grid-template-columns: repeat(3, 1fr);
+    gap: var(--carrossel-gap);
+  }
+
+  /*
+   * O desnível some aqui. Ele é o gesto da seção no desktop — oito fotos
+   * postas à mão sobre a mesa —, mas depende da fileira ser vista inteira e
+   * de uma só vez. Num trilho que corta peças na borda, alturas diferentes
+   * deixam de ler como mão e passam a ler como encaixe torto, ainda mais com
+   * os rótulos parando em linhas de base diferentes.
+   */
+  /* Descendente de .carrossel, e não .categorias__celula sozinho: os desníveis
+     vêm de :nth-child, que pesa o mesmo que uma classe — sem o ancestral este
+     reset perderia para eles e o trilho nasceria torto. */
+  .carrossel .categorias__celula {
+    --desnivel: 0px;
+  }
+
+  /*
+   * Sem hover, o item em foco precisa se declarar sozinho. O anel é o mesmo
+   * do hover no desktop: mesma linguagem, disparada pela posição no trilho em
+   * vez de pelo ponteiro.
+   */
+  .categorias__celula[data-atual] .categorias__disco {
+    box-shadow:
+      0 0 0 3px var(--paper),
+      0 0 0 5px var(--accent),
+      0 20px 34px -22px rgb(var(--ink-rgb) / 60%);
+  }
+
+  .categorias__celula[data-atual] .categorias__nome {
+    color: var(--accent);
+  }
+
+  /* Solto do disco, o rótulo tem largura do item e para de ser espremido. */
+  .categorias__nome {
+    font-size: clamp(11px, 3vw, 13px);
+  }
+
+  /* A seção deixa de precisar do respiro que a fileira dupla exigia. */
+  .categorias__grade {
+    margin-bottom: clamp(26px, 4vh, 38px);
+  }
+
+  .categorias__manuscrito {
+    margin-top: clamp(20px, 3vh, 30px);
   }
 }

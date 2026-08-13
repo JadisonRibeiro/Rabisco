@@ -58,6 +58,26 @@
     <link rel="stylesheet" href="/styles/main.css" />
     <script type="module" src="/scripts/main.js"></script>
 
+    <!--
+      A abertura só roda uma vez por aba. Esta decisão precisa estar tomada
+      antes da primeira pintura: em main.js, que é módulo e portanto adiado, a
+      cortina já teria aparecido por alguns quadros antes de ser retirada — um
+      piscar que é pior do que não ter animação nenhuma.
+
+      Inline e minúsculo justamente por bloquear o parser: é uma leitura de
+      sessionStorage e uma escrita de atributo.
+
+      O try existe porque sessionStorage lança em contextos com cookies de
+      terceiros bloqueados; ali a abertura simplesmente roda toda vez, que é a
+      falha mais branda possível.
+    -->
+    <script>
+      try {
+        if (sessionStorage.getItem('rabisco:abertura'))
+          document.documentElement.dataset.abertura = 'vista';
+      } catch {}
+    </script>
+
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -148,6 +168,37 @@
   </head>
   <body>
     <a class="pular-para-conteudo" href="#conteudo">Pular para o conteúdo</a>
+    <!--
+      Cortina de abertura. Fica fora de .pagina__raiz para que a página atrás
+      continue intacta — ela cobre, não substitui.
+    -->
+    <div class="abertura" role="presentation">
+      <div class="abertura__cena">
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          viewBox="-160 -150 1178 1420"
+          class="abertura__marca"
+        >
+          <!-- O miolo vem antes do contorno no DOM: tinta por baixo da linha. -->
+          <path fill-rule="evenodd" d="M856 1114L728 1114L730 1094L730 1093L730 1075L732 1074L732 993L730 992L730 977L730 976L728 943L726 942L726 935L726 934L726 927L722 906L722 900L714 865L712 861L706 831L686 778L668 739L658 722L648 707L628 683L609 662L595 650L570 668L525 698L493 716L426 748L378 766L333 782L289 794L238 804L212 806L211 806L196 806L195 808L169 808L168 806L154 806L153 806L138 804L110 798L85 790L67 780L46 766L26 745L12 720L4 697L2 681L0 680L0 669L0 668L0 645L2 644L2 633L12 602L20 588L28 574L40 559L61 538L76 526L97 512L126 496L154 484L183 474L220 464L224 464L243 460L248 460L253 458L283 454L284 452L298 452L299 450L329 448L330 448L405 446L406 448L438 450L439 450L463 454L517 466L549 478L571 486L586 494L589 494L608 474L622 455L632 437L652 397L664 360L670 328L672 306L674 305L674 267L672 266L672 259L668 240L662 221L654 208L642 192L631 180L620 172L603 160L581 150L568 146L565 144L545 138L521 132L498 130L497 130L481 130L480 128L460 128L459 130L444 130L443 130L424 132L423 132L417 132L385 138L365 144L337 152L317 160L290 174L248 200L215 226L180 261L162 283L146 306L132 330L126 343L123 344L120 344L6 299L6 30L127 30L128 32L129 136L160 106L197 78L229 58L269 38L305 24L350 12L386 4L408 2L409 2L419 2L420 0L432 0L433 0L498 0L499 0L530 2L531 4L544 4L575 10L617 22L649 36L663 42L691 60L717 80L746 109L762 133L778 161L788 190L794 212L798 238L800 239L800 256L802 257L802 273L802 274L802 312L800 313L800 329L794 361L788 384L776 417L766 441L750 473L732 505L702 547L686 564L686 566L710 589L728 610L748 637L768 669L784 701L784 703L800 737L822 797L834 842L834 846L836 851L836 855L838 860L842 885L842 890L848 915L848 929L850 930L852 962L854 963L854 973L854 974L854 983L856 984L856 999L856 1000L856 1021L858 1022L858 1099L856 1100ZM204 679L231 676L232 676L237 676L269 670L304 660L337 650L370 636L393 626L410 618L412 618L449 598L472 585L469 584L451 580L432 578L431 576L423 576L422 576L412 576L411 574L356 574L355 576L319 578L318 578L283 582L228 594L207 602L204 602L174 612L154 622L143 630L134 637L128 647L128 655L130 662L136 670L145 674L155 678L168 678L169 680Z" class="abertura__miolo"></path>
+          <path fill-rule="evenodd" d="M856 1114L728 1114L730 1094L730 1093L730 1075L732 1074L732 993L730 992L730 977L730 976L728 943L726 942L726 935L726 934L726 927L722 906L722 900L714 865L712 861L706 831L686 778L668 739L658 722L648 707L628 683L609 662L595 650L570 668L525 698L493 716L426 748L378 766L333 782L289 794L238 804L212 806L211 806L196 806L195 808L169 808L168 806L154 806L153 806L138 804L110 798L85 790L67 780L46 766L26 745L12 720L4 697L2 681L0 680L0 669L0 668L0 645L2 644L2 633L12 602L20 588L28 574L40 559L61 538L76 526L97 512L126 496L154 484L183 474L220 464L224 464L243 460L248 460L253 458L283 454L284 452L298 452L299 450L329 448L330 448L405 446L406 448L438 450L439 450L463 454L517 466L549 478L571 486L586 494L589 494L608 474L622 455L632 437L652 397L664 360L670 328L672 306L674 305L674 267L672 266L672 259L668 240L662 221L654 208L642 192L631 180L620 172L603 160L581 150L568 146L565 144L545 138L521 132L498 130L497 130L481 130L480 128L460 128L459 130L444 130L443 130L424 132L423 132L417 132L385 138L365 144L337 152L317 160L290 174L248 200L215 226L180 261L162 283L146 306L132 330L126 343L123 344L120 344L6 299L6 30L127 30L128 32L129 136L160 106L197 78L229 58L269 38L305 24L350 12L386 4L408 2L409 2L419 2L420 0L432 0L433 0L498 0L499 0L530 2L531 4L544 4L575 10L617 22L649 36L663 42L691 60L717 80L746 109L762 133L778 161L788 190L794 212L798 238L800 239L800 256L802 257L802 273L802 274L802 312L800 313L800 329L794 361L788 384L776 417L766 441L750 473L732 505L702 547L686 564L686 566L710 589L728 610L748 637L768 669L784 701L784 703L800 737L822 797L834 842L834 846L836 851L836 855L838 860L842 885L842 890L848 915L848 929L850 930L852 962L854 963L854 973L854 974L854 983L856 984L856 999L856 1000L856 1021L858 1022L858 1099L856 1100ZM204 679L231 676L232 676L237 676L269 670L304 660L337 650L370 636L393 626L410 618L412 618L449 598L472 585L469 584L451 580L432 578L431 576L423 576L422 576L412 576L411 574L356 574L355 576L319 578L318 578L283 582L228 594L207 602L204 602L174 612L154 622L143 630L134 637L128 647L128 655L130 662L136 670L145 674L155 678L168 678L169 680Z" pathLength="1" class="abertura__contorno"></path>
+
+          <path
+            d="M-96 1246 C 170 1176, 470 1292, 742 1212 C 838 1184, 918 1220, 986 1198"
+            pathLength="1"
+            class="abertura__rabisco abertura__rabisco--um"
+          ></path>
+          <path
+            d="M636 -104 C 792 -60, 894 44, 918 186"
+            pathLength="1"
+            class="abertura__rabisco abertura__rabisco--dois"
+          ></path>
+        </svg>
+        <p class="abertura__nome">Rabisco Papelaria</p>
+      </div>
+    </div>
+
     <div data-motion="cinematico" class="pagina__raiz">
       <header data-nav="1" class="nav__barra">
         <div aria-hidden="true" class="nav__verniz"></div>
@@ -505,8 +556,15 @@
               </h2>
             </div>
 
-            <ul class="categorias__lista">
-              <li data-anim="up" class="categorias__celula">
+            <!--
+              No celular esta lista vira um trilho horizontal; no desktop
+              continua a grade de oito. O que muda é só CSS — a marcação é a
+              mesma lista de sempre, então sem JS e sem as media queries o
+              conteúdo continua completo e em ordem.
+            -->
+            <div data-carrossel class="carrossel">
+              <ul data-trilho class="categorias__lista carrossel__trilho">
+                <li data-anim="up" class="categorias__celula carrossel__item">
                 <a
                   href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20as%20canetas."
                   target="_blank"
@@ -527,7 +585,7 @@
                   <span class="categorias__nome">Canetas</span>
                 </a>
               </li>
-              <li data-anim="up" class="categorias__celula">
+                <li data-anim="up" class="categorias__celula carrossel__item">
                 <a
                   href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20os%20cadernos."
                   target="_blank"
@@ -548,7 +606,7 @@
                   <span class="categorias__nome">Cadernos</span>
                 </a>
               </li>
-              <li data-anim="up" class="categorias__celula">
+                <li data-anim="up" class="categorias__celula carrossel__item">
                 <a
                   href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20os%20marca-textos."
                   target="_blank"
@@ -569,7 +627,7 @@
                   <span class="categorias__nome">Marca-textos</span>
                 </a>
               </li>
-              <li data-anim="up" class="categorias__celula">
+                <li data-anim="up" class="categorias__celula carrossel__item">
                 <a
                   href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20o%20material%20de%20arte%20fina."
                   target="_blank"
@@ -590,7 +648,7 @@
                   <span class="categorias__nome">Arte fina</span>
                 </a>
               </li>
-              <li data-anim="up" class="categorias__celula">
+                <li data-anim="up" class="categorias__celula carrossel__item">
                 <a
                   href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20os%20planners."
                   target="_blank"
@@ -611,7 +669,7 @@
                   <span class="categorias__nome">Planners</span>
                 </a>
               </li>
-              <li data-anim="up" class="categorias__celula">
+                <li data-anim="up" class="categorias__celula carrossel__item">
                 <a
                   href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20o%20material%20escolar."
                   target="_blank"
@@ -632,7 +690,7 @@
                   <span class="categorias__nome">Escolar</span>
                 </a>
               </li>
-              <li data-anim="up" class="categorias__celula">
+                <li data-anim="up" class="categorias__celula carrossel__item">
                 <a
                   href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20o%20material%20de%20escrit%C3%B3rio."
                   target="_blank"
@@ -653,7 +711,7 @@
                   <span class="categorias__nome">Escritório</span>
                 </a>
               </li>
-              <li data-anim="up" class="categorias__celula">
+                <li data-anim="up" class="categorias__celula carrossel__item">
                 <a
                   href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20as%20novidades."
                   target="_blank"
@@ -674,7 +732,54 @@
                   <span class="categorias__nome">Novidades</span>
                 </a>
               </li>
-            </ul>
+              </ul>
+
+              <!--
+                As setas são atalho, não o caminho: quem arrasta nunca as toca.
+                Ficam fora do trilho para não rolarem junto com ele, e nascem
+                com [hidden] porque sem JS não teriam o que fazer — o trilho
+                continua deslizando ao dedo de qualquer forma.
+              -->
+              <div hidden data-carrossel-controles class="carrossel__controles">
+                <button
+                  type="button"
+                  data-anterior
+                  aria-label="Ver categorias anteriores"
+                  class="carrossel__seta"
+                >
+                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M15 5 8 12l7 7"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  data-proximo
+                  aria-label="Ver mais categorias"
+                  class="carrossel__seta"
+                >
+                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="m9 5 7 7-7 7"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+                <!-- Reflete o avanço do trilho; o conteúdo já diz o mesmo a
+                     quem usa leitor de tela, então aqui é só desenho. -->
+                <div aria-hidden="true" class="carrossel__medidor">
+                  <span data-progresso class="carrossel__progresso"></span>
+                </div>
+              </div>
+            </div>
 
             <span data-anim="fade" class="categorias__manuscrito"
               >não achou o que procurava? pergunta mesmo assim ↗</span
@@ -750,8 +855,14 @@
               </p>
             </div>
 
-            <div data-stack="1" class="galeria__grade-2">
-              <figure data-card="1" class="galeria__card">
+            <!--
+              Mosaico de doze colunas no desktop, trilho horizontal no celular.
+              Saiu o data-stack: ele empilhava a grade abaixo de 900px, que é
+              exatamente a faixa onde o trilho assume.
+            -->
+            <div data-carrossel class="carrossel">
+              <div data-trilho class="galeria__grade-2 carrossel__trilho">
+              <figure data-card="1" class="galeria__card carrossel__item">
                 <div data-media="1" class="galeria__card-media">
                   <img
                     src="/assets/images/gal-canetas-tecnicas.jpg"
@@ -789,7 +900,7 @@
                   class="galeria__card-link"
                 ></a>
               </figure>
-              <figure data-card="1" class="galeria__card-2">
+              <figure data-card="1" class="galeria__card-2 carrossel__item">
                 <div data-media="1" class="galeria__card-media">
                   <img
                     src="/assets/images/gal-cadernos-pontilhados.jpg"
@@ -827,7 +938,7 @@
                   class="galeria__card-link"
                 ></a>
               </figure>
-              <figure data-card="1" class="galeria__card-3">
+              <figure data-card="1" class="galeria__card-3 carrossel__item">
                 <div data-media="1" class="galeria__card-media">
                   <img
                     src="/assets/images/gal-aquarela.jpg"
@@ -865,7 +976,7 @@
                   class="galeria__card-link"
                 ></a>
               </figure>
-              <figure data-card="1" class="galeria__card-3">
+              <figure data-card="1" class="galeria__card-3 carrossel__item">
                 <div data-media="1" class="galeria__card-media">
                   <img
                     src="/assets/images/gal-planners.jpg"
@@ -903,7 +1014,7 @@
                   class="galeria__card-link"
                 ></a>
               </figure>
-              <figure data-card="1" class="galeria__card-3">
+              <figure data-card="1" class="galeria__card-3 carrossel__item">
                 <div data-media="1" class="galeria__card-media">
                   <img
                     src="/assets/images/gal-mesa-de-teste.jpg"
@@ -941,6 +1052,45 @@
                   class="galeria__card-link"
                 ></a>
               </figure>
+              </div>
+
+              <div hidden data-carrossel-controles class="carrossel__controles">
+                <button
+                  type="button"
+                  data-anterior
+                  aria-label="Ver produtos anteriores"
+                  class="carrossel__seta"
+                >
+                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M15 5 8 12l7 7"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  data-proximo
+                  aria-label="Ver mais produtos"
+                  class="carrossel__seta"
+                >
+                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="m9 5 7 7-7 7"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+                <div aria-hidden="true" class="carrossel__medidor">
+                  <span data-progresso class="carrossel__progresso"></span>
+                </div>
+              </div>
             </div>
 
             <div data-anim="fade" class="galeria__acoes">

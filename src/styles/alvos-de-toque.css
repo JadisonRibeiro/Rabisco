@@ -66,3 +66,23 @@
   display: flex;
   align-items: center;
 }
+
+/*
+ * No celular o teto de 28px deixa de valer, porque a causa dele muda: lá o
+ * gap de 12px era o que havia, aqui há tela sobrando na vertical e o dedo é o
+ * ponteiro. Abrindo a coluna para 28px de gap, o passo entre irmãos vira 44px
+ * e o alvo cabe inteiro sem encostar no vizinho — o mesmo raciocínio do
+ * comentário acima, com outro número de entrada.
+ *
+ * Custa ~48px de rodapé. É a troca certa: são os três links de navegação do
+ * rodapé, tocados com o polegar em movimento.
+ */
+@media (max-width: 900px) {
+  .rodape__coluna {
+    gap: 28px;
+  }
+
+  .rodape__link {
+    --alvo: 44px;
+  }
+}

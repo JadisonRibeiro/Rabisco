@@ -8,6 +8,10 @@
 @import './base.css';
 @import './animations.css';
 
+/* Antes dos componentes: a cortina cobre a página, e o token de atraso que
+   ela define precisa existir quando animations.css já foi lido. */
+@import './components/abertura.css';
+
 @import './components/pagina.css';
 @import './components/foto.css';
 @import './components/nav.css';
@@ -15,6 +19,12 @@
 @import './components/hero.css';
 @import './components/categorias.css';
 @import './components/galeria.css';
+
+/* Depois de quem ele converte: o trilho troca o `display` das duas grades e,
+   com a mesma especificidade dos seletores originais, quem vem por último
+   vence. */
+@import './components/carrossel.css';
+
 @import './components/loja.css';
 @import './components/cta.css';
 @import './components/rodape.css';

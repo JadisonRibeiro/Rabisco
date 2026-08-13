@@ -8,6 +8,23 @@
 
 html {
   scroll-behavior: smooth;
+
+  /*
+   * A barra do topo é fixa, então uma âncora que para no topo exato da seção
+   * para com a primeira linha embaixo dela — era o que acontecia com
+   * #categorias, #produtos e #loja, os três links do menu. O padding de
+   * rolagem recua o ponto de parada pela altura da barra, mais um respiro
+   * para o título não encostar nela.
+   */
+  scroll-padding-top: calc(var(--nav-h) + 18px);
+
+  /*
+   * Safari no iPhone aumenta a fonte de blocos que julga estreitos quando o
+   * aparelho gira. O texto do site é todo clamp sobre vw: crescer por fora da
+   * escala quebra justamente as medidas calculadas.
+   */
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -18,6 +35,25 @@ body {
   -webkit-font-smoothing: antialiased;
   text-wrap: pretty;
   overflow-x: hidden;
+
+  /*
+   * O retângulo cinza que o WebKit pinta sobre qualquer alvo tocado aparecia
+   * em cima dos discos redondos e das pílulas, denunciando a caixa quadrada
+   * por trás da forma. Cada alvo tem seu próprio estado :active abaixo.
+   */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/*
+ * Resposta ao toque. Sem hover, um alvo que não reage deixa a dúvida de se o
+ * toque pegou — e era o caso de todas as pílulas depois de tirar o realce
+ * nativo. Só onde não há ponteiro fino, para não roubar o hover do desktop.
+ */
+@media (hover: none) {
+  a:active,
+  button:active {
+    opacity: 0.72;
+  }
 }
 
 h1,

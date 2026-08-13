@@ -25,8 +25,8 @@
   transform: scaleX(1);
 }
 
-/* Os chips de categoria saíram: o carrossel agora é disco + nome, e o estado
-   de hover mora junto do componente em components/rail.css. */
+/* Os chips de categoria saíram: a vitrine agora é disco + nome, e o estado de
+   hover mora junto do componente em components/categorias.css. */
 
 /* Botão flutuante de WhatsApp. */
 [data-wafab]:hover {

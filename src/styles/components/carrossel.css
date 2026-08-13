@@ -1,0 +1,174 @@
+/* Trilho horizontal com encaixe — usado pelas categorias e pela galeria */
+
+/*
+ * Só existe abaixo de 900px. No desktop as duas seções continuam sendo as
+ * grades que sempre foram: o trilho resolve um problema que é do polegar, não
+ * do mouse, e a grade de oito discos lado a lado é parte do desenho lá.
+ *
+ * A rolagem é nativa — `overflow-x: auto` com `scroll-snap`. O JS só
+ * acrescenta as setas e o indicador; sem ele o trilho continua deslizando ao
+ * toque. Um carrossel movido por JS teria que reimplementar inércia, borracha
+ * na ponta e velocidade do gesto, e nenhuma reimplementação disso acerta o
+ * que o sistema já faz.
+ */
+@media (max-width: 900px) {
+  .carrossel {
+    position: relative;
+  }
+
+  /*
+   * O trilho sangra até as bordas da tela: a margem negativa desfaz o gutter
+   * da seção e o padding o devolve por dentro. Sem isso o primeiro item
+   * começaria recuado e o corte do último aconteceria longe da borda,
+   * deixando a faixa parecendo uma lista estreita em vez de algo que continua
+   * para fora da tela.
+   */
+  .carrossel__trilho {
+    display: flex;
+    gap: var(--carrossel-gap, 14px);
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+
+    /*
+     * Sem isto o gesto horizontal que chega ao fim do trilho vira o gesto de
+     * "voltar" do navegador — o usuário tenta ver a última categoria e sai do
+     * site. É o detalhe que separa um carrossel de um acidente.
+     */
+    overscroll-behavior-x: contain;
+
+    /* A barra de rolagem some, o trilho continua rolável. */
+    scrollbar-width: none;
+
+    /* Grade e lista perdem seus padrões ao virar trilho. */
+    grid-template-columns: none;
+    list-style: none;
+    margin-block: 0;
+    padding-block: 0;
+  }
+
+  .carrossel__trilho::-webkit-scrollbar {
+    display: none;
+  }
+
+  .carrossel__item {
+    flex: 0 0 var(--carrossel-item, 78%);
+    scroll-snap-align: start;
+
+    /*
+     * Itens de flex nascem com min-width:auto e não encolhem abaixo do
+     * conteúdo — um rótulo comprido alargaria a peça e desalinharia todo o
+     * encaixe seguinte.
+     */
+    min-width: 0;
+  }
+
+  /* ── Controles ─────────────────────────────────────────────────────────── */
+
+  .carrossel__controles {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: clamp(16px, 2.5vh, 24px);
+  }
+
+  /*
+   * As setas existem para quem não descobre que dá para arrastar, e para quem
+   * não consegue arrastar com precisão. Não são o caminho principal, então
+   * ficam discretas — mas em 44px, que é o alvo de toque, não o tamanho do
+   * desenho.
+   */
+  .carrossel__seta {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 1.5px solid var(--carrossel-linha, rgb(var(--ink-rgb) / 22%));
+    border-radius: var(--r-circulo);
+    background: transparent;
+    color: var(--carrossel-cor, var(--ink));
+    cursor: pointer;
+    transition:
+      background 0.35s ease,
+      border-color 0.35s ease,
+      color 0.35s ease,
+      opacity 0.35s ease;
+  }
+
+  .carrossel__seta:active {
+    background: var(--carrossel-cor, var(--ink));
+    color: var(--carrossel-fundo, var(--paper));
+  }
+
+  /*
+   * Na ponta o botão apaga em vez de sumir: um controle que desaparece muda a
+   * largura da fileira e desloca o irmão sob o dedo que ia tocá-lo.
+   */
+  .carrossel__seta[disabled] {
+    opacity: 0.28;
+    cursor: default;
+  }
+
+  .carrossel__seta svg {
+    width: 17px;
+    height: 17px;
+    display: block;
+  }
+
+  /*
+   * Medidor em barra, não em pontinhos. São oito categorias: oito pontos viram
+   * uma fileira de ruído que ninguém conta, e o alvo de cada um ficaria abaixo
+   * de qualquer mínimo de toque. A barra diz a mesma coisa — onde estou, quanto
+   * falta — num gesto só de leitura.
+   */
+  .carrossel__medidor {
+    position: relative;
+    flex: 1;
+    height: 3px;
+    border-radius: var(--r-pilula);
+    background: var(--carrossel-linha, rgb(var(--ink-rgb) / 16%));
+    overflow: hidden;
+  }
+
+  .carrossel__progresso {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: var(--carrossel-fatia, 30%);
+    border-radius: var(--r-pilula);
+    background: var(--accent);
+    translate: var(--carrossel-avanco, 0) 0;
+    transition:
+      translate 0.35s var(--ease),
+      width 0.35s var(--ease);
+  }
+
+  /*
+   * Quem prefere menos movimento ainda precisa do trilho — ele é a estrutura,
+   * não um enfeite. O que sai é o deslizamento suave: o salto das setas passa
+   * a ser instantâneo, e a barra acompanha sem interpolar.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    .carrossel__trilho {
+      scroll-behavior: auto;
+    }
+
+    .carrossel__progresso {
+      transition: none;
+    }
+  }
+}
+
+/*
+ * Acima de 900px nada disso existe, e os controles não devem ocupar espaço
+ * nem receber foco por tabulação — `display: none` resolve os dois.
+ */
+@media (min-width: 901px) {
+  .carrossel__controles {
+    display: none;
+  }
+}

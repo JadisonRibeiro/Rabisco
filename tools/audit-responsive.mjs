@@ -48,6 +48,24 @@ function auditar(alvoMinimo) {
   };
 
   const limite = doc.clientWidth;
+
+  /*
+   * Um item dentro de um trilho horizontal fica fora da viewport por
+   * definição: é o que significa "há mais para o lado". A regra antiga
+   * isentava o rolador, mas não os filhos dele, então cada carrossel entrava
+   * como dezenas de estouros — ruído que esconderia um estouro de verdade.
+   *
+   * O que continua sendo erro é a PÁGINA rolar na horizontal, e isso quem
+   * mede é o teste de scrollWidth do documento, logo acima.
+   */
+  const dentroDeRoladorX = (el) => {
+    for (let p = el.parentElement; p && p !== doc; p = p.parentElement) {
+      const ox = getComputedStyle(p).overflowX;
+      if (ox === 'auto' || ox === 'scroll') return true;
+    }
+    return false;
+  };
+
   for (const el of document.querySelectorAll('body *')) {
     const cs = getComputedStyle(el);
     if (cs.display === 'none' || cs.visibility === 'hidden') continue;
@@ -66,6 +84,7 @@ function auditar(alvoMinimo) {
       el.classList.contains('pular-para-conteudo') ||
       cs.overflowX === 'auto' ||
       cs.overflowX === 'scroll' ||
+      dentroDeRoladorX(el) ||
       el.closest('[data-noscroll]');
     if (!decorativo && (r.right > limite + 1 || r.left < -1)) {
       problemas.estouros.push({

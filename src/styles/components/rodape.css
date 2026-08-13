@@ -79,7 +79,13 @@
 .rodape__whatsapp-fab {
   position: fixed;
   right: clamp(16px, 2vw, 26px);
-  bottom: clamp(16px, 2vw, 26px);
+
+  /*
+   * A faixa do indicador de gestos do iPhone come os últimos ~20px da tela.
+   * Com bottom fixo o botão ficava debaixo dela: o toque ora abria o WhatsApp,
+   * ora mandava o usuário para a tela inicial.
+   */
+  bottom: calc(clamp(16px, 2vw, 26px) + env(safe-area-inset-bottom, 0px));
   z-index: 70;
   width: clamp(54px, 4.4vw, 62px);
   height: clamp(54px, 4.4vw, 62px);

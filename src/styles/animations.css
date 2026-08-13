@@ -235,10 +235,17 @@
 
 /* ── Entrada no load (só o hero, que já está na tela) ─────────────────────── */
 
+/*
+ * --entrada-atraso desloca a escada inteira. Enquanto a cortina de abertura
+ * está na frente, o hero não pode gastar sua entrada por trás dela: quando a
+ * cortina saísse, encontraria tudo já posicionado e a transição para o site
+ * seria um corte seco. Fora da abertura o token vale 0s e nada muda.
+ */
 [data-in] {
   animation-duration: 1.2s;
   animation-timing-function: var(--ease);
   animation-fill-mode: both;
+  animation-delay: var(--entrada-atraso, 0s);
 }
 
 [data-in='up'] {
@@ -257,25 +264,25 @@
 }
 
 [data-id='1'] {
-  animation-delay: 0.05s;
+  animation-delay: calc(var(--entrada-atraso, 0s) + 0.05s);
 }
 [data-id='2'] {
-  animation-delay: 0.18s;
+  animation-delay: calc(var(--entrada-atraso, 0s) + 0.18s);
 }
 [data-id='3'] {
-  animation-delay: 0.32s;
+  animation-delay: calc(var(--entrada-atraso, 0s) + 0.32s);
 }
 [data-id='4'] {
-  animation-delay: 0.46s;
+  animation-delay: calc(var(--entrada-atraso, 0s) + 0.46s);
 }
 [data-id='5'] {
-  animation-delay: 0.62s;
+  animation-delay: calc(var(--entrada-atraso, 0s) + 0.62s);
 }
 [data-id='6'] {
-  animation-delay: 0.8s;
+  animation-delay: calc(var(--entrada-atraso, 0s) + 0.8s);
 }
 [data-id='7'] {
-  animation-delay: 1s;
+  animation-delay: calc(var(--entrada-atraso, 0s) + 1s);
 }
 
 /* ── Rabiscos que se desenham em laço ────────────────────────────────────── */

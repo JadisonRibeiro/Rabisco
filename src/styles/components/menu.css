@@ -8,9 +8,29 @@
   flex-direction: column;
   justify-content: center;
   padding: 96px clamp(20px, 7vw, 48px) 40px;
+  padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px));
   background: var(--accent);
   opacity: 0;
   transition: opacity 0.4s ease;
+
+  /*
+   * O painel cabe na tela hoje, mas um item a mais no menu o faria rolar — e
+   * um trilho de rolagem dentro de uma camada fixa arrasta a página atrás
+   * assim que chega ao fim. Barato agora, caro de descobrir depois.
+   */
+  overscroll-behavior: contain;
+}
+
+/*
+ * O botão flutuante de WhatsApp está em z-index 70, acima do painel: com o
+ * menu aberto ele boiava sobre o laranja, disputando atenção com o "Falar com
+ * a loja" que fica logo ali dentro — duas portas para a mesma conversa, uma
+ * por cima da outra. Sai de cena enquanto o menu manda.
+ */
+[data-menu-open] .rodape__whatsapp-fab {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
 }
 
 .menu__textura {

@@ -8,10 +8,19 @@ import { initNavCondense } from './modules/nav-condense.js';
 import { initMobileMenu } from './modules/mobile-menu.js';
 import { initPointerEffects } from './modules/pointer-effects.js';
 import { initLojaEstado } from './modules/loja-estado.js';
+import { initCarrossel } from './modules/carrossel.js';
+import { initAbertura } from './modules/abertura.js';
 
 const scope = createListenerScope();
 
-for (const init of [initNavCondense, initMobileMenu, initPointerEffects, initLojaEstado]) {
+for (const init of [
+  initAbertura,
+  initNavCondense,
+  initMobileMenu,
+  initPointerEffects,
+  initLojaEstado,
+  initCarrossel,
+]) {
   init(scope);
 }
 

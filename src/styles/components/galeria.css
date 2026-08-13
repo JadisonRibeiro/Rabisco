@@ -404,3 +404,79 @@
   color: var(--ink);
   box-shadow: inset 0 0 0 1px var(--cream);
 }
+
+/* ── Trilho no celular ───────────────────────────────────────────────────── */
+
+/*
+ * Empilhados, os cinco cards somavam 2437px em 375px de largura: três telas
+ * de rolagem só para atravessar uma seção, mais de um terço da página
+ * inteira. Deitados num trilho, a seção cabe em pouco mais de uma tela e o
+ * quinto produto fica a quatro gestos de distância em vez de a três telas.
+ */
+@media (max-width: 900px) {
+  .galeria {
+    --carrossel-gap: 14px;
+
+    /* Um card domina a tela e o seguinte aparece pela beirada — o suficiente
+       para prometer continuação sem dividir a atenção entre dois produtos. */
+    --carrossel-item: 82%;
+
+    /* Sobre o laranja da seção, o contorno das setas precisa ser o creme. */
+    --carrossel-linha: rgb(var(--cream-rgb) / 42%);
+    --carrossel-cor: var(--cream);
+    --carrossel-fundo: var(--accent);
+  }
+
+  /*
+   * Os três formatos de card viram um só. Os spans de 5, 7 e 4 colunas
+   * desenhavam o mosaico do desktop; num trilho eles não têm o que dizer, e
+   * alturas diferentes lado a lado quebrariam a linha de base do encaixe.
+   */
+  .galeria__card,
+  .galeria__card-2,
+  .galeria__card-3 {
+    height: clamp(330px, 48vh, 430px);
+  }
+
+  /*
+   * A seta só aparecia no hover, que no toque nunca acontece: o card ficava
+   * sem nenhum sinal de que leva a algum lugar. Fixa, ela é a pista.
+   *
+   * O rótulo "Tenho interesse" continua fora. Ele é posicionado em
+   * `right: 44px; bottom: 0`, na mesma faixa da linha de descrição — no
+   * desktop os dois nunca coincidem porque o rótulo só existe durante o
+   * hover, mas fixo no celular ele cai por cima de descrições longas
+   * ("Ponta 0.1 a 0.8 · traço uniforme"). A seta sozinha diz o mesmo sem
+   * disputar espaço, e o alvo continua sendo o card inteiro.
+   */
+  .galeria__card-seta {
+    opacity: 1;
+    transform: none;
+  }
+
+  /*
+   * A barra de avanço fica sobre o laranja, onde o próprio laranja do
+   * --accent não teria contraste nenhum.
+   */
+  .galeria .carrossel__progresso {
+    background: var(--cream);
+  }
+
+  .galeria__acoes {
+    margin-top: clamp(26px, 4vh, 40px);
+  }
+
+  /*
+   * As duas pílulas ocupam a largura inteira e empilham. Lado a lado em 375px
+   * elas quebravam o rótulo em duas linhas dentro de uma cápsula desenhada
+   * para uma.
+   */
+  .galeria__acoes-par {
+    width: 100%;
+  }
+
+  .galeria__magnetico {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+}
