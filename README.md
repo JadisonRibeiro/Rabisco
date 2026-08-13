@@ -44,15 +44,29 @@ npm run preview    # serve o dist/ gerado
 
 ## Variáveis de ambiente
 
-Só existe uma. Copie `.env.example` para `.env`:
+São duas. Copie `.env.example` para `.env`:
 
 ```
 VITE_SITE_URL=https://rabisco.pages.dev
+VITE_BASE=
 ```
 
-Ela alimenta a canonical, as tags Open Graph, o bloco JSON-LD, o `robots.txt`
-e o `sitemap.xml` — os dois últimos emitidos durante o build. Quando o
-domínio definitivo existir, este é o único lugar a mudar.
+`VITE_SITE_URL` alimenta a canonical, as tags Open Graph, o bloco JSON-LD, o
+`robots.txt` e o `sitemap.xml` — os dois últimos emitidos durante o build.
+Quando o domínio definitivo existir, este é o único lugar a mudar.
+
+`VITE_BASE` é o subcaminho onde o site é servido. Vazio significa raiz do
+domínio, que é o que `npm run dev` e `npm run preview` esperam. O deploy do
+GitHub Pages define `/Rabisco/`, e o `site.webmanifest` é emitido no build
+para que seus caminhos sigam esse mesmo valor.
+
+## Deploy
+
+`.github/workflows/deploy.yml` publica no GitHub Pages a cada push na `main`:
+instala, roda o lint, builda com o base do Pages e envia o `dist/`. O site
+fica em <https://jadisonribeiro.github.io/Rabisco>.
+
+O Pages precisa estar com **Source: GitHub Actions** em Settings → Pages.
 
 ## Estrutura
 
