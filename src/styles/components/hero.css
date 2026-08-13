@@ -66,49 +66,16 @@
   z-index: 1;
 }
 
-/*
- * Uma coluna em toda largura — a composição do celular é a da seção inteira.
- *
- * Aqui havia duas trilhas (1.02fr 0.98fr) que só viravam uma abaixo de 900px,
- * pelo [data-stack] de responsive.css. Eram duas leituras diferentes da mesma
- * seção: no celular texto e fachada em sequência, no monitor lado a lado. Uma
- * coluna só faz a ordem — sobrancelha, título, parágrafo, fachada — valer nas
- * duas telas, e o que muda entre elas passa a ser escala e respiro.
- *
- * A largura máxima é ditada pelo título: as linhas são `nowrap`, e no teto do
- * clamp a mais longa mede cerca de 6,7 vezes o corpo. O teto do titulo desceu
- * de 142 para 128px pelo mesmo motivo: e o par (128 x 880) que fecha, e a
- * conta so aperta acima de 1524px de viewport — de 1440 para baixo o clamp
- * ja entregava menos que 128 e nada muda.
- *
- * [data-stack] continua no elemento e continua verdadeiro; só deixou de ser o
- * que decide, porque agora a base já é uma coluna.
- */
 .hero__grade {
   position: relative;
   z-index: 2;
   width: 100%;
-  max-width: 880px;
+  max-width: 1560px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr;
-
-  /* O mesmo respiro de antes. Numa coluna ele passa a separar o texto da
-     fachada, que é o papel que já tinha no empilhamento do celular. */
+  grid-template-columns: 1.02fr 0.98fr;
   gap: clamp(36px, 5vw, 80px);
-
-  /*
-   * Sem isto o título em versalete condensado, que é `nowrap`, arrasta a
-   * trilha além da coluna em vez de sangrar dentro dela — a mesma armadilha
-   * que responsive.css já desarmava no empilhamento do celular, agora
-   * valendo em toda largura porque o empilhamento também vale.
-   */
-  min-width: 0;
-}
-
-.hero__grade > * {
-  min-width: 0;
-  max-width: 100%;
+  align-items: center;
 }
 
 .hero__eyebrow {
@@ -135,7 +102,7 @@
   font-weight: 800;
   font-stretch: 76%;
   text-transform: uppercase;
-  font-size: clamp(52px, 8.4vw, 128px);
+  font-size: clamp(52px, 8.4vw, 142px);
   line-height: 0.85;
   letter-spacing: -0.025em;
 }
@@ -208,15 +175,6 @@
  */
 .hero__moldura {
   position: relative;
-
-  /*
-   * No celular a fachada ocupa a coluna inteira, que ali são 335px. Empilhada
-   * numa coluna de 960 ela ocuparia os 960 — um card de publicação do tamanho
-   * de meia tela. O teto devolve a ela a mesma presença que tem no celular;
-   * a coluna é que ficou maior, não a peça.
-   */
-  width: 100%;
-  max-width: 440px;
 }
 
 /*
@@ -379,27 +337,6 @@
   display: block;
   margin-top: -3px;
   opacity: 0.45;
-}
-
-/*
- * O bilhete e o indicador "Role" saem de cena em toda largura.
- *
- * Os dois já eram invisíveis no celular, pelo [data-hide-sm] de
- * responsive.css: eram o que sobrava de exclusivo do monitor. Com a seção
- * sendo a mesma peça nas duas telas, mantê-los era manter justamente a
- * divergência que este ajuste veio desfazer — e o "Role", ancorado no rodapé
- * de uma seção que agora passa da dobra, apontaria para 300px abaixo do que o
- * visitante enxerga.
- *
- * O endereço não se perde: ele é o título da seção da loja, escrito por
- * extenso. Voltar atrás é apagar este bloco.
- *
- * Depois das regras dos dois de propósito: empata em especificidade com elas
- * e precisa vencer pela ordem.
- */
-.hero__flutuante,
-.hero__so-desktop {
-  display: none;
 }
 
 /*
