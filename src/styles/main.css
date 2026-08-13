@@ -25,6 +25,7 @@
    vence. */
 @import './components/carrossel.css';
 
+@import './components/descontos.css';
 @import './components/loja.css';
 @import './components/cta.css';
 @import './components/rodape.css';

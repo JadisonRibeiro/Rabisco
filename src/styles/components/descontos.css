@@ -1,0 +1,630 @@
+/* Escada de descontos */
+
+/*
+ * A seção é uma trilha alta com um palco preso no meio dela: enquanto a
+ * trilha rola, o palco fica, e o número troca. São cinco degraus, e cada um
+ * ocupa uma fatia da trilha — o passo do dedo é que puxa o desconto para
+ * cima.
+ *
+ * O escuro não é gosto: o ritmo da página é creme, papel, LARANJA, e depois
+ * papel de novo. Um quarto bloco laranja não interromperia nada e um bloco de
+ * papel se dissolveria entre os vizinhos. O quase-preto já existe no rodapé,
+ * então pertence à casa, e é a única superfície que faz a página parar.
+ */
+
+.descontos {
+  position: relative;
+  background: var(--ink);
+  color: var(--cream);
+
+  /*
+   * `clip`, e não `hidden`. As duas aparam igual, mas `hidden` cria um
+   * contexto de rolagem, e aí o palco preso lá dentro passa a se medir por
+   * ELE em vez de pela janela: como esse contexto não rola, o sticky não tem
+   * onde grudar e a peça volta a andar com a página — o conteúdo saía por
+   * cima da tela e só a última linha aparecia.
+   *
+   * Só no eixo x, que é onde as ondas de 200% de largura sangram. `clip`
+   * convive com `visible` no outro eixo (`hidden` não conviveria), então a
+   * explosão continua livre para passar da borda de cima e de baixo.
+   */
+  overflow-x: clip;
+
+  /*
+   * Altura de cada degrau, em tela. Abaixo de meia tela o número troca antes
+   * de o olho pousar nele e a sequência vira pisca-pisca; muito acima disso a
+   * seção cobra rolagem demais por degrau e a descoberta vira trabalho.
+   *
+   * svh, e não vh: no celular a barra de endereço entra e sai, e com vh cada
+   * degrau mudaria de tamanho durante a própria rolagem.
+   */
+  --passo-h: 38svh;
+  --passos: 5;
+
+  /* O palco ocupa a tela abaixo da barra fixa. */
+  --palco-h: calc(100svh - var(--nav-h));
+}
+
+/* ── Emendas ─────────────────────────────────────────────────────────────── */
+
+/*
+ * Mesma gramática das outras emendas do site: a onda é preenchida com a cor
+ * da seção VIZINHA, de modo que seja o laranja da galeria escorrendo para
+ * dentro do escuro, e o papel da loja subindo por baixo — e não uma faixa
+ * decorativa colada entre dois blocos.
+ */
+.descontos__onda {
+  position: absolute;
+  left: 0;
+  z-index: 3;
+  display: block;
+  width: 200%;
+  height: clamp(30px, 4.4vw, 66px);
+  pointer-events: none;
+  animation: rabOnda 32s linear infinite;
+}
+
+.descontos__onda--topo {
+  top: -1px;
+}
+
+/*
+ * A de baixo é a mesma curva fechada para o outro lado (V70 em vez de V0), e
+ * não a mesma peça girada: `rotate` e o `transform` da deriva se multiplicam
+ * na ordem do espec, e a translação passaria a correr no espaço já virado —
+ * o laço da onda deixaria de fechar onde deve. Duas letras no caminho custam
+ * menos que depender dessa ordem.
+ *
+ * A deriva corre ao contrário para as duas emendas não arrastarem juntas.
+ */
+.descontos__onda--base {
+  bottom: -1px;
+  animation-direction: reverse;
+}
+
+/* ── Trilha e palco ──────────────────────────────────────────────────────── */
+
+/*
+ * A altura soma os degraus MAIS o palco, e a parcela do palco não é folga.
+ *
+ * O palco só fica preso enquanto sobra trilha abaixo dele: o tempo de fixação
+ * é `trilha - palco`. Medindo a trilha só pelos degraus, esse tempo seria
+ * `5·passo - palco` e os últimos degraus cairiam depois de a seção já ter se
+ * soltado — o 50% acontecia fora da tela. Somando o palco, cada um dos cinco
+ * degraus ganha um passo inteiro de rolagem com a peça parada, e o quinto
+ * termina no exato quadro em que ela se solta.
+ */
+.descontos__trilha {
+  position: relative;
+  height: calc(var(--passos) * var(--passo-h) + var(--palco-h));
+}
+
+/*
+ * As sentinelas ladrilham a trilha, uma por degrau. Quem decide o degrau é o
+ * IntersectionObserver com a raiz reduzida a uma linha no meio da tela: como
+ * as faixas são contíguas e não se sobrepõem, exatamente uma cruza essa linha
+ * a cada instante — não há empate a desempatar nem contagem a manter.
+ */
+.descontos__marco {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: var(--passo-h);
+  pointer-events: none;
+}
+
+.descontos__marco:nth-child(1) {
+  top: 0;
+}
+.descontos__marco:nth-child(2) {
+  top: var(--passo-h);
+}
+.descontos__marco:nth-child(3) {
+  top: calc(2 * var(--passo-h));
+}
+.descontos__marco:nth-child(4) {
+  top: calc(3 * var(--passo-h));
+}
+/*
+ * A última cobre também a cauda da trilha — o trecho de altura do palco que
+ * sobra depois do quinto degrau.
+ *
+ * Sem isso aquele trecho fica sem sentinela nenhuma, e o observador só avisa
+ * quando alguém CRUZA a linha: uma rolagem que salte por cima (âncora,
+ * restauração de posição ao recarregar, um arrasto muito rápido) pousaria ali
+ * sem disparar nada, e o degrau ficaria congelado no que estava — a seção
+ * mostrando 40% depois de o visitante já ter passado do fim.
+ */
+.descontos__marco:nth-child(5) {
+  top: calc(4 * var(--passo-h));
+  height: calc(var(--passo-h) + var(--palco-h));
+}
+
+/* Preso logo abaixo da barra fixa, que é o teto útil da tela. */
+.descontos__palco {
+  position: sticky;
+  top: var(--nav-h);
+  height: var(--palco-h);
+  display: grid;
+  place-items: center;
+  padding: clamp(20px, 4vh, 48px) var(--gutter);
+  text-align: center;
+}
+
+.descontos__cena {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  width: 100%;
+}
+
+/*
+ * Halo quente por trás do número. É o mesmo recurso do halo da galeria, na
+ * cor do brilho da marca: dá profundidade ao bloco escuro sem acender nenhuma
+ * superfície nova.
+ */
+.descontos__halo {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    52% 46% at 50% 46%,
+    rgb(var(--glow-rgb) / 18%),
+    rgb(var(--glow-rgb) / 0%) 70%
+  );
+  pointer-events: none;
+  transition: opacity 0.7s ease;
+}
+
+/* ── Texto de apoio ──────────────────────────────────────────────────────── */
+
+.descontos__eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: clamp(14px, 2vh, 22px);
+}
+
+.descontos__eyebrow::before,
+.descontos__eyebrow::after {
+  content: '';
+  display: block;
+  width: clamp(24px, 6vw, 92px);
+  height: 1px;
+  background: rgb(var(--cream-rgb) / 30%);
+}
+
+.descontos__rotulo {
+  font-size: 10.5px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: rgb(var(--cream-rgb) / 72%);
+  white-space: nowrap;
+}
+
+.descontos__antetitulo {
+  font-weight: 800;
+  font-stretch: 78%;
+  text-transform: uppercase;
+  font-size: clamp(17px, 2.6vw, 34px);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: rgb(var(--cream-rgb) / 88%);
+}
+
+/* ── O número ────────────────────────────────────────────────────────────── */
+
+/*
+ * Os cinco valores ocupam a MESMA célula de grade. Empilhados assim, a caixa
+ * tem sempre a altura do maior e nada salta de lugar quando o número troca —
+ * um valor entrando enquanto o outro sai, no mesmo lugar, e não uma lista que
+ * cresce.
+ */
+.descontos__numero {
+  position: relative;
+  display: grid;
+  margin-top: clamp(6px, 1.4vh, 16px);
+}
+
+.descontos__valor {
+  grid-area: 1 / 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+
+  font-weight: 800;
+  font-stretch: 78%;
+  font-size: clamp(120px, 36vw, 320px);
+  line-height: 0.82;
+  letter-spacing: -0.045em;
+  color: var(--cream);
+
+  /*
+   * Tabular para o dígito das dezenas não dançar de largura entre 10, 20 e 30
+   * — o salto lateral denunciaria que são cinco peças diferentes trocando de
+   * lugar, e não um número subindo.
+   */
+  font-variant-numeric: tabular-nums;
+
+  /* Estado de repouso: ainda por vir, embaixo e fora de foco. */
+  opacity: 0;
+  translate: 0 0.24em;
+  scale: 0.86;
+  filter: blur(14px);
+  transition:
+    opacity 0.5s var(--ease),
+    translate 0.6s var(--ease),
+    scale 0.6s var(--ease),
+    filter 0.5s ease,
+    color 0.6s ease;
+}
+
+.descontos__pct {
+  font-size: 0.42em;
+  line-height: 1;
+  margin-top: 0.14em;
+  margin-left: 0.04em;
+  color: rgb(var(--cream-rgb) / 60%);
+  transition: color 0.6s ease;
+}
+
+/* Já passou: sai por cima, no sentido de quem foi empurrado para trás. */
+[data-passo='2'] .descontos__valor:nth-child(-n + 1),
+[data-passo='3'] .descontos__valor:nth-child(-n + 2),
+[data-passo='4'] .descontos__valor:nth-child(-n + 3),
+[data-passo='5'] .descontos__valor:nth-child(-n + 4) {
+  opacity: 0;
+  translate: 0 -0.24em;
+  scale: 1.08;
+  filter: blur(14px);
+}
+
+/* Ativo. Vem por último de propósito: empata em especificidade com a regra de
+   "já passou" e precisa vencer pela ordem. */
+[data-passo='1'] .descontos__valor:nth-child(1),
+[data-passo='2'] .descontos__valor:nth-child(2),
+[data-passo='3'] .descontos__valor:nth-child(3),
+[data-passo='4'] .descontos__valor:nth-child(4),
+[data-passo='5'] .descontos__valor:nth-child(5) {
+  opacity: 1;
+  translate: 0 0;
+  scale: 1;
+  filter: blur(0);
+}
+
+/*
+ * O clímax. O laranja da marca sobre este fundo dá 2,3:1 e um número deste
+ * tamanho ficaria abafado; a brasa quente da paleta acende sem perder
+ * contraste, e é a única vez que ela aparece em texto no site inteiro —
+ * por isso lê como recompensa.
+ */
+[data-passo='5'] .descontos__valor:nth-child(5) {
+  color: rgb(var(--ember-quente-rgb));
+}
+
+[data-passo='5'] .descontos__valor:nth-child(5) .descontos__pct {
+  color: rgb(var(--ember-quente-rgb) / 72%);
+}
+
+[data-passo='5'] .descontos__halo {
+  opacity: 1.6;
+}
+
+.descontos__off {
+  margin-top: clamp(2px, 1vh, 10px);
+  font-weight: 800;
+  font-stretch: 78%;
+  font-size: clamp(20px, 3.4vw, 44px);
+  letter-spacing: 0.42em;
+
+  /* O espaçamento empurra a última letra para fora do eixo; o recuo devolve
+     o bloco ao centro óptico. */
+  text-indent: 0.42em;
+  text-transform: uppercase;
+  color: rgb(var(--cream-rgb) / 90%);
+  transition: color 0.6s ease;
+}
+
+[data-passo='5'] .descontos__off {
+  color: rgb(var(--ember-quente-rgb));
+}
+
+/* ── A escada ────────────────────────────────────────────────────────────── */
+
+/*
+ * A régua de cinco. Serve a duas coisas ao mesmo tempo: enumera os descontos
+ * que existem — que é a informação — e mostra quanto do caminho já foi feito,
+ * substituindo qualquer barra de progresso.
+ */
+.descontos__escada {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(8px, 1.6vw, 18px);
+  margin: clamp(20px, 3.4vh, 40px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.descontos__degrau {
+  font-size: clamp(11px, 1.5vw, 15px);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: rgb(var(--cream-rgb) / 42%);
+  transition:
+    color 0.45s ease,
+    opacity 0.45s ease;
+}
+
+.descontos__degrau::after {
+  content: '·';
+  margin-left: clamp(8px, 1.6vw, 18px);
+  color: rgb(var(--cream-rgb) / 26%);
+}
+
+.descontos__degrau:last-child::after {
+  content: none;
+}
+
+[data-passo='1'] .descontos__degrau:nth-child(-n + 1),
+[data-passo='2'] .descontos__degrau:nth-child(-n + 2),
+[data-passo='3'] .descontos__degrau:nth-child(-n + 3),
+[data-passo='4'] .descontos__degrau:nth-child(-n + 4),
+[data-passo='5'] .descontos__degrau:nth-child(-n + 5) {
+  color: var(--cream);
+}
+
+[data-passo='5'] .descontos__degrau:nth-child(5) {
+  color: rgb(var(--ember-quente-rgb));
+}
+
+/* ── Chamada ─────────────────────────────────────────────────────────────── */
+
+.descontos__manuscrito {
+  margin-top: clamp(16px, 2.6vh, 28px);
+  font-family: Caveat, cursive;
+  font-size: clamp(19px, 1.8vw, 27px);
+  color: rgb(var(--cream-rgb) / 78%);
+}
+
+/* Mesma pílula da chamada final do site, na versão clara sobre fundo escuro. */
+.descontos__botao {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: clamp(14px, 2.4vh, 26px);
+  padding: 18px 32px;
+  border-radius: var(--r-pilula);
+  background: var(--cream);
+  color: var(--ink);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  box-shadow: 0 24px 50px -26px rgb(var(--preto-rgb) / 80%);
+  transition:
+    transform 0.4s var(--ease),
+    background 0.4s ease,
+    color 0.4s ease;
+}
+
+.descontos__botao:hover {
+  background: rgb(var(--ember-quente-rgb));
+  color: var(--ink);
+}
+
+/* ── A explosão ──────────────────────────────────────────────────────────── */
+
+/*
+ * Não é confete. São traços de caneta saindo do número — o mesmo gesto que
+ * assina o site inteiro, virado em comemoração. Doze riscos curtos, de
+ * comprimentos irregulares, que se desenham para fora e se apagam.
+ *
+ * A peça inteira é `pointer-events: none` e mora atrás do número: ela
+ * acontece em volta do 50%, nunca por cima dele.
+ */
+.descontos__estouro {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(148%, 720px);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  z-index: -1;
+  overflow: visible;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.descontos__risco {
+  fill: none;
+  stroke-linecap: round;
+  stroke-width: 3.4;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+/*
+ * A animação nasce do atributo mudar para 5, então ela se refaz toda vez que
+ * o visitante volta e desce de novo — a recompensa não é de uma vez só.
+ */
+[data-passo='5'] .descontos__estouro {
+  animation: rabEstouro 1.05s var(--ease) both;
+}
+
+[data-passo='5'] .descontos__risco {
+  animation: rabRisco 0.62s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+
+@keyframes rabEstouro {
+  0% {
+    opacity: 0;
+    scale: 0.42;
+  }
+  22% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    scale: 1.14;
+  }
+}
+
+@keyframes rabRisco {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Cada risco parte num instante levemente diferente: saindo todos juntos, o
+   conjunto lê como um único anel se abrindo, não como estilhaço. */
+.descontos__risco:nth-child(3n + 2) {
+  animation-delay: 0.05s;
+}
+.descontos__risco:nth-child(3n + 3) {
+  animation-delay: 0.1s;
+}
+
+/*
+ * O clarão. Um só quadro de luz atrás do número, para o olho registrar o
+ * momento antes de ler o que mudou.
+ */
+.descontos__clarao {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(120%, 560px);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  z-index: -1;
+  border-radius: var(--r-circulo);
+  background: radial-gradient(
+    circle,
+    rgb(var(--ember-claro-rgb) / 46%),
+    rgb(var(--ember-rgb) / 0%) 68%
+  );
+  opacity: 0;
+  pointer-events: none;
+}
+
+[data-passo='5'] .descontos__clarao {
+  animation: rabClarao 0.9s var(--ease) both;
+}
+
+@keyframes rabClarao {
+  0% {
+    opacity: 0;
+    scale: 0.5;
+  }
+  18% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    scale: 1.25;
+  }
+}
+
+/* ── Celular ─────────────────────────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .descontos {
+    /*
+     * Degrau mais curto que no desktop. A altura da seção é
+     * `5 · passo + palco`, então cada svh aqui custa cinco: a 38svh a seção
+     * cobrava 3,1 telas de rolagem no celular. A 32svh são 2,5, e cada degrau
+     * ainda pede um terço de tela de arrasto — troca sem pressa, mas sem
+     * cobrar cinco gestos inteiros.
+     */
+    --passo-h: 32svh;
+  }
+
+  .descontos__valor {
+    /* O número é o assunto da tela; aqui ele pode ocupá-la quase inteira. */
+    font-size: clamp(118px, 42vw, 200px);
+  }
+
+  .descontos__botao {
+    /* Alvo cheio, como as demais pílulas da página no celular. */
+    width: 100%;
+    max-width: 340px;
+    justify-content: center;
+  }
+
+  /* Menos traço e menos raio: a explosão precisa caber na tela estreita sem
+     encostar nas bordas. */
+  .descontos__estouro {
+    width: min(122%, 380px);
+  }
+}
+
+/* ── Movimento reduzido ──────────────────────────────────────────────────── */
+
+/*
+ * Aqui a seção deixa de ser uma trilha e vira um bloco comum, já mostrando o
+ * fim: 50% OFF, a escada inteira acesa e nenhuma sentinela. A informação que
+ * a rolagem revelaria é justamente a que fica na tela desde o início — quem
+ * pediu menos movimento não fica sabendo menos.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .descontos__trilha {
+    height: auto;
+  }
+
+  .descontos__palco {
+    position: static;
+    height: auto;
+    padding-block: clamp(72px, 12vh, 140px);
+  }
+
+  .descontos__marco {
+    display: none;
+  }
+
+  /* Só o último ocupa a célula; os outros saem do fluxo e a caixa encolhe
+     para o tamanho do que está visível. */
+  .descontos__valor {
+    display: none;
+  }
+
+  .descontos__valor:nth-child(5) {
+    display: flex;
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+    filter: none;
+    color: rgb(var(--ember-quente-rgb));
+    transition: none;
+  }
+
+  .descontos__valor:nth-child(5) .descontos__pct {
+    color: rgb(var(--ember-quente-rgb) / 72%);
+  }
+
+  .descontos__off {
+    color: rgb(var(--ember-quente-rgb));
+  }
+
+  .descontos__degrau {
+    color: var(--cream);
+    transition: none;
+  }
+
+  .descontos__degrau:nth-child(5) {
+    color: rgb(var(--ember-quente-rgb));
+  }
+
+  .descontos__estouro,
+  .descontos__clarao {
+    display: none;
+  }
+
+  .descontos__onda {
+    animation: none;
+  }
+}

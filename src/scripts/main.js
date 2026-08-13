@@ -10,6 +10,7 @@ import { initPointerEffects } from './modules/pointer-effects.js';
 import { initLojaEstado } from './modules/loja-estado.js';
 import { initCarrossel } from './modules/carrossel.js';
 import { initAbertura } from './modules/abertura.js';
+import { initDescontos } from './modules/descontos.js';
 
 const scope = createListenerScope();
 
@@ -20,6 +21,7 @@ for (const init of [
   initPointerEffects,
   initLojaEstado,
   initCarrossel,
+  initDescontos,
 ]) {
   init(scope);
 }

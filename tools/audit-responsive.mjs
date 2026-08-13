@@ -125,8 +125,14 @@ function auditar(alvoMinimo) {
       range.selectNodeContents(el);
       const larguraDoTexto = range.getBoundingClientRect().width;
       range.detach?.();
+      // clip-path recortando o elemento é a assinatura do texto que existe só
+      // para o leitor de tela: caixa de 1px com a frase inteira dentro, de
+      // propósito. Medir transbordo ali é medir o próprio recurso.
+      const recortado = cs.clipPath !== 'none';
+
       if (
         larguraDoTexto > el.clientWidth + 2 &&
+        !recortado &&
         cs.overflow !== 'auto' &&
         cs.overflow !== 'scroll'
       ) {

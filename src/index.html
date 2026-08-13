@@ -1089,6 +1089,187 @@
           </div>
         </section>
 
+        <!--
+          Escada de descontos. A seção é uma trilha alta com um palco preso no
+          meio: enquanto a trilha rola, o palco fica e o número sobe de 10 a
+          50. O degrau mora num atributo, escrito por scripts/modules/descontos.js;
+          tudo o que se vê é CSS reagindo a ele.
+
+          Nasce em data-passo="5" de propósito: sem JS, o visitante chega
+          direto ao 50% — perde a descoberta, nunca a informação.
+        -->
+        <section id="descontos" data-descontos data-passo="5" class="descontos">
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 2880 70"
+            preserveAspectRatio="none"
+            data-float="1"
+            class="descontos__onda descontos__onda--topo"
+          >
+            <!-- Preenchida com o laranja da galeria: é o bloco de cima
+                 escorrendo para dentro deste, não uma faixa entre os dois. -->
+            <path d="M0 38 C120 56 240 56 360 38 C480 20 600 20 720 38 C840 56 960 56 1080 38 C1200 20 1320 20 1440 38 C1560 56 1680 56 1800 38 C1920 20 2040 20 2160 38 C2280 56 2400 56 2520 38 C2640 20 2760 20 2880 38 V0 H0 Z" fill="var(--accent)"></path>
+          </svg>
+
+          <div class="descontos__trilha">
+          <span aria-hidden="true" data-marco="1" class="descontos__marco"></span>
+          <span aria-hidden="true" data-marco="2" class="descontos__marco"></span>
+          <span aria-hidden="true" data-marco="3" class="descontos__marco"></span>
+          <span aria-hidden="true" data-marco="4" class="descontos__marco"></span>
+          <span aria-hidden="true" data-marco="5" class="descontos__marco"></span>
+
+            <div class="descontos__palco">
+              <div aria-hidden="true" class="descontos__halo"></div>
+
+              <div class="u-container descontos__cena">
+                <div data-anim="fade" class="descontos__eyebrow">
+                  <span class="descontos__rotulo">Aqui você encontra</span>
+                </div>
+
+                <h2 class="descontos__titulo">
+                  <span class="descontos__antetitulo">Descontos de até</span>
+
+                  <!--
+                    Os cinco valores ocupam a mesma célula e só um está visível.
+                    Para quem ouve a página, cinco números empilhados seriam
+                    ruído: o bloco inteiro sai do alcance e a frase completa
+                    entra logo abaixo, em texto que só o leitor de tela lê.
+                  -->
+                  <span aria-hidden="true" class="descontos__numero">
+            <span class="descontos__valor"
+              >10<span class="descontos__pct">%</span></span
+            >
+            <span class="descontos__valor"
+              >20<span class="descontos__pct">%</span></span
+            >
+            <span class="descontos__valor"
+              >30<span class="descontos__pct">%</span></span
+            >
+            <span class="descontos__valor"
+              >40<span class="descontos__pct">%</span></span
+            >
+            <span class="descontos__valor"
+              >50<span class="descontos__pct">%</span></span
+            >
+                    <span class="descontos__clarao"></span>
+                    <svg viewBox="-100 -100 200 200" class="descontos__estouro">
+            <path
+              d="M33.9 -1.1 Q50.0 -7.1 66.5 -2.1"
+              pathLength="1"
+              stroke="var(--accent)"
+              class="descontos__risco"
+            ></path>
+            <path
+              d="M30.4 17.8 Q38.2 22.5 46.2 27.1"
+              pathLength="1"
+              stroke="rgb(var(--ember-quente-rgb))"
+              class="descontos__risco"
+            ></path>
+            <path
+              d="M20.3 29.2 Q30.0 33.9 31.0 44.6"
+              pathLength="1"
+              stroke="rgb(var(--ember-claro-rgb))"
+              class="descontos__risco"
+            ></path>
+            <path
+              d="M0.5 38.0 Q4.2 47.9 0.8 57.9"
+              pathLength="1"
+              stroke="var(--accent)"
+              class="descontos__risco"
+            ></path>
+            <path
+              d="M-20.1 33.1 Q-27.0 46.9 -36.1 59.4"
+              pathLength="1"
+              stroke="rgb(var(--ember-quente-rgb))"
+              class="descontos__risco"
+            ></path>
+            <path
+              d="M-30.1 14.1 Q-46.0 24.6 -64.2 30.1"
+              pathLength="1"
+              stroke="rgb(var(--ember-claro-rgb))"
+              class="descontos__risco"
+            ></path>
+            <path
+              d="M-33.6 2.2 Q-46.1 -1.2 -58.0 3.7"
+              pathLength="1"
+              stroke="var(--accent)"
+              class="descontos__risco"
+            ></path>
+            <path
+              d="M-32.6 -16.4 Q-47.8 -22.2 -61.5 -30.9"
+              pathLength="1"
+              stroke="rgb(var(--ember-quente-rgb))"
+              class="descontos__risco"
+            ></path>
+            <path
+              d="M-16.4 -29.0 Q-24.3 -35.2 -25.5 -45.1"
+              pathLength="1"
+              stroke="rgb(var(--ember-claro-rgb))"
+              class="descontos__risco"
+            ></path>
+            <path
+              d="M1.2 -35.5 Q2.7 -47.8 2.0 -60.1"
+              pathLength="1"
+              stroke="var(--accent)"
+              class="descontos__risco"
+            ></path>
+            <path
+              d="M17.1 -30.3 Q28.3 -44.7 34.9 -61.7"
+              pathLength="1"
+              stroke="rgb(var(--ember-quente-rgb))"
+              class="descontos__risco"
+            ></path>
+            <path
+              d="M30.7 -19.7 Q45.8 -23.5 55.6 -35.6"
+              pathLength="1"
+              stroke="rgb(var(--ember-claro-rgb))"
+              class="descontos__risco"
+            ></path>
+                    </svg>
+                  </span>
+
+                  <span class="u-so-leitor">50% off</span>
+                  <span aria-hidden="true" class="descontos__off">Off</span>
+                </h2>
+
+                <ol class="descontos__escada">
+            <li class="descontos__degrau">10%</li>
+            <li class="descontos__degrau">20%</li>
+            <li class="descontos__degrau">30%</li>
+            <li class="descontos__degrau">40%</li>
+            <li class="descontos__degrau">50%</li>
+                </ol>
+
+                <p class="descontos__manuscrito">Encontre sua próxima oportunidade.</p>
+
+                <a href="https://wa.me/5591991032292?text=Oi!%20Quero%20saber%20quais%20produtos%20est%C3%A3o%20com%20desconto." target="_blank" rel="noopener" class="descontos__botao">
+                  Aproveitar descontos
+                  <svg width="18" height="10" fill="none" aria-hidden="true" viewBox="0 0 18 10">
+                    <path
+                      d="M1 5h15M12 1l4 4-4 4"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                    ></path>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 2880 70"
+            preserveAspectRatio="none"
+            data-float="1"
+            class="descontos__onda descontos__onda--base"
+          >
+            <!-- Fechada em V70: preenche para baixo, e é o papel da loja
+                 subindo por baixo desta seção. -->
+            <path d="M0 38 C120 56 240 56 360 38 C480 20 600 20 720 38 C840 56 960 56 1080 38 C1200 20 1320 20 1440 38 C1560 56 1680 56 1800 38 C1920 20 2040 20 2160 38 C2280 56 2400 56 2520 38 C2640 20 2760 20 2880 38 V70 H0 Z" fill="var(--paper)"></path>
+          </svg>
+        </section>
+
         <section id="loja" class="loja">
           <div aria-hidden="true" class="loja__grade"></div>
           <svg

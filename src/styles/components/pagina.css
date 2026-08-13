@@ -4,5 +4,19 @@
   position: relative;
   background: var(--cream);
   color: var(--ink);
-  overflow: hidden;
+
+  /*
+   * `clip` no lugar de `hidden`, e só no eixo x.
+   *
+   * A intenção sempre foi a mesma: aparar o que as peças decorativas sangram
+   * para os lados. Mas `hidden` faz do elemento um contexto de rolagem, e um
+   * `position: sticky` em qualquer lugar abaixo dele passa a se medir por
+   * este contêiner — que não rola. Era o que impedia o palco da seção de
+   * descontos de grudar: ele andava junto com a página e o número trocava
+   * fora da tela.
+   *
+   * `clip` apara igual sem criar contexto nenhum, e convive com `visible` no
+   * eixo y (`hidden` não conviveria: forçaria os dois).
+   */
+  overflow-x: clip;
 }
