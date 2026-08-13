@@ -1092,8 +1092,9 @@
         <!--
           Escada de descontos. A seção é uma trilha alta com um palco preso no
           meio: enquanto a trilha rola, o palco fica e o número sobe de 10 a
-          50. O degrau mora num atributo, escrito por scripts/modules/descontos.js;
-          tudo o que se vê é CSS reagindo a ele.
+          50. O degrau mora num atributo e o avanço contínuo numa variável,
+          os dois escritos por scripts/modules/descontos.js a partir da caixa
+          da trilha; tudo o que se vê é CSS reagindo a eles.
 
           Nasce em data-passo="5" de propósito: sem JS, o visitante chega
           direto ao 50% — perde a descoberta, nunca a informação.
@@ -1111,14 +1112,8 @@
             <path d="M0 38 C120 56 240 56 360 38 C480 20 600 20 720 38 C840 56 960 56 1080 38 C1200 20 1320 20 1440 38 C1560 56 1680 56 1800 38 C1920 20 2040 20 2160 38 C2280 56 2400 56 2520 38 C2640 20 2760 20 2880 38 V0 H0 Z" fill="var(--accent)"></path>
           </svg>
 
-          <div class="descontos__trilha">
-          <span aria-hidden="true" data-marco="1" class="descontos__marco"></span>
-          <span aria-hidden="true" data-marco="2" class="descontos__marco"></span>
-          <span aria-hidden="true" data-marco="3" class="descontos__marco"></span>
-          <span aria-hidden="true" data-marco="4" class="descontos__marco"></span>
-          <span aria-hidden="true" data-marco="5" class="descontos__marco"></span>
-
-            <div class="descontos__palco">
+          <div data-descontos-trilha class="descontos__trilha">
+            <div data-descontos-palco class="descontos__palco">
               <div aria-hidden="true" class="descontos__halo"></div>
 
               <div class="u-container descontos__cena">

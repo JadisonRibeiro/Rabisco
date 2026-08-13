@@ -1,111 +1,136 @@
 /**
  * Escada de descontos.
  *
- * O degrau atual é um atributo no elemento da seção; todo o resto — a troca
- * do número, a escada acendendo, a explosão — é CSS reagindo a ele. Este
- * módulo só responde a uma pergunta: qual dos cinco degraus está passando
- * pelo meio da tela agora.
+ * Este módulo escreve dois números na seção e sai: o degrau atual, num
+ * atributo, e o avanço contínuo da rolagem, numa variável. Todo o resto — a
+ * troca do número, a escada acendendo, o halo esquentando, a explosão — é CSS
+ * reagindo a esses dois.
  *
- * A resposta vem de um IntersectionObserver com a raiz espremida a uma linha.
- * As sentinelas ladrilham a trilha sem sobra nem sobreposição, então
- * exatamente uma cruza essa linha a cada instante: não há empate a
- * desempatar, nem posição a recalcular, nem listener de rolagem — que é o que
- * faria o dedo travar num aparelho fraco.
+ * O avanço é MEDIDO na própria trilha, não inferido da janela: uma leitura de
+ * `getBoundingClientRect` por quadro diz quanto dela já passou da linha em que
+ * o palco gruda. Trilha, palco e linha são as mesmas três medidas que o CSS
+ * usa para desenhar a seção, lidas de lá — não há o que sair de sincronia.
  *
- * A linha fica na altura em que o palco gruda, e não no meio da tela. É a
- * diferença entre a escada acompanhar a peça parada ou correr enquanto ela
- * ainda desliza: medida pelo centro, os primeiros degraus queimavam durante a
- * aproximação e o 50% chegava depois de a seção já ter se soltado.
+ * A versão anterior perguntava o degrau a um IntersectionObserver com a raiz
+ * espremida a uma linha, e calculava essa linha a partir de
+ * `window.innerHeight`. Era o que tremia no celular: a geometria da seção é
+ * svh e não se mexe, mas `innerHeight` encolhe e cresce enquanto a barra de
+ * endereço entra e sai durante a rolagem. A linha de leitura escorregava sobre
+ * uma página parada, e o observador ainda era refeito a cada `resize` — que o
+ * celular dispara sem parar por causa da mesma barra. O mesmo ponto da página
+ * valia degraus diferentes conforme a barra, e o número de 160px piscava para
+ * frente e para trás. Medido na trilha, o avanço não tem como saber que a
+ * barra existe.
  *
  * Sem JS a seção não fica quebrada: o HTML nasce com o último degrau, e o que
  * se perde é a descoberta, não a informação.
  */
 
-const PRIMEIRO = '1';
+const PASSOS = 5;
+
+/*
+ * Grão do avanço contínuo escrito no CSS. Cinquenta paradas ao longo da
+ * seção: fino demais para o olho ver degrau no halo, e grosso o bastante para
+ * o estilo não ser reavaliado a cada pixel de rolagem.
+ */
+const GRAO = 0.02;
 
 export function initDescontos({ on, add }) {
   const secao = document.querySelector('[data-descontos]');
   if (!secao) return;
 
-  const marcos = [...secao.querySelectorAll('[data-marco]')];
-  if (!marcos.length) return;
+  const trilha = secao.querySelector('[data-descontos-trilha]');
+  const palco = secao.querySelector('[data-descontos-palco]');
+  if (!trilha || !palco) return;
 
   /*
-   * Quem pediu menos movimento recebe a seção inteira de uma vez, com o 50%
-   * já na tela — o CSS desmonta a trilha e o palco preso. Observar aqui só
-   * criaria trabalho para trocar um número que ninguém veria mudar.
+   * As duas medidas que não dependem da rolagem: onde o palco gruda — o mesmo
+   * `top` que o CSS declara, lido de lá — e quanto ele ocupa. Guardadas, para
+   * que o quadro precise ler só a caixa da trilha.
    */
-  const semMovimento = window.matchMedia('(prefers-reduced-motion: reduce)');
-  if (semMovimento.matches) return;
+  let linha = 0;
+  let alturaPalco = 0;
 
-  /*
-   * O HTML vem no último degrau para o caso de o JS não chegar. Com ele
-   * presente, a seção volta ao começo: senão o visitante veria o 50% já
-   * gasto na aproximação e a escada não teria para onde subir.
-   */
-  secao.dataset.passo = PRIMEIRO;
+  const medir = () => {
+    linha = parseFloat(getComputedStyle(palco).top) || 0;
+    alturaPalco = palco.offsetHeight;
+  };
 
-  const aoCruzar = (entradas) => {
-    for (const entrada of entradas) {
-      if (entrada.isIntersecting) {
-        secao.dataset.passo = entrada.target.dataset.marco;
-      }
+  let quadro = 0;
+  let passoEscrito = 0;
+  let avancoEscrito = -1;
+
+  const aplicar = () => {
+    quadro = 0;
+
+    const caixa = trilha.getBoundingClientRect();
+
+    /*
+     * O curso é o tanto de rolagem que acontece com o palco preso: a trilha
+     * inteira menos a parte dela ocupada pelo próprio palco. Por construção,
+     * são exatamente os cinco degraus.
+     *
+     * Com movimento reduzido o CSS desmonta a trilha e solta o palco; os dois
+     * passam a ter a mesma altura e o curso zera. A seção fica no estado final
+     * que o CSS impõe e este módulo não escreve nada — inclusive se a
+     * preferência mudar com a sessão aberta, porque a conta é refeita a cada
+     * quadro e não há estado a desfazer.
+     */
+    const curso = caixa.height - alturaPalco;
+    if (curso < 1) return;
+
+    const avanco = Math.min(1, Math.max(0, (linha - caixa.top) / curso));
+
+    /* Cinco faixas iguais. O `min` cobre o único ponto em que o piso
+       estouraria a régua: o fim exato do curso. */
+    const passo = Math.min(PASSOS, Math.floor(avanco * PASSOS) + 1);
+
+    /*
+     * Só escreve o que mudou. Reescrever o mesmo valor não repintaria nada,
+     * mas invalida estilo à toa — e isto roda a cada quadro de rolagem da
+     * página inteira, não só desta seção.
+     */
+    if (passo !== passoEscrito) {
+      passoEscrito = passo;
+      secao.dataset.passo = String(passo);
+    }
+
+    const graduado = Math.round(avanco / GRAO) * GRAO;
+    if (graduado !== avancoEscrito) {
+      avancoEscrito = graduado;
+      secao.style.setProperty('--avanco', graduado.toFixed(2));
     }
   };
 
-  let observador = null;
-
   /*
-   * A linha de leitura mora onde o palco gruda — o mesmo --nav-h que o CSS
-   * usa no `top` do sticky, lido de lá para os dois nunca discordarem.
-   *
-   * rootMargin encolhe a raiz pelos quatro lados: tirando --nav-h do topo e
-   * todo o resto de baixo, sobra 1px de altura na altura exata da fixação.
+   * Um quadro por vez. O `scroll` do celular chega muitas vezes entre dois
+   * quadros, e ler a caixa em todas elas seria pedir layout no meio do gesto —
+   * que é o que faz o dedo travar em aparelho fraco.
    */
-  const montar = () => {
-    observador?.disconnect();
-
-    const navH =
-      parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 0;
-    const base = Math.max(0, window.innerHeight - navH - 1);
-
-    observador = new IntersectionObserver(aoCruzar, {
-      rootMargin: `-${navH}px 0px -${base}px 0px`,
-      threshold: 0,
-    });
-
-    for (const marco of marcos) observador.observe(marco);
+  const agendar = () => {
+    if (!quadro) quadro = requestAnimationFrame(aplicar);
   };
 
-  montar();
-  add(() => observador?.disconnect());
+  medir();
+  aplicar();
+
+  on(window, 'scroll', agendar, { passive: true });
+  add(() => cancelAnimationFrame(quadro));
 
   /*
-   * rootMargin é fixado na criação: girar o aparelho ou abrir a barra de
-   * endereço muda innerHeight e a linha ficaria no lugar errado pelo resto da
-   * sessão. Refazer o observador é barato — cinco elementos — e um quadro de
-   * espera evita refazê-lo a cada pixel durante o arrasto da barra.
+   * Girar o aparelho ou mudar o zoom muda as duas medidas guardadas. A barra
+   * de endereço do celular também dispara `resize` — e aí medir de novo custa
+   * duas leituras e devolve os mesmos dois números, porque ambos são svh. O
+   * avanço continua vindo da trilha, e é por isso que a barra deixou de mexer
+   * no degrau.
    */
-  let agendado = 0;
   on(
     window,
     'resize',
     () => {
-      cancelAnimationFrame(agendado);
-      agendado = requestAnimationFrame(montar);
+      medir();
+      agendar();
     },
     { passive: true },
   );
-  add(() => cancelAnimationFrame(agendado));
-
-  /*
-   * A preferência pode mudar com a sessão aberta (o visitante liga "reduzir
-   * movimento" no sistema). Aí a trilha deixa de existir por CSS e as
-   * sentinelas somem: manter o observador apontado para elementos sem caixa
-   * deixaria o degrau congelado onde estava, sobrescrevendo o estado final
-   * que o CSS acabou de impor.
-   */
-  on(semMovimento, 'change', (e) => {
-    if (e.matches) observador?.disconnect();
-  });
 }

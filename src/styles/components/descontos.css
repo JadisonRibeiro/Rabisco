@@ -100,45 +100,13 @@
 }
 
 /*
- * As sentinelas ladrilham a trilha, uma por degrau. Quem decide o degrau é o
- * IntersectionObserver com a raiz reduzida a uma linha no meio da tela: como
- * as faixas são contíguas e não se sobrepõem, exatamente uma cruza essa linha
- * a cada instante — não há empate a desempatar nem contagem a manter.
+ * A trilha não tem marcação nenhuma dentro dela: o degrau sai de uma conta
+ * sobre a caixa deste elemento, feita em scripts/modules/descontos.js. Aqui
+ * existiam cinco sentinelas absolutas, uma por degrau, para um
+ * IntersectionObserver ler — e é justamente o que a seção deixou de precisar,
+ * junto com a linha de leitura tirada de `window.innerHeight` que tremia no
+ * celular.
  */
-.descontos__marco {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: var(--passo-h);
-  pointer-events: none;
-}
-
-.descontos__marco:nth-child(1) {
-  top: 0;
-}
-.descontos__marco:nth-child(2) {
-  top: var(--passo-h);
-}
-.descontos__marco:nth-child(3) {
-  top: calc(2 * var(--passo-h));
-}
-.descontos__marco:nth-child(4) {
-  top: calc(3 * var(--passo-h));
-}
-/*
- * A última cobre também a cauda da trilha — o trecho de altura do palco que
- * sobra depois do quinto degrau.
- *
- * Sem isso aquele trecho fica sem sentinela nenhuma, e o observador só avisa
- * quando alguém CRUZA a linha: uma rolagem que salte por cima (âncora,
- * restauração de posição ao recarregar, um arrasto muito rápido) pousaria ali
- * sem disparar nada, e o degrau ficaria congelado no que estava — a seção
- * mostrando 40% depois de o visitante já ter passado do fim.
- */
-.descontos__marco:nth-child(5) {
-  top: calc(4 * var(--passo-h));
-  height: calc(var(--passo-h) + var(--palco-h));
-}
 
 /* Preso logo abaixo da barra fixa, que é o teto útil da tela. */
 .descontos__palco {
@@ -173,8 +141,19 @@
     rgb(var(--glow-rgb) / 0%) 70%
   );
   pointer-events: none;
-  opacity: 0.5;
-  transition: opacity 0.7s ease;
+
+  /*
+   * Única coisa da seção que anda com o avanço CONTÍNUO da rolagem, e não com
+   * o degrau: o bloco vai esquentando enquanto o número ainda está entre dois
+   * valores, e a escada de cinco não fica sendo a única leitura de progresso.
+   *
+   * Só opacidade, que o compositor resolve sem repintar o gradiente. E sem
+   * transição de propósito — o valor já chega em cinquenta paradas ao longo da
+   * seção, e uma transição por cima só atrasaria o que a rolagem manda.
+   *
+   * O 0 de reserva é o estado sem JS: 0,5, exatamente o repouso de antes.
+   */
+  opacity: calc(0.5 + 0.5 * var(--avanco, 0));
 }
 
 /* ── Texto de apoio ──────────────────────────────────────────────────────── */
@@ -316,8 +295,12 @@
   color: rgb(var(--ember-quente-rgb) / 72%);
 }
 
-/* Era 1.6, que o navegador trunca para 1 — e como a base não declarava
-   opacidade nenhuma (logo, 1), a transição ia de 1 para 1: nada acontecia. */
+/*
+ * O clímax fecha o halo no máximo. Com JS a rampa contínua já chega quase lá
+ * sozinha e esta regra só arredonda o último décimo; sem JS — ou com movimento
+ * reduzido — ela é o que garante que quem vê a seção pronta no 50% receba o
+ * bloco aceso, e não o halo em repouso.
+ */
 [data-passo='5'] .descontos__halo {
   opacity: 1;
 }
@@ -645,10 +628,6 @@
     position: static;
     height: auto;
     padding-block: clamp(72px, 12vh, 140px);
-  }
-
-  .descontos__marco {
-    display: none;
   }
 
   /* Só o último ocupa a célula; os outros saem do fluxo e a caixa encolhe
