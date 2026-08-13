@@ -6,15 +6,14 @@
  * componente esconderia a relação.
  */
 
-/* Cards da galeria: a foto aproxima, o véu escurece, a seta sobe. */
-[data-card]:hover [data-media] {
-  transform: scale(1.06);
-}
-
-[data-card]:hover [data-veil] {
-  opacity: 0.78;
-}
-
+/*
+ * Cards da galeria: a seta sobe.
+ *
+ * A foto não aproxima mais e o véu saiu junto com ele. Os dois existiam para
+ * uma legenda que morava POR CIMA da imagem — o véu dava contraste ao nome, o
+ * zoom disfarçava a moldura estática. Com o nome abaixo do card, o zoom só
+ * cortava a peça fotografada, que é justamente o que se veio ver.
+ */
 [data-card]:hover [data-dot] {
   opacity: 1;
   transform: translateY(0);

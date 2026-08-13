@@ -135,31 +135,54 @@
   gap: clamp(12px, 1.4vw, 20px);
 }
 
+/*
+ * O card virou duas peças empilhadas: a foto, dentro da moldura arredondada, e
+ * a legenda logo abaixo dela, no fluxo. Antes a legenda flutuava por cima da
+ * imagem e precisava de um véu escuro para ser lida — o nome do produto
+ * disputava espaço com a própria foto e o véu, que é o que dava ao card o ar
+ * de sombra. Fora da moldura, o nome fica sobre o laranja da seção e a foto
+ * fica inteira: cada um lê pelo que é.
+ *
+ * Sem sombra e sem zoom, por pedido. A separação do card contra o laranja não
+ * dependia da sombra: o que recorta a peça é o papel claro que preenche a
+ * moldura inteira.
+ */
+.galeria__card,
+.galeria__card-2,
+.galeria__card-3 {
+  margin: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: transform 0.7s var(--ease);
+}
+
+.galeria__card:hover,
+.galeria__card-2:hover,
+.galeria__card-3:hover {
+  transform: translateY(-8px);
+}
+
 .galeria__card {
   grid-column: span 5;
-  margin: 0;
+}
+
+/*
+ * A altura mora na moldura, e não mais na figure: com a legenda no fluxo, uma
+ * altura fixa na figure espremeria a foto sempre que o nome quebrasse em duas
+ * linhas.
+ */
+.galeria__card-media {
   position: relative;
   border-radius: var(--r-md);
   overflow: hidden;
   height: clamp(300px, 44vh, 520px);
   background: rgb(var(--ink-rgb) / 14%);
-
-  /*
-   * Sem sombra, por pedido. A separação do card contra o laranja da seção não
-   * dependia dela: o que recorta a peça é o papel claro que preenche o card
-   * inteiro. A sombra caía 40px abaixo e dava o ar "pressionado".
-   */
-  transition: transform 0.7s var(--ease);
 }
 
-.galeria__card:hover {
-  transform: translateY(-8px);
-}
-
-.galeria__card-media {
-  position: absolute;
-  inset: 0;
-  transition: transform 0.9s var(--ease);
+.galeria__card-3 .galeria__card-media {
+  height: clamp(280px, 38vh, 440px);
 }
 
 /*
@@ -175,20 +198,13 @@
  * este mesmo papel na conversão: moldura e foto são a mesma superfície, e o
  * card lê como uma folha com a peça em cima.
  *
- * O 42% sobe a peça um pouco acima do centro, para o véu que escurece a base
- * do card cair sobre papel e não sobre o produto.
+ * A peça voltou ao centro da moldura. Ela subia para 42% para escapar do véu
+ * que escurecia a base do card; sem véu e sem legenda por cima, o centro é o
+ * lugar certo — a sobra de papel fica igual em cima e embaixo.
  */
 .galeria__card-media .foto {
   background: var(--paper);
-  object-position: center 42%;
-}
-
-.galeria__card-veu {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgb(var(--ink-rgb) / 0%) 40%, rgb(var(--ink-rgb) / 80%) 100%);
-  transition: opacity 0.6s ease;
-  pointer-events: none;
+  object-position: center;
 }
 
 .galeria__indice {
@@ -214,13 +230,18 @@
   color: rgb(var(--ink-rgb) / 62%);
 }
 
+/*
+ * Fora da moldura, no fluxo. Continua `pointer-events: none` porque o link que
+ * cobre a figure inteira vem depois dela no DOM e precisa receber o clique
+ * também aqui embaixo.
+ */
 .galeria__legenda {
-  position: absolute;
-  inset: auto 20px 20px;
+  position: relative;
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 14px;
+  padding: 0 2px;
   pointer-events: none;
 }
 
@@ -228,16 +249,23 @@
   font-weight: 800;
   font-stretch: 84%;
   text-transform: uppercase;
-  font-size: clamp(17px, 1.5vw, 25px);
-  line-height: 1;
+  font-size: clamp(18px, 1.6vw, 27px);
+  line-height: 1.05;
   letter-spacing: -0.01em;
   color: var(--cream);
 }
 
+/*
+ * Creme cheio, e não mais 66%. A opacidade menor funcionava sobre o véu quase
+ * preto; sobre o laranja da seção ela cai para 3,2:1 e reprova o mínimo de
+ * 4,5:1 da WCAG AA para texto de 13px. A hierarquia entre nome e descrição
+ * passou a vir do tamanho e do peso, que não custam contraste.
+ */
 .galeria__texto-2 {
   margin-top: 8px;
   font-size: 13px;
-  color: rgb(var(--cream-rgb) / 66%);
+  line-height: 1.45;
+  color: var(--cream);
 }
 
 .galeria__card-seta {
@@ -258,32 +286,10 @@
 
 .galeria__card-2 {
   grid-column: span 7;
-  margin: 0;
-  position: relative;
-  border-radius: var(--r-md);
-  overflow: hidden;
-  height: clamp(300px, 44vh, 520px);
-  background: rgb(var(--ink-rgb) / 14%);
-  transition: transform 0.7s var(--ease);
-}
-
-.galeria__card-2:hover {
-  transform: translateY(-8px);
 }
 
 .galeria__card-3 {
   grid-column: span 4;
-  margin: 0;
-  position: relative;
-  border-radius: var(--r-md);
-  overflow: hidden;
-  height: clamp(280px, 38vh, 440px);
-  background: rgb(var(--ink-rgb) / 14%);
-  transition: transform 0.7s var(--ease);
-}
-
-.galeria__card-3:hover {
-  transform: translateY(-8px);
 }
 
 .galeria__acoes {
@@ -349,7 +355,10 @@
  * filhos do desenho original e a caixa de texto recupera a largura inteira.
  *
  * A altura casada com a da seta é o que alinha os dois pelo centro sem
- * depender de acertar um `bottom` no olho.
+ * depender de acertar um `top` no olho.
+ *
+ * Ancorado no topo da legenda, e não na base: ali ele corre na faixa do nome
+ * do produto, que é curto, em vez de cruzar a linha da descrição.
  *
  * Mesma duração e mesma curva da seta, e o mesmo data-dot: sobem juntos no
  * hover como uma peça só, em vez de dois movimentos concorrentes.
@@ -357,7 +366,7 @@
 .galeria__interesse {
   position: absolute;
   right: 44px;
-  bottom: 0;
+  top: 0;
   height: 34px;
   display: flex;
   align-items: center;
@@ -428,14 +437,17 @@
   .galeria__card-2,
   .galeria__card-3 {
     grid-column: span 1;
+    gap: 10px;
+  }
 
-    /*
-     * Cinco linhas de legenda (nome em duas, descrição em duas, preço em uma)
-     * comem ~90px do pé do card. A 230px sobrava pouca foto e a peça lia como
-     * rótulo com imagem ao fundo; a 74vw a proporção volta a ser de produto
-     * fotografado, com a legenda apoiada nele.
-     */
-    height: clamp(258px, 74vw, 340px);
+  /*
+   * A legenda não mora mais dentro da foto, então a moldura não precisa
+   * reservar altura para ela: uma caixa quase quadrada é a proporção em que
+   * esta vitrine de duas colunas mostra o produto inteiro sem sobrar papel.
+   */
+  .galeria__card-media,
+  .galeria__card-3 .galeria__card-media {
+    height: clamp(180px, 48vw, 280px);
   }
 
   /*
@@ -445,41 +457,16 @@
    * sozinho: só o último, e só quando a contagem é ímpar. Assim continua certa
    * quando entrarem mochilas e estojos e o total virar par de novo.
    */
-  /*
-   * Deitado, ele ganha o dobro de largura para a mesma legenda: mantida a
-   * altura dos outros, viraria um painel e destoaria da fileira.
-   */
   .galeria__grade-2 > :last-child:nth-child(odd) {
     grid-column: span 2;
-    height: clamp(190px, 52vw, 250px);
   }
 
   /*
-   * E recupera o véu original. O reforço abaixo existe para card estreito e
-   * alto, onde a legenda ocupa proporção grande da peça; neste, que é baixo e
-   * largo, um gradiente começando a 22% escurece quase a foto inteira e sobra
-   * um retângulo escuro no lugar do produto.
+   * Deitado, ele ganha o dobro de largura: mantida a altura dos outros,
+   * viraria um painel e destoaria da fileira.
    */
-  .galeria__grade-2 > :last-child:nth-child(odd) .galeria__card-veu {
-    background: linear-gradient(
-      180deg,
-      rgb(var(--ink-rgb) / 0%) 40%,
-      rgb(var(--ink-rgb) / 80%) 100%
-    );
-  }
-
-  /*
-   * O véu só escurece de verdade a partir de 40% da altura. Num card estreito
-   * a legenda é mais alta em proporção e a primeira linha do nome caía ainda
-   * na parte clara da foto — subir o início do gradiente devolve o contraste
-   * sem escurecer a imagem inteira.
-   */
-  .galeria__card-veu {
-    background: linear-gradient(
-      180deg,
-      rgb(var(--ink-rgb) / 0%) 22%,
-      rgb(var(--ink-rgb) / 88%) 100%
-    );
+  .galeria__grade-2 > :last-child:nth-child(odd) .galeria__card-media {
+    height: clamp(160px, 42vw, 220px);
   }
 
   /*
@@ -487,11 +474,10 @@
    * sem nenhum sinal de que leva a algum lugar. Fixa, ela é a pista.
    *
    * O rótulo "Tenho interesse" continua fora. Ele é posicionado em
-   * `right: 44px; bottom: 0`, na mesma faixa da linha de descrição — no
-   * desktop os dois nunca coincidem porque o rótulo só existe durante o
-   * hover, mas fixo no celular ele cai por cima das descrições. A seta
-   * sozinha diz o mesmo sem disputar espaço, e o alvo continua sendo o card
-   * inteiro.
+   * `right: 44px`, na faixa do nome — no desktop ele só existe durante o
+   * hover, mas fixo no celular cairia por cima de um nome de duas linhas. A
+   * seta sozinha diz o mesmo sem disputar espaço, e o alvo continua sendo o
+   * card inteiro.
    */
   .galeria__card-seta {
     opacity: 1;
@@ -514,16 +500,16 @@
   }
 
   /*
-   * A caixa de texto agora tem ~110px. A tipografia do card largo não cabe
+   * A caixa de texto agora tem ~140px. A tipografia do card largo não cabe
    * nela: o nome quebrava em três linhas e encostava na descrição.
    */
   .galeria__legenda {
-    inset: auto 12px 12px;
     gap: 8px;
+    padding: 0 2px;
   }
 
   .galeria__nome {
-    font-size: 14px;
+    font-size: 15px;
     line-height: 1.12;
   }
 
