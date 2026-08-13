@@ -1,10 +1,10 @@
 /**
  * Escada de descontos.
  *
- * Este módulo escreve dois números na seção e sai: o degrau atual, num
- * atributo, e o avanço contínuo da rolagem, numa variável. Todo o resto — a
- * troca do número, a escada acendendo, o halo esquentando, a explosão — é CSS
- * reagindo a esses dois.
+ * Este módulo escreve três números na seção e sai: onde a fita do carrossel
+ * está, o degrau atual e o avanço contínuo da rolagem. Todo o resto — a fita
+ * andando, o realce mudando de cartão, a escada acendendo, o halo
+ * esquentando, a explosão — é CSS reagindo a esses três.
  *
  * O avanço é MEDIDO na própria trilha, não inferido da janela: uma leitura de
  * `getBoundingClientRect` por quadro diz quanto dela já passou da linha em que
@@ -35,6 +35,21 @@ const PASSOS = 5;
  */
 const GRAO = 0.02;
 
+/*
+ * Quanto de cada faixa a fita passa ANDANDO. O resto ela passa parada, com o
+ * cartão no meio da janela.
+ *
+ * Uma fita puramente linear é ilegível: o número fica entre dois valores a
+ * maior parte do tempo e não há nada para ler. Um terço de deslize e dois de
+ * repouso dá o compasso de carrossel — cada desconto pousa, é lido, e só então
+ * o próximo entra.
+ */
+const DESLIZE = 0.34;
+
+/* Aceleração e freio do deslize, sem depender de nenhuma curva do CSS: a fita
+   é posicionada a cada quadro, então a suavidade tem de estar na conta. */
+const suavizar = (t) => t * t * (3 - 2 * t);
+
 export function initDescontos({ on, add }) {
   const secao = document.querySelector('[data-descontos]');
   if (!secao) return;
@@ -59,6 +74,7 @@ export function initDescontos({ on, add }) {
   let quadro = 0;
   let passoEscrito = 0;
   let avancoEscrito = -1;
+  let posicaoEscrita = '';
 
   const aplicar = () => {
     quadro = 0;
@@ -81,9 +97,28 @@ export function initDescontos({ on, add }) {
 
     const avanco = Math.min(1, Math.max(0, (linha - caixa.top) / curso));
 
-    /* Cinco faixas iguais. O `min` cobre o único ponto em que o piso
-       estouraria a régua: o fim exato do curso. */
-    const passo = Math.min(PASSOS, Math.floor(avanco * PASSOS) + 1);
+    /*
+     * Onde a fita está, em cartões: 0 no 10% e 4 no 50%.
+     *
+     * O curso é cortado em cinco faixas iguais. Dentro de cada uma a fita
+     * espera os dois primeiros terços e desliza no último, então o número fica
+     * parado e legível a maior parte do caminho e a troca acontece de uma vez.
+     * A última faixa não tem para onde deslizar — é o 50% já em cena, e o
+     * `min` a segura ali enquanto os fogos acontecem.
+     */
+    const escala = avanco * PASSOS;
+    const cartao = Math.min(PASSOS - 1, Math.floor(escala));
+    const dentro = escala - cartao;
+    const deslize = dentro <= 1 - DESLIZE ? 0 : (dentro - (1 - DESLIZE)) / DESLIZE;
+    const posicao = Math.min(PASSOS - 1, cartao + suavizar(deslize));
+
+    /*
+     * O degrau é o cartão mais perto do meio da janela, e não a faixa da
+     * rolagem: assim o realce, a escada e o clímax trocam quando o número novo
+     * CHEGA ao centro, na metade do deslize, e não quando ele começa a andar
+     * lá da borda.
+     */
+    const passo = Math.round(posicao) + 1;
 
     /*
      * Só escreve o que mudou. Reescrever o mesmo valor não repintaria nada,
@@ -99,6 +134,18 @@ export function initDescontos({ on, add }) {
     if (graduado !== avancoEscrito) {
       avancoEscrito = graduado;
       secao.style.setProperty('--avanco', graduado.toFixed(2));
+    }
+
+    /*
+     * A fita, ao contrário do halo, precisa do valor cheio: ela anda uma
+     * janela inteira por cartão, e arredondar aqui viraria degrau visível no
+     * meio do deslize. Três casas bastam para o passo ficar abaixo do pixel em
+     * qualquer tela.
+     */
+    const casas = posicao.toFixed(3);
+    if (casas !== posicaoEscrita) {
+      posicaoEscrita = casas;
+      secao.style.setProperty('--carrossel', casas);
     }
   };
 

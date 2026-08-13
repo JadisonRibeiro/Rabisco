@@ -193,63 +193,145 @@
   color: rgb(var(--cream-rgb) / 88%);
 }
 
-/* ── O número ────────────────────────────────────────────────────────────── */
+/* ── O número: o carrossel ───────────────────────────────────────────────── */
 
 /*
- * Os cinco valores ocupam a MESMA célula de grade. Empilhados assim, a caixa
- * tem sempre a altura do maior e nada salta de lugar quando o número troca —
- * um valor entrando enquanto o outro sai, no mesmo lugar, e não uma lista que
- * cresce.
+ * Os cinco valores são uma FITA que anda de lado, um cartão por degrau: o
+ * número não troca de aparência no lugar, ele sai de cena para a esquerda
+ * enquanto o próximo entra pela direita. É o mesmo gesto do carrossel de
+ * produtos da página, com o dedo trocado pela rolagem.
+ *
+ * Tudo aqui é medido em porcentagem da janela. Assim os cinco cartões, o
+ * recuo que centraliza o primeiro e o passo da fita saem sempre da mesma
+ * largura, seja ela a de um celular ou a de um monitor — e é por isso que a
+ * animação é literalmente a mesma nos dois, sem variante para manter.
  */
+/*
+ * A cena centraliza os filhos pelo CONTEÚDO deles, então o título mede o que
+ * carrega dentro. Sem esta largura ele encolheria para o texto e a janela do
+ * carrossel viria junto, estreita demais para o número caber no cartão.
+ */
+.descontos__titulo {
+  width: 100%;
+}
+
 .descontos__numero {
   position: relative;
-  display: grid;
+  display: block;
   margin-top: clamp(6px, 1.4vh, 16px);
+
+  /*
+   * O corpo do número, de onde tudo o mais desce. Uma origem só: a quebra do
+   * celular redefine este valor e o cartão acompanha sozinho.
+   */
+  --num: clamp(120px, 36vw, 320px);
+
+  /*
+   * Largura de um cartão. Medida no NÚMERO, e não na janela, porque é do
+   * número que ela precisa dar conta: "50%" ocupa cerca de 1,25 do corpo, e
+   * 1,62 deixa um vão folgado entre um desconto e o seguinte sem afastá-los
+   * tanto que sumam da tela.
+   *
+   * É esse vão que faz a peça ler como carrossel: o número anterior e o
+   * próximo ficam espiando nas bordas da janela, dissolvidos pela máscara.
+   * Amarrado à janela em vez de ao corpo, o cartão ficaria enorme no monitor
+   * — os vizinhos a um metro do centro — e a fita voltaria a parecer uma
+   * troca seca.
+   */
+  --cartao: calc(1.62 * var(--num));
+}
+
+/*
+ * A janela apara a fita nas laterais.
+ *
+ * `clip`, e não `hidden`, pela mesma razão da seção inteira: `hidden` criaria
+ * um contexto de rolagem aqui dentro. E `clip` é o único valor que convive com
+ * `visible` no outro eixo — o que importa porque a linha do número tem
+ * `line-height: 0.82` e as garrafas dos dígitos passam da caixa em cima e
+ * embaixo. Aparar só onde precisa.
+ */
+.descontos__janela {
+  display: block;
+  overflow-x: clip;
+  overflow-y: visible;
+
+  /*
+   * A janela mede o espaço que tem, não o que guarda.
+   *
+   * Sem isto a conta anda em círculo: a fita são cinco números lado a lado, o
+   * título cresce para caber os cinco, a janela herda essa largura e os
+   * cartões, que são fração dela, crescem também. Medido, dava uma janela de
+   * 2005px numa tela de 1440 — a seção inteira arrastada para fora do
+   * container. Contenção de tamanho em linha corta o laço na origem: a largura
+   * desce da cena para a fita, e nunca sobe.
+   */
+  contain: inline-size;
+
+  /*
+   * As bordas dissolvem em vez de cortar. Um corte reto denunciaria a janela e
+   * transformaria os vizinhos em pedaços de número; dissolvidos, eles leem
+   * como o que vem antes e o que vem depois.
+   */
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+
+.descontos__fita {
+  display: flex;
+
+  /*
+   * Duas parcelas. A primeira centraliza o cartão zero: sobra metade do vão
+   * entre o cartão e a janela. A segunda é o passo da rolagem, escrito por
+   * scripts/modules/descontos.js — 0 no 10%, 4 no 50%, e as frações do meio
+   * são a fita em movimento. A reserva 4 é o estado sem JS: a fita já parada
+   * no 50%, que é o que o HTML anuncia.
+   *
+   * A centralização mora aqui, e não num `padding`, porque padding encolheria
+   * a caixa de conteúdo da fita — e é contra ELA que os 76% do cartão são
+   * medidos. Os cartões sairiam a 76% de 76%, e nada pousaria no meio. Em
+   * `translate` as duas parcelas medem a mesma coisa: a largura da própria
+   * fita, que é a da janela.
+   *
+   * `translate` sozinho, que o compositor resolve sem tocar em layout.
+   */
+  translate: calc((100% - var(--cartao)) / 2 - var(--carrossel, 4) * var(--cartao));
+  will-change: transform;
 }
 
 .descontos__valor {
-  grid-area: 1 / 1;
+  flex: 0 0 var(--cartao);
   display: flex;
   align-items: flex-start;
   justify-content: center;
 
   font-weight: 800;
   font-stretch: 78%;
-  font-size: clamp(120px, 36vw, 320px);
+  font-size: var(--num);
   line-height: 0.82;
   letter-spacing: -0.045em;
   color: var(--cream);
+  white-space: nowrap;
 
   /*
    * Tabular para o dígito das dezenas não dançar de largura entre 10, 20 e 30
-   * — o salto lateral denunciaria que são cinco peças diferentes trocando de
-   * lugar, e não um número subindo.
+   * — o salto lateral denunciaria que são cinco peças diferentes passando, e
+   * não um número subindo.
    */
   font-variant-numeric: tabular-nums;
 
-  /* Estado de repouso: ainda por vir, e um pouco embaixo. */
-  opacity: 0;
-  translate: 0 0.14em;
-  transition:
-    opacity 0.32s var(--ease),
-    translate 0.34s var(--ease),
-    color 0.5s ease;
-
   /*
-   * Esta transição já teve desfoque, escala e 0,6s de percurso. Saíram os
-   * três, por dois motivos que se somam.
+   * Quem não está no centro fica apagado. É a única coisa da fita que responde
+   * ao DEGRAU e não ao avanço contínuo: o realce troca quando o cartão novo
+   * chega ao meio, no meio do deslize, e a transição curta cobre exatamente
+   * essa passagem.
    *
-   * O caro: `filter: blur()` nenhuma camada resolve — cada quadro voltava
-   * para a thread principal redesenhar cinco textos de 157px. E escalar texto
-   * obriga o navegador a re-rasterizá-lo a cada passo, para mantê-lo nítido.
-   * Sobram opacidade e deslocamento, que o compositor faz sozinho.
-   *
-   * O visível: com 0,6s e meia altura de linha de percurso, uma rolagem rápida
-   * atravessava os cinco degraus antes de qualquer transição terminar. Cada
-   * troca interrompia a anterior no meio e o número balançava — que é o
-   * "tremor" que se via, e não perda de quadros. Curto e de percurso pequeno,
-   * a troca termina antes de a próxima chegar.
+   * Só opacidade e cor. Escala e desfoque saíram desta seção uma vez por
+   * medida — escalar texto obriga o navegador a re-rasterizá-lo a cada passo,
+   * e nenhuma camada resolve um blur sobre cinco textos deste tamanho.
    */
+  opacity: 0.22;
+  transition:
+    opacity 0.3s var(--ease),
+    color 0.5s ease;
 }
 
 .descontos__pct {
@@ -261,24 +343,13 @@
   transition: color 0.6s ease;
 }
 
-/* Já passou: sai por cima, no sentido de quem foi empurrado para trás. */
-[data-passo='2'] .descontos__valor:nth-child(-n + 1),
-[data-passo='3'] .descontos__valor:nth-child(-n + 2),
-[data-passo='4'] .descontos__valor:nth-child(-n + 3),
-[data-passo='5'] .descontos__valor:nth-child(-n + 4) {
-  opacity: 0;
-  translate: 0 -0.14em;
-}
-
-/* Ativo. Vem por último de propósito: empata em especificidade com a regra de
-   "já passou" e precisa vencer pela ordem. */
+/* O cartão que está no centro. */
 [data-passo='1'] .descontos__valor:nth-child(1),
 [data-passo='2'] .descontos__valor:nth-child(2),
 [data-passo='3'] .descontos__valor:nth-child(3),
 [data-passo='4'] .descontos__valor:nth-child(4),
 [data-passo='5'] .descontos__valor:nth-child(5) {
   opacity: 1;
-  translate: 0 0;
 }
 
 /*
@@ -592,9 +663,10 @@
     --passo-h: 32svh;
   }
 
-  .descontos__valor {
-    /* O número é o assunto da tela; aqui ele pode ocupá-la quase inteira. */
-    font-size: clamp(118px, 42vw, 200px);
+  .descontos__numero {
+    /* O número é o assunto da tela; aqui ele pode ocupá-la quase inteira. O
+       cartão desce daqui, então a fita se reajusta sozinha. */
+    --num: clamp(118px, 42vw, 200px);
   }
 
   .descontos__botao {
@@ -615,9 +687,9 @@
 
 /*
  * Aqui a seção deixa de ser uma trilha e vira um bloco comum, já mostrando o
- * fim: 50% OFF, a escada inteira acesa e nenhuma sentinela. A informação que
- * a rolagem revelaria é justamente a que fica na tela desde o início — quem
- * pediu menos movimento não fica sabendo menos.
+ * fim: 50% OFF e a escada inteira acesa. A informação que a rolagem revelaria
+ * é justamente a que fica na tela desde o início — quem pediu menos movimento
+ * não fica sabendo menos.
  */
 @media (prefers-reduced-motion: reduce) {
   .descontos__trilha {
@@ -630,16 +702,31 @@
     padding-block: clamp(72px, 12vh, 140px);
   }
 
-  /* Só o último ocupa a célula; os outros saem do fluxo e a caixa encolhe
-     para o tamanho do que está visível. */
+  /*
+   * A fita se desfaz: sem carrossel não há o que aparar nem para onde
+   * deslizar, e o recuo que centralizava o primeiro cartão não tem mais
+   * função.
+   */
+  .descontos__janela {
+    mask-image: none;
+  }
+
+  .descontos__fita {
+    padding-inline: 0;
+    translate: none;
+    will-change: auto;
+  }
+
+  /* Só o quinto ocupa a linha; os outros saem do fluxo e a caixa encolhe para
+     o tamanho do que está visível. */
   .descontos__valor {
     display: none;
   }
 
   .descontos__valor:nth-child(5) {
     display: flex;
+    flex-basis: 100%;
     opacity: 1;
-    translate: 0 0;
     color: rgb(var(--ember-quente-rgb));
     transition: none;
   }

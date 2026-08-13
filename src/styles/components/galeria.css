@@ -160,6 +160,27 @@
   transition: transform 0.9s var(--ease);
 }
 
+/*
+ * As fotos daqui são recortes de catálogo, e não cenas: o assunto é a peça
+ * inteira, e cortar qualquer parte dela é perder informação de produto.
+ *
+ * Por isso `contain` no lugar de `cover`. Estes cards mudam muito de proporção
+ * — 1,93 no segundo do desktop, 0,59 na vitrine de duas colunas do celular —
+ * e nenhuma foto de produto sobrevive a essa amplitude com recorte: medido a
+ * 390px, o estojo virava uma faixa rosa sem estojo nenhum dentro.
+ *
+ * A sobra do `contain` não aparece porque as cinco fotos foram achatadas sobre
+ * este mesmo papel na conversão: moldura e foto são a mesma superfície, e o
+ * card lê como uma folha com a peça em cima.
+ *
+ * O 42% sobe a peça um pouco acima do centro, para o véu que escurece a base
+ * do card cair sobre papel e não sobre o produto.
+ */
+.galeria__card-media .foto {
+  background: var(--paper);
+  object-position: center 42%;
+}
+
 .galeria__card-veu {
   position: absolute;
   inset: 0;
@@ -176,34 +197,19 @@
   letter-spacing: 0.34em;
 
   /*
-   * Era creme a 70% direto sobre a foto. O véu do card é um gradiente que
-   * só escurece de verdade na base, então aqui em cima o número dependia da
-   * foto: sobre a área clara do primeiro card a razão caía para 1.00 — texto
-   * literalmente invisível. Opaco, com um véu local logo abaixo.
+   * Tinta sobre o papel do card.
+   *
+   * Este número já foi creme com um véu escuro atrás dele, porque as fotos
+   * eram cenas e ninguém sabia o que cairia neste canto — sobre a área clara
+   * de uma delas a razão caía para 1.00, texto literalmente invisível, e o véu
+   * era o seguro. Com fotos de catálogo achatadas sobre papel, o canto é
+   * sempre claro e conhecido: o véu virou uma mancha escura no alto de cada
+   * card, resolvendo um problema que deixou de existir.
+   *
+   * O acoplamento é real e vale dizer: isto depende de o fundo do card ser
+   * claro, que é o que .galeria__card-media .foto garante.
    */
-  color: var(--cream);
-
-  /* Contexto de empilhamento próprio: sem ele o véu com z-index negativo
-     cairia atrás da foto do card em vez de ficar entre foto e número. */
-  isolation: isolate;
-}
-
-/*
- * Véu localizado atrás do número. Escurecer o topo do card inteiro para
- * resolver 10 caracteres mudaria as cinco fotos; este gradiente cobre só o
- * canto e se dissolve antes de encostar na imagem que importa.
- */
-.galeria__indice::before {
-  content: '';
-  position: absolute;
-  inset: -24px -44px -22px -28px;
-  z-index: -1;
-  background: radial-gradient(
-    150% 180% at 26% 42%,
-    rgb(var(--ink-rgb) / 88%) 18%,
-    rgb(var(--ink-rgb) / 0%) 80%
-  );
-  pointer-events: none;
+  color: rgb(var(--ink-rgb) / 62%);
 }
 
 .galeria__legenda {
