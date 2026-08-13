@@ -173,6 +173,7 @@
     rgb(var(--glow-rgb) / 0%) 70%
   );
   pointer-events: none;
+  opacity: 0.5;
   transition: opacity 0.7s ease;
 }
 
@@ -247,17 +248,29 @@
    */
   font-variant-numeric: tabular-nums;
 
-  /* Estado de repouso: ainda por vir, embaixo e fora de foco. */
+  /* Estado de repouso: ainda por vir, e um pouco embaixo. */
   opacity: 0;
-  translate: 0 0.24em;
-  scale: 0.86;
-  filter: blur(14px);
+  translate: 0 0.14em;
   transition:
-    opacity 0.5s var(--ease),
-    translate 0.6s var(--ease),
-    scale 0.6s var(--ease),
-    filter 0.5s ease,
-    color 0.6s ease;
+    opacity 0.32s var(--ease),
+    translate 0.34s var(--ease),
+    color 0.5s ease;
+
+  /*
+   * Esta transição já teve desfoque, escala e 0,6s de percurso. Saíram os
+   * três, por dois motivos que se somam.
+   *
+   * O caro: `filter: blur()` nenhuma camada resolve — cada quadro voltava
+   * para a thread principal redesenhar cinco textos de 157px. E escalar texto
+   * obriga o navegador a re-rasterizá-lo a cada passo, para mantê-lo nítido.
+   * Sobram opacidade e deslocamento, que o compositor faz sozinho.
+   *
+   * O visível: com 0,6s e meia altura de linha de percurso, uma rolagem rápida
+   * atravessava os cinco degraus antes de qualquer transição terminar. Cada
+   * troca interrompia a anterior no meio e o número balançava — que é o
+   * "tremor" que se via, e não perda de quadros. Curto e de percurso pequeno,
+   * a troca termina antes de a próxima chegar.
+   */
 }
 
 .descontos__pct {
@@ -275,9 +288,7 @@
 [data-passo='4'] .descontos__valor:nth-child(-n + 3),
 [data-passo='5'] .descontos__valor:nth-child(-n + 4) {
   opacity: 0;
-  translate: 0 -0.24em;
-  scale: 1.08;
-  filter: blur(14px);
+  translate: 0 -0.14em;
 }
 
 /* Ativo. Vem por último de propósito: empata em especificidade com a regra de
@@ -289,8 +300,6 @@
 [data-passo='5'] .descontos__valor:nth-child(5) {
   opacity: 1;
   translate: 0 0;
-  scale: 1;
-  filter: blur(0);
 }
 
 /*
@@ -307,8 +316,10 @@
   color: rgb(var(--ember-quente-rgb) / 72%);
 }
 
+/* Era 1.6, que o navegador trunca para 1 — e como a base não declarava
+   opacidade nenhuma (logo, 1), a transição ia de 1 para 1: nada acontecia. */
 [data-passo='5'] .descontos__halo {
-  opacity: 1.6;
+  opacity: 1;
 }
 
 .descontos__off {
@@ -450,8 +461,14 @@
  * A animação nasce do atributo mudar para 5, então ela se refaz toda vez que
  * o visitante volta e desce de novo — a recompensa não é de uma vez só.
  */
+/*
+ * 1,4s, e o brilho se mantém até 58% do percurso. A 1,05s com queda desde o
+ * quinto do caminho o conjunto já tinha dissipado aos 400ms: o olho pegava a
+ * abertura e perdia o resto. Fogos precisam de um instante parados no alto
+ * antes de cair.
+ */
 [data-passo='5'] .descontos__estouro {
-  animation: rabEstouro 1.05s var(--ease) both;
+  animation: rabEstouro 1.4s var(--ease) both;
 }
 
 [data-passo='5'] .descontos__risco {
@@ -461,14 +478,17 @@
 @keyframes rabEstouro {
   0% {
     opacity: 0;
-    scale: 0.42;
+    scale: 0.44;
   }
-  22% {
+  15% {
+    opacity: 1;
+  }
+  58% {
     opacity: 1;
   }
   100% {
     opacity: 0;
-    scale: 1.14;
+    scale: 1.22;
   }
 }
 
@@ -488,6 +508,51 @@
 }
 .descontos__risco:nth-child(3n + 3) {
   animation-delay: 0.1s;
+}
+
+/*
+ * As faíscas. Os riscos sozinhos liam como um anel se abrindo; o que faz
+ * parecer fogos é a segunda onda — pontos que continuam viajando depois de o
+ * traço já ter parado, cada um com o seu alcance.
+ *
+ * A direção de cada faísca vem de --dx/--dy, escritos no próprio elemento:
+ * uma animação só serve às dezesseis, e o que muda de uma para a outra é
+ * dado, não regra.
+ */
+.descontos__faisca {
+  opacity: 0;
+}
+
+[data-passo='5'] .descontos__faisca {
+  animation: rabFaisca 1.25s cubic-bezier(0.12, 0.72, 0.28, 1) both;
+  animation-delay: var(--atraso, 0s);
+}
+
+@keyframes rabFaisca {
+  0% {
+    translate: 0 0;
+    scale: 0.3;
+    opacity: 0;
+  }
+  14% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 0.9;
+  }
+  100% {
+    translate: var(--dx) var(--dy);
+    scale: 0.55;
+    opacity: 0;
+  }
+}
+
+/*
+ * A promoção vale só durante o clímax: fora dele a camada não teria o que
+ * compor e ficaria ocupando memória à toa.
+ */
+[data-passo='5'] .descontos__estouro {
+  will-change: transform, opacity;
 }
 
 /*
@@ -513,7 +578,7 @@
 }
 
 [data-passo='5'] .descontos__clarao {
-  animation: rabClarao 0.9s var(--ease) both;
+  animation: rabClarao 1.15s var(--ease) both;
 }
 
 @keyframes rabClarao {
@@ -596,8 +661,6 @@
     display: flex;
     opacity: 1;
     translate: 0 0;
-    scale: 1;
-    filter: none;
     color: rgb(var(--ember-quente-rgb));
     transition: none;
   }
