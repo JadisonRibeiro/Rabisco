@@ -40,7 +40,11 @@ jobs:
           VITE_BASE: /Rabisco/
           VITE_SITE_URL: https://jadisonribeiro.github.io/Rabisco
 
+      # enablement liga o Pages pela API na primeira execucao; sem isto o
+      # deploy falha ate alguem trocar o Source a mao em Settings -> Pages.
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - uses: actions/upload-pages-artifact@v3
         with:

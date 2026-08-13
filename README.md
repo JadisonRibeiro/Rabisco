@@ -66,7 +66,9 @@ para que seus caminhos sigam esse mesmo valor.
 instala, roda o lint, builda com o base do Pages e envia o `dist/`. O site
 fica em <https://jadisonribeiro.github.io/Rabisco>.
 
-O Pages precisa estar com **Source: GitHub Actions** em Settings → Pages.
+O workflow liga o Pages sozinho na primeira execução (`enablement: true`).
+O Pages só publica repositório privado em plano pago — no plano Free, o
+repositório precisa ser público.
 
 ## Estrutura
 
