@@ -143,15 +143,17 @@
   overflow: hidden;
   height: clamp(300px, 44vh, 520px);
   background: rgb(var(--ink-rgb) / 14%);
-  box-shadow: 0 40px 70px -50px rgb(var(--ink-rgb) / 70%);
-  transition:
-    transform 0.7s var(--ease),
-    box-shadow 0.7s ease;
+
+  /*
+   * Sem sombra, por pedido. A separação do card contra o laranja da seção não
+   * dependia dela: o que recorta a peça é o papel claro que preenche o card
+   * inteiro. A sombra caía 40px abaixo e dava o ar "pressionado".
+   */
+  transition: transform 0.7s var(--ease);
 }
 
 .galeria__card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 60px 90px -50px rgb(var(--ink-rgb) / 80%);
 }
 
 .galeria__card-media {
@@ -262,15 +264,11 @@
   overflow: hidden;
   height: clamp(300px, 44vh, 520px);
   background: rgb(var(--ink-rgb) / 14%);
-  box-shadow: 0 40px 70px -50px rgb(var(--ink-rgb) / 70%);
-  transition:
-    transform 0.7s var(--ease),
-    box-shadow 0.7s ease;
+  transition: transform 0.7s var(--ease);
 }
 
 .galeria__card-2:hover {
   transform: translateY(-8px);
-  box-shadow: 0 60px 90px -50px rgb(var(--ink-rgb) / 80%);
 }
 
 .galeria__card-3 {
@@ -281,15 +279,11 @@
   overflow: hidden;
   height: clamp(280px, 38vh, 440px);
   background: rgb(var(--ink-rgb) / 14%);
-  box-shadow: 0 40px 70px -50px rgb(var(--ink-rgb) / 70%);
-  transition:
-    transform 0.7s var(--ease),
-    box-shadow 0.7s ease;
+  transition: transform 0.7s var(--ease);
 }
 
 .galeria__card-3:hover {
   transform: translateY(-8px);
-  box-shadow: 0 60px 90px -50px rgb(var(--ink-rgb) / 80%);
 }
 
 .galeria__acoes {
