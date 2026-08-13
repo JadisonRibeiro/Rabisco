@@ -67,7 +67,10 @@ function initMagnetico({ on, add }) {
 
 export function initPointerEffects(scope) {
   const movimentoReduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const ponteiroFino = window.matchMedia('(pointer: fine)').matches;
+  // any-pointer e não pointer: a segunda descreve só a entrada primária, que
+  // num notebook com touchscreen é o toque. O mouse ligado ao lado ficava sem
+  // paralaxe nem ímã por causa disso.
+  const ponteiroFino = window.matchMedia('(any-pointer: fine)').matches;
   if (movimentoReduzido || !ponteiroFino) return;
 
   initOrbs(scope);

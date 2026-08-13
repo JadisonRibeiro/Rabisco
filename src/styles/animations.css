@@ -87,6 +87,46 @@
   }
 }
 
+/*
+ * Respiro do card do hero. Quatro pontos, e não os dois de rabFloat: com só
+ * ida e volta o olho lê a repetição e o movimento vira pêndulo. Passando por
+ * pontos laterais opostos na subida e na descida, o caminho fecha um laço
+ * irregular — some como movimento e fica como presença.
+ *
+ * A rotação é miúda de propósito: o eixo do card está a 88% da altura (vem do
+ * giro de hover), então mesmo 0,6deg desloca o topo de uma peça de ~1200px
+ * em uns 12px. Vai daí para cima e o repouso já lê como balanço de pêndulo.
+ */
+@keyframes rabHeroFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate3d(3px, -9px, 0) rotate(-0.55deg);
+  }
+  50% {
+    transform: translate3d(0, -14px, 0) rotate(0.3deg);
+  }
+  75% {
+    transform: translate3d(-3px, -6px, 0) rotate(0.6deg);
+  }
+}
+
+/*
+ * Deriva das emendas onduladas. A peça tem o dobro da largura da seção e o
+ * desenho se repete na metade, então andar -50% recai exatamente sobre o
+ * quadro inicial: o laço fecha sem emenda visível.
+ *
+ * linear, e não uma curva de embalo: aceleração faria o olho perceber onde o
+ * ciclo começa. Movimento de fundo bom é o que não tem começo.
+ */
+@keyframes rabOnda {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 @keyframes rabDrift {
   0% {
     transform: translate3d(0, 0, 0) scale(1);
@@ -299,7 +339,6 @@
     animation: none;
   }
 
-  [data-chip],
   [data-wafab],
   [data-card] [data-media],
   [data-navlink] [data-underline] {

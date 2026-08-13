@@ -36,6 +36,24 @@
   pointer-events: none;
 }
 
+/* Emenda ondulada com a seção de categorias, pintada por cima do halo e da
+   textura — ver o comentário no HTML. O -1px cobre a fresta que o
+   arredondamento subpixel abre entre o SVG e a borda da seção em certos
+   zooms. */
+/* Deriva para o outro lado e mais devagar que a emenda de cima. Duas ondas
+   andando juntas, no mesmo passo, leriam como uma peça só arrastando a
+   página; em sentidos opostos, cada seção fica com o movimento dela. */
+.galeria__onda {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  display: block;
+  width: 200%;
+  height: clamp(30px, 4.4vw, 66px);
+  pointer-events: none;
+  animation: rabOnda 36s linear infinite reverse;
+}
+
 .galeria__grafico {
   position: absolute;
   top: 6%;
@@ -304,4 +322,85 @@
 .galeria__magnetico:hover {
   background: var(--cream);
   color: var(--ink);
+}
+
+/* ── Vitrine: o que o card ganhou ao virar produto ───────────────────────── */
+
+/*
+ * O card inteiro é o alvo do "Tenho interesse". A legenda é `pointer-events:
+ * none`, então o link não pode morar dentro dela — fica como último filho da
+ * figure, cobrindo a peça toda. Isso resolve o toque, onde não existe hover
+ * para revelar o rótulo, e mantém um alvo bem maior que 44px.
+ *
+ * O recorte de foco entra para dentro porque a figure tem overflow hidden: no
+ * padrão, o anel seria desenhado na borda e sumiria aparado.
+ */
+.galeria__card-link {
+  position: absolute;
+  inset: 0;
+  outline-offset: -3px;
+}
+
+/*
+ * O rótulo é posicionado, e não um terceiro item do flex. Em fluxo ele
+ * ocupava largura mesmo invisível — `opacity: 0` não devolve espaço — e
+ * roubava uns 150px da coluna de texto, quebrando as descrições em linhas
+ * novas. Fora do fluxo, o `space-between` volta a enxergar exatamente os dois
+ * filhos do desenho original e a caixa de texto recupera a largura inteira.
+ *
+ * A altura casada com a da seta é o que alinha os dois pelo centro sem
+ * depender de acertar um `bottom` no olho.
+ *
+ * Mesma duração e mesma curva da seta, e o mesmo data-dot: sobem juntos no
+ * hover como uma peça só, em vez de dois movimentos concorrentes.
+ */
+.galeria__interesse {
+  position: absolute;
+  right: 44px;
+  bottom: 0;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cream);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s var(--ease);
+}
+
+.galeria__chamada {
+  display: grid;
+  gap: 10px;
+}
+
+.galeria__acoes-par {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.galeria__magnetico--vazado {
+  background: transparent;
+  color: var(--cream);
+  /* Contorno por sombra interna, e não por `border`: a borda somaria 2px à
+     caixa e o par de pílulas perderia a mesma altura, já que a de
+     preenchimento não tem contorno nenhum. */
+  box-shadow: inset 0 0 0 1px rgb(var(--cream-rgb) / 42%);
+  transition:
+    background 0.4s ease,
+    color 0.4s ease,
+    box-shadow 0.4s ease,
+    transform 0.4s var(--ease);
+}
+
+.galeria__magnetico--vazado:hover {
+  background: var(--cream);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--cream);
 }

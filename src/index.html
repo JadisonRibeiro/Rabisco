@@ -168,17 +168,8 @@
           <span data-bl="2" class="nav__burger-linha"></span>
         </button>
         <nav data-hide-nav="1" class="nav__menu">
-          <a href="#manifesto" data-navlink="1" class="nav__link-2"
-            >Manifesto<span data-underline="1" class="nav__underline"></span
-          ></a>
-          <a href="#curadoria" data-navlink="1" class="nav__link-2"
-            >Curadoria<span data-underline="1" class="nav__underline"></span
-          ></a>
-          <a href="#servicos" data-navlink="1" class="nav__link-2"
-            >Serviços<span data-underline="1" class="nav__underline"></span
-          ></a>
-          <a href="#presentes" data-navlink="1" class="nav__link-2"
-            >Presentes<span data-underline="1" class="nav__underline"></span
+          <a href="#categorias" data-navlink="1" class="nav__link-2"
+            >Categorias<span data-underline="1" class="nav__underline"></span
           ></a>
           <a href="#produtos" data-navlink="1" class="nav__link-2"
             >Produtos<span data-underline="1" class="nav__underline"></span
@@ -214,56 +205,8 @@
       <div data-mobilemenu="1" aria-hidden="true" class="menu__painel">
         <div aria-hidden="true" class="menu__textura"></div>
         <nav class="menu__menu">
-          <a href="#manifesto" data-mobilelink="1" class="menu__link"
-            >Manifesto<svg
-              width="18"
-              height="10"
-              fill="none"
-              aria-hidden="true"
-              viewBox="0 0 18 10"
-              class="menu__grafico"
-            >
-              <path
-                d="M1 5h15M12 1l4 4-4 4"
-                stroke="currentColor"
-                stroke-width="1.6"
-                stroke-linecap="round"
-              ></path></svg
-          ></a>
-          <a href="#curadoria" data-mobilelink="1" class="menu__link"
-            >Curadoria<svg
-              width="18"
-              height="10"
-              fill="none"
-              aria-hidden="true"
-              viewBox="0 0 18 10"
-              class="menu__grafico"
-            >
-              <path
-                d="M1 5h15M12 1l4 4-4 4"
-                stroke="currentColor"
-                stroke-width="1.6"
-                stroke-linecap="round"
-              ></path></svg
-          ></a>
-          <a href="#servicos" data-mobilelink="1" class="menu__link"
-            >Serviços<svg
-              width="18"
-              height="10"
-              fill="none"
-              aria-hidden="true"
-              viewBox="0 0 18 10"
-              class="menu__grafico"
-            >
-              <path
-                d="M1 5h15M12 1l4 4-4 4"
-                stroke="currentColor"
-                stroke-width="1.6"
-                stroke-linecap="round"
-              ></path></svg
-          ></a>
-          <a href="#presentes" data-mobilelink="1" class="menu__link"
-            >Presentes<svg
+          <a href="#categorias" data-mobilelink="1" class="menu__link"
+            >Categorias<svg
               width="18"
               height="10"
               fill="none"
@@ -436,26 +379,33 @@
 
             <div class="u-camada">
               <div data-in="blur" data-id="4" class="hero__moldura">
-                <div class="hero__moldura-2">
+                <a
+                  href="https://www.instagram.com/rabisco_papelaria_pgm"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="Ver o perfil @rabisco_papelaria_pgm no Instagram"
+                  data-float="1"
+                  class="hero__moldura-2"
+                >
                   <img
-                    src="/assets/images/fachada.webp"
-                    alt="Fachada da Rabisco Papelaria: vitrine iluminada com o letreiro laranja da loja"
-                    loading="lazy"
+                    src="/assets/images/hero-instagram.webp"
+                    alt="Publicação do perfil @rabisco_papelaria_pgm com a fachada da Rabisco Papelaria: vitrine iluminada e letreiro laranja da loja"
+                    width="1100"
+                    height="1219"
+                    loading="eager"
+                    fetchpriority="high"
                     decoding="async"
                     class="foto foto--contain u-foto"
                   />
-                </div>
+                </a>
               </div>
               <div data-float="1" data-hide-sm="1" class="hero__flutuante">
                 <span class="hero__manuscrito-3">Sete de Setembro, 36<br />— passe pra tomar um café</span>
               </div>
-              <div data-float="1" data-hide-sm="1" class="hero__flutuante-2">
-                <img src="/assets/images/r-marca.png" alt class="hero__foto-2" />
-              </div>
             </div>
           </div>
 
-          <a href="#manifesto" data-hide-sm="1" aria-label="Rolar para o conteúdo" class="hero__so-desktop">
+          <a href="#categorias" data-hide-sm="1" aria-label="Rolar para o conteúdo" class="hero__so-desktop">
             <span class="hero__rotulo">Role</span>
             <span class="hero__cursor"></span>
             <svg width="15" height="9" fill="none" aria-hidden="true" viewBox="0 0 15 9" class="hero__grafico-4">
@@ -470,155 +420,55 @@
           </a>
         </section>
 
-        <section class="rail">
-          <svg aria-hidden="true" viewBox="0 0 1440 40" preserveAspectRatio="none" class="rail__grafico">
-            <path d="M0 0H1440V21C1260 33 1170 9 990 19C810 29 720 7 540 17C360 27 180 5 0 19Z" fill="#FAF6F0"></path>
-          </svg>
-          <svg aria-hidden="true" viewBox="0 0 1440 40" preserveAspectRatio="none" class="rail__grafico-2">
+        <section id="categorias" class="categorias">
+          <!--
+            As duas bordas são preenchidas com a cor da seção VIZINHA, não com
+            a desta: é o creme do hero que escorre para dentro e o laranja da
+            galeria que sobe, de modo que cada onda pertença visualmente ao
+            bloco de onde vem. Vêm antes do conteúdo no DOM para ficarem por
+            baixo dele sem precisar de z-index.
+          -->
+          <!--
+            O caminho tem largura dobrada e é rigorosamente periódico: cada
+            lombada ocupa 720 unidades, e as 2880 do viewBox são quatro delas
+            iguais. É o que deixa o laço invisível — deslocar metade da peça
+            recai exatamente sobre o desenho anterior. Uma onda desenhada "à
+            mão", sem período constante, daria um salto a cada volta.
+          -->
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 2880 70"
+            preserveAspectRatio="none"
+            data-float="1"
+            class="categorias__onda categorias__onda--topo"
+          >
+            <!--
+              A forma preenchida e o traço são dois caminhos, e não um só com
+              fill e stroke. Um caminho fechado é contornado inteiro: o stroke
+              corria também pela aresta reta do topo e pelo fechamento na
+              lateral, desenhando exatamente a linha de divisão que a onda
+              existe para esconder. Aqui o segundo caminho é aberto e percorre
+              só a curva.
+            -->
             <path
-              d="M0 40H1440V19C1260 7 1170 31 990 21C810 11 720 33 540 23C360 13 180 35 0 21Z"
-              fill="#FAF6F0"
+              d="M0 26 C120 10 240 10 360 26 C480 42 600 42 720 26 C840 10 960 10 1080 26 C1200 42 1320 42 1440 26 C1560 10 1680 10 1800 26 C1920 42 2040 42 2160 26 C2280 10 2400 10 2520 26 C2640 42 2760 42 2880 26 V0 H0 Z"
+              fill="rgb(var(--cream-rgb))"
+            ></path>
+            <path
+              d="M0 26 C120 10 240 10 360 26 C480 42 600 42 720 26 C840 10 960 10 1080 26 C1200 42 1320 42 1440 26 C1560 10 1680 10 1800 26 C1920 42 2040 42 2160 26 C2280 10 2400 10 2520 26 C2640 42 2760 42 2880 26"
+              fill="none"
+              stroke="rgb(var(--accent-rgb) / 38%)"
+              stroke-width="2.5"
+              vector-effect="non-scaling-stroke"
             ></path>
           </svg>
-          <div aria-hidden="true" class="rail__halo"></div>
-          <div aria-hidden="true" class="rail__textura"></div>
 
-          <div class="rail__container">
-            <div class="rail__grupo">
-              <span class="rail__rotulo">Navegue por categoria</span>
-              <span class="rail__regua"></span>
-            </div>
-            <div class="rail__grupo-2">
-              <button type="button" data-rail="prev" aria-label="Categoria anterior" class="rail__prev">
-                <svg width="17" height="10" fill="none" aria-hidden="true" viewBox="0 0 18 10">
-                  <path d="M17 5H2M6 1L2 5l4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path>
-                </svg>
-              </button>
-              <button type="button" data-rail="next" aria-label="Próxima categoria" class="rail__prev">
-                <svg width="17" height="10" fill="none" aria-hidden="true" viewBox="0 0 18 10">
-                  <path d="M1 5h15M12 1l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <div class="u-camada">
-            <div data-noscroll="1" data-rail="track" class="rail__trilho">
-              <a href="#curadoria" data-chip="1" class="rail__chip">
-                <span data-chipimg="1" class="rail__chip-foto">
-                  <img
-                    src="/assets/images/cat-canetas.jpg"
-                    alt
-                    loading="lazy"
-                    decoding="async"
-                    class="foto foto--cover u-foto"
-                  />
-                </span>
-                <span data-chiptxt="1" class="rail__chip-nome">Canetas</span>
-              </a>
-              <a href="#curadoria" data-chip="1" class="rail__chip">
-                <span data-chipimg="1" class="rail__chip-foto">
-                  <img
-                    src="/assets/images/cat-cadernos.jpg"
-                    alt
-                    loading="lazy"
-                    decoding="async"
-                    class="foto foto--cover u-foto"
-                  />
-                </span>
-                <span data-chiptxt="1" class="rail__chip-nome">Cadernos</span>
-              </a>
-              <a href="#curadoria" data-chip="1" class="rail__chip">
-                <span data-chipimg="1" class="rail__chip-foto">
-                  <img
-                    src="/assets/images/cat-marca-textos.jpg"
-                    alt
-                    loading="lazy"
-                    decoding="async"
-                    class="foto foto--cover u-foto"
-                  />
-                </span>
-                <span data-chiptxt="1" class="rail__chip-nome">Marca-textos</span>
-              </a>
-              <a href="#curadoria" data-chip="1" class="rail__chip">
-                <span data-chipimg="1" class="rail__chip-foto">
-                  <img
-                    src="/assets/images/cat-planners.jpg"
-                    alt
-                    loading="lazy"
-                    decoding="async"
-                    class="foto foto--cover u-foto"
-                  />
-                </span>
-                <span data-chiptxt="1" class="rail__chip-nome">Planners</span>
-              </a>
-              <a href="#curadoria" data-chip="1" class="rail__chip">
-                <span data-chipimg="1" class="rail__chip-foto">
-                  <img
-                    src="/assets/images/cat-arte-fina.jpg"
-                    alt
-                    loading="lazy"
-                    decoding="async"
-                    class="foto foto--cover u-foto"
-                  />
-                </span>
-                <span data-chiptxt="1" class="rail__chip-nome">Arte fina</span>
-              </a>
-              <a href="#curadoria" data-chip="1" class="rail__chip">
-                <span data-chipimg="1" class="rail__chip-foto">
-                  <img
-                    src="/assets/images/cat-escolar.jpg"
-                    alt
-                    loading="lazy"
-                    decoding="async"
-                    class="foto foto--cover u-foto"
-                  />
-                </span>
-                <span data-chiptxt="1" class="rail__chip-nome">Escolar</span>
-              </a>
-              <a href="#curadoria" data-chip="1" class="rail__chip">
-                <span data-chipimg="1" class="rail__chip-foto">
-                  <img
-                    src="/assets/images/cat-escritorio.jpg"
-                    alt
-                    loading="lazy"
-                    decoding="async"
-                    class="foto foto--cover u-foto"
-                  />
-                </span>
-                <span data-chiptxt="1" class="rail__chip-nome">Escritório</span>
-              </a>
-              <a href="#curadoria" data-chip="1" class="rail__chip">
-                <span data-chipimg="1" class="rail__chip-foto">
-                  <img
-                    src="/assets/images/cat-novidades.jpg"
-                    alt
-                    loading="lazy"
-                    decoding="async"
-                    class="foto foto--cover u-foto"
-                  />
-                </span>
-                <span data-chiptxt="1" class="rail__chip-nome">Novidades</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="rail__container-2">
-            <div class="rail__barra-progresso">
-              <span data-rail="bar" class="rail__bar"></span>
-            </div>
-          </div>
-        </section>
-
-        <section id="manifesto" class="manifesto">
-          <div aria-hidden="true" class="manifesto__halo"></div>
-          <div aria-hidden="true" class="manifesto__textura"></div>
-          <svg aria-hidden="true" viewBox="0 0 900 200" class="manifesto__grafico">
+          <svg aria-hidden="true" viewBox="0 0 900 200" class="categorias__grafico">
             <path
-              d="M20 150 C 220 40, 500 190, 880 60"
+              d="M14 132 C 190 44, 340 168, 508 92 C 636 34, 748 128, 886 62"
               fill="none"
-              stroke="#14100E"
-              stroke-width="12"
+              stroke="rgb(var(--accent-rgb))"
+              stroke-width="11"
               stroke-linecap="round"
               data-anim="draw"
               class="u-traco"
@@ -626,252 +476,236 @@
           </svg>
 
           <div class="u-container">
-            <div data-anim="fade" class="manifesto__eyebrow">
-              <span class="u-rotulo">O manifesto</span>
-              <span data-anim="line" class="manifesto__regua"></span>
-            </div>
-
-            <div data-stack="1" class="manifesto__grade">
-              <h2 class="manifesto__titulo">
-                <span data-anim="up" data-d="1" class="u-bloco">Nenhuma ideia</span>
-                <span data-anim="up" data-d="2" class="u-bloco">nasce pronta.</span>
-                <span data-anim="up" data-d="3" class="manifesto__bloco"
-                  >Ela nasce
-                  <span class="u-realce">
-                    <span class="manifesto__realce-2">torta</span>
-                    <svg
-                      aria-hidden="true"
-                      viewBox="0 0 480 150"
-                      preserveAspectRatio="none"
-                      class="manifesto__grafico-2"
-                    >
-                      <path
-                        d="M300 22 C 170 2, 44 20, 26 66 C 10 112, 148 132, 268 124 C 392 116, 466 84, 448 48 C 432 16, 306 6, 208 26"
-                        fill="none"
-                        stroke="var(--accent,#F63E0B)"
-                        stroke-width="8"
-                        stroke-linecap="round"
-                        data-anim="draw"
-                        data-d="2"
-                        class="manifesto__traco-2"
-                      ></path>
-                    </svg> </span
-                  >,
-                </span>
-                <span data-anim="up" data-d="4" class="u-bloco">rápida, imperfeita.</span>
-              </h2>
-              <div class="manifesto__lista"></div>
-            </div>
-
-            <div data-stack="1" id="curadoria" class="manifesto__grade-2">
-              <article data-anim="blur" class="manifesto__card">
-                <img src="/assets/images/r-marca.png" alt data-float="1" class="manifesto__flutuante" />
-                <div class="manifesto__topo">
-                  <span class="manifesto__rotulo-2">01 — Escrita</span>
-                  <span class="manifesto__manuscrito">o coração da loja</span>
-                </div>
-                <div class="u-camada">
-                  <h3 class="manifesto__nome">Canetas &amp; instrumentos</h3>
-                  <p class="manifesto__texto">
-                    Técnicas 0.1 a 1.0, esferográficas de gel, brush pens, nanquim, lapiseiras e canetas-tinteiro. Com
-                    mesa de teste liberada.
-                  </p>
-                </div>
-              </article>
-              <article data-anim="blur" class="manifesto__card-2">
-                <div class="manifesto__midia">
-                  <img
-                    src="/assets/images/arte-fina.jpg"
-                    alt="Vidros de tinta e pincéis sobre a bancada do ateliê"
-                    loading="lazy"
-                    decoding="async"
-                    class="foto foto--cover u-foto"
-                  />
-                  <div class="manifesto__veu"></div>
-                </div>
-                <div class="manifesto__rodape-card">
-                  <span class="manifesto__rotulo-3">03 — Ateliê</span>
-                  <h3 class="manifesto__nome-2">Arte fina</h3>
-                  <p class="manifesto__texto-2">
-                    Aquarela, acrílica, telas, papéis 300g, pincéis e marcadores profissionais.
-                  </p>
-                </div>
-              </article>
-            </div>
-          </div>
-        </section>
-
-        <section id="servicos" class="servicos">
-          <div class="servicos__container">
-            <div data-stack="1" class="servicos__grade">
-              <div>
-                <div data-anim="fade" class="u-eyebrow">
-                  <span class="servicos__rotulo">Serviços</span>
-                  <span data-anim="line" class="servicos__regua"></span>
-                </div>
-                <h2 data-anim="up" class="servicos__titulo">Do rabisco<br />ao acabado</h2>
+            <div class="categorias__grade">
+              <div data-anim="fade" class="categorias__eyebrow">
+                <span class="categorias__rotulo">Categorias</span>
               </div>
-              <p data-anim="up" data-d="1" class="servicos__texto">
-                Cinco serviços de balcão feitos aqui dentro, com prazo dito na hora e conferência antes de você levar.
-              </p>
+              <h2 data-anim="up" class="categorias__titulo">
+                Escolha por<br />onde
+                <span class="u-realce">
+                  <span class="categorias__realce">começar</span>
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 400 60"
+                    preserveAspectRatio="none"
+                    class="categorias__grafico-2"
+                  >
+                    <path
+                      d="M12 40 C 96 14, 168 52, 248 28 C 304 11, 350 38, 392 22"
+                      fill="none"
+                      stroke="rgb(var(--accent-rgb))"
+                      stroke-width="9"
+                      stroke-linecap="round"
+                      data-anim="draw"
+                      data-d="1"
+                      class="categorias__traco"
+                    ></path>
+                  </svg>
+                </span>
+              </h2>
             </div>
 
-            <div>
-              <a
-                href="https://wa.me/5591991032292"
-                target="_blank"
-                rel="noopener"
-                data-anim="up"
-                class="servicos__link"
-              >
-                <span class="servicos__indice">01</span>
-                <span class="servicos__nome">Impressão &amp; cópias</span>
-                <span data-hide-sm="1" class="servicos__so-desktop"
-                  >Preto e colorida, A4 e A3, digitalização e envio por e-mail.</span
+            <ul class="categorias__lista">
+              <li data-anim="up" class="categorias__celula">
+                <a
+                  href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20as%20canetas."
+                  target="_blank"
+                  rel="noopener"
+                  class="categorias__item"
                 >
-                <span class="servicos__seta">↗</span>
-              </a>
-              <a
-                href="https://wa.me/5591991032292"
-                target="_blank"
-                rel="noopener"
-                data-anim="up"
-                data-d="1"
-                class="servicos__link"
-              >
-                <span class="servicos__indice">02</span>
-                <span class="servicos__nome">Encadernação</span>
-                <span data-hide-sm="1" class="servicos__so-desktop"
-                  >Espiral, capa dura e capa transparente para TCC, apostilas e relatórios.</span
+                  <span class="categorias__disco">
+                    <img
+                      src="/assets/images/cat-canetas.jpg"
+                      alt="Canetas coloridas em pé num porta-lápis de tela metálica"
+                      width="600"
+                      height="600"
+                      loading="lazy"
+                      decoding="async"
+                      class="foto foto--cover u-foto"
+                    />
+                  </span>
+                  <span class="categorias__nome">Canetas</span>
+                </a>
+              </li>
+              <li data-anim="up" class="categorias__celula">
+                <a
+                  href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20os%20cadernos."
+                  target="_blank"
+                  rel="noopener"
+                  class="categorias__item"
                 >
-                <span class="servicos__seta">↗</span>
-              </a>
-              <a
-                href="https://wa.me/5591991032292"
-                target="_blank"
-                rel="noopener"
-                data-anim="up"
-                data-d="2"
-                class="servicos__link"
-              >
-                <span class="servicos__indice">03</span>
-                <span class="servicos__nome">Personalização</span>
-                <span data-hide-sm="1" class="servicos__so-desktop"
-                  >Cadernos, canecas, agendas e brindes com nome, logo ou frase.</span
+                  <span class="categorias__disco">
+                    <img
+                      src="/assets/images/cat-cadernos.jpg"
+                      alt="Caderno espiral aberto em folha lisa ao lado de três lápis"
+                      width="600"
+                      height="600"
+                      loading="lazy"
+                      decoding="async"
+                      class="foto foto--cover u-foto"
+                    />
+                  </span>
+                  <span class="categorias__nome">Cadernos</span>
+                </a>
+              </li>
+              <li data-anim="up" class="categorias__celula">
+                <a
+                  href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20os%20marca-textos."
+                  target="_blank"
+                  rel="noopener"
+                  class="categorias__item"
                 >
-                <span class="servicos__seta">↗</span>
-              </a>
-              <a
-                href="https://wa.me/5591991032292"
-                target="_blank"
-                rel="noopener"
-                data-anim="up"
-                data-d="3"
-                class="servicos__link"
-              >
-                <span class="servicos__indice">04</span>
-                <span class="servicos__nome">Plotagem &amp; banners</span>
-                <span data-hide-sm="1" class="servicos__so-desktop"
-                  >Faixas, cartazes e projetos em grande formato, com acabamento.</span
+                  <span class="categorias__disco">
+                    <img
+                      src="/assets/images/cat-marca-textos.jpg"
+                      alt="Marca-textos e canetas expostos na vitrine de vidro da loja"
+                      width="600"
+                      height="600"
+                      loading="lazy"
+                      decoding="async"
+                      class="foto foto--cover u-foto"
+                    />
+                  </span>
+                  <span class="categorias__nome">Marca-textos</span>
+                </a>
+              </li>
+              <li data-anim="up" class="categorias__celula">
+                <a
+                  href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20o%20material%20de%20arte%20fina."
+                  target="_blank"
+                  rel="noopener"
+                  class="categorias__item"
                 >
-                <span class="servicos__seta">↗</span>
-              </a>
-              <a
-                href="https://wa.me/5591991032292"
-                target="_blank"
-                rel="noopener"
-                data-anim="up"
-                data-d="4"
-                class="servicos__link-2"
-              >
-                <span class="servicos__indice">05</span>
-                <span class="servicos__nome">Carimbos &amp; etiquetas</span>
-                <span data-hide-sm="1" class="servicos__so-desktop"
-                  >Automáticos, de bolso e etiquetas escolares em cartela.</span
+                  <span class="categorias__disco">
+                    <img
+                      src="/assets/images/cat-arte-fina.jpg"
+                      alt="Pincéis guardados em potes de vidro sobre a bancada"
+                      width="600"
+                      height="600"
+                      loading="lazy"
+                      decoding="async"
+                      class="foto foto--cover u-foto"
+                    />
+                  </span>
+                  <span class="categorias__nome">Arte fina</span>
+                </a>
+              </li>
+              <li data-anim="up" class="categorias__celula">
+                <a
+                  href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20os%20planners."
+                  target="_blank"
+                  rel="noopener"
+                  class="categorias__item"
                 >
-                <span class="servicos__seta">↗</span>
-              </a>
-            </div>
-          </div>
-        </section>
+                  <span class="categorias__disco">
+                    <img
+                      src="/assets/images/cat-planners.jpg"
+                      alt="Gato de pedra deitado no muro de uma calçada arborizada"
+                      width="600"
+                      height="600"
+                      loading="lazy"
+                      decoding="async"
+                      class="foto foto--cover u-foto"
+                    />
+                  </span>
+                  <span class="categorias__nome">Planners</span>
+                </a>
+              </li>
+              <li data-anim="up" class="categorias__celula">
+                <a
+                  href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20o%20material%20escolar."
+                  target="_blank"
+                  rel="noopener"
+                  class="categorias__item"
+                >
+                  <span class="categorias__disco">
+                    <img
+                      src="/assets/images/cat-escolar.jpg"
+                      alt="Lápis de ponta nova enfileirados, com as borrachas viradas para a frente"
+                      width="600"
+                      height="600"
+                      loading="lazy"
+                      decoding="async"
+                      class="foto foto--cover u-foto"
+                    />
+                  </span>
+                  <span class="categorias__nome">Escolar</span>
+                </a>
+              </li>
+              <li data-anim="up" class="categorias__celula">
+                <a
+                  href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20o%20material%20de%20escrit%C3%B3rio."
+                  target="_blank"
+                  rel="noopener"
+                  class="categorias__item"
+                >
+                  <span class="categorias__disco">
+                    <img
+                      src="/assets/images/cat-escritorio.jpg"
+                      alt="Atendente sorrindo atrás do balcão, com um caderno aberto nas mãos"
+                      width="600"
+                      height="600"
+                      loading="lazy"
+                      decoding="async"
+                      class="foto foto--cover u-foto"
+                    />
+                  </span>
+                  <span class="categorias__nome">Escritório</span>
+                </a>
+              </li>
+              <li data-anim="up" class="categorias__celula">
+                <a
+                  href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20as%20novidades."
+                  target="_blank"
+                  rel="noopener"
+                  class="categorias__item"
+                >
+                  <span class="categorias__disco">
+                    <img
+                      src="/assets/images/cat-novidades.jpg"
+                      alt="Flores de papel recortadas e um cavalinho de madeira sobre cartão colorido"
+                      width="600"
+                      height="600"
+                      loading="lazy"
+                      decoding="async"
+                      class="foto foto--cover u-foto"
+                    />
+                  </span>
+                  <span class="categorias__nome">Novidades</span>
+                </a>
+              </li>
+            </ul>
 
-        <section id="presentes" class="presentes">
-          <div class="servicos__container">
-            <div class="presentes__intro">
-              <span data-anim="fade" class="presentes__rotulo">Presentes &amp; kits</span>
-              <h2 data-anim="up" class="presentes__titulo">Embrulhado<br />à mão</h2>
-              <p data-anim="up" data-d="1" class="presentes__texto">
-                Três combinações prontas — ou monte a sua com a gente no balcão. Embalagem por conta da casa e cartão
-                escrito à mão.
-              </p>
-            </div>
-
-            <div data-stack="1" class="presentes__grade">
-              <article data-anim="up" class="presentes__card">
-                <div class="presentes__midia">
-                  <img
-                    src="/assets/images/kit-primeira-pagina.jpg"
-                    alt="Caderno aberto com caneta-tinteiro apoiada sobre a página"
-                    loading="lazy"
-                    decoding="async"
-                    class="foto foto--cover u-foto"
-                  />
-                </div>
-                <div class="presentes__corpo">
-                  <div class="presentes__topo">
-                    <h3 class="presentes__nome">Primeira página</h3>
-                    <span class="presentes__manuscrito">pra quem começa</span>
-                  </div>
-                  <p class="presentes__texto-2">Caderno pontilhado, caneta de gel 0.5 e marcador de página em metal.</p>
-                </div>
-              </article>
-
-              <article data-anim="up" data-d="1" class="presentes__card-2">
-                <div class="presentes__midia-2">
-                  <img
-                    src="/assets/images/kit-estudio.jpg"
-                    alt="Páginas de sketchbook cobertas de estudos de figura a grafite"
-                    loading="lazy"
-                    decoding="async"
-                    class="foto foto--cover u-foto"
-                  />
-                </div>
-                <div class="presentes__corpo">
-                  <div class="presentes__topo">
-                    <h3 class="presentes__nome">Estúdio</h3>
-                    <span class="presentes__manuscrito-2">pra quem desenha</span>
-                  </div>
-                  <p class="presentes__texto-3">
-                    Sketchbook 200g, grafites 2H a 6B, borracha maleável e brush pen preta.
-                  </p>
-                </div>
-              </article>
-
-              <article data-anim="up" data-d="2" class="presentes__card-3">
-                <div class="presentes__midia">
-                  <img
-                    src="/assets/images/kit-escritorio.jpg"
-                    alt="Carimbo de mesa sobre bandeja preta"
-                    loading="lazy"
-                    decoding="async"
-                    class="foto foto--cover u-foto"
-                  />
-                </div>
-                <div class="presentes__corpo">
-                  <div class="presentes__topo">
-                    <h3 class="presentes__nome">Escritório</h3>
-                    <span class="presentes__manuscrito">pra equipe</span>
-                  </div>
-                  <p class="presentes__texto-4">Agenda anual, caneta com logo, bloco adesivo e organizador de mesa.</p>
-                </div>
-              </article>
-            </div>
+            <span data-anim="fade" class="categorias__manuscrito"
+              >não achou o que procurava? pergunta mesmo assim ↗</span
+            >
           </div>
         </section>
 
         <section id="produtos" class="galeria">
           <div aria-hidden="true" class="galeria__halo"></div>
           <div aria-hidden="true" class="galeria__textura"></div>
+
+          <!--
+            A emenda ondulada com a seção de categorias mora aqui, e não lá,
+            porque precisa vir DEPOIS do halo e da textura: os dois cobrem a
+            seção inteira, e uma onda desenhada do outro lado da fronteira
+            encostaria no laranja chapado enquanto o halo continua por baixo
+            dela — a emenda apareceria como um risco reto atravessando a tela.
+            Pintando o papel por cima de tudo, a curva é a única fronteira.
+          -->
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 2880 70"
+            preserveAspectRatio="none"
+            data-float="1"
+            class="galeria__onda"
+          >
+            <path
+              d="M0 38 C120 56 240 56 360 38 C480 20 600 20 720 38 C840 56 960 56 1080 38 C1200 20 1320 20 1440 38 C1560 56 1680 56 1800 38 C1920 20 2040 20 2160 38 C2280 56 2400 56 2520 38 C2640 20 2760 20 2880 38 V0 H0 Z"
+              fill="var(--paper)"
+            ></path>
+          </svg>
           <svg aria-hidden="true" viewBox="0 0 900 200" class="galeria__grafico">
             <path
               d="M20 140 C 240 30, 520 180, 880 54"
@@ -892,9 +726,9 @@
                   <span data-anim="line" class="galeria__regua"></span>
                 </div>
                 <h2 data-anim="up" class="galeria__titulo">
-                  Por dentro<br />da
+                  Produtos em<br />
                   <span class="u-realce">
-                    <span class="galeria__realce">loja</span>
+                    <span class="galeria__realce">destaque</span>
                     <svg aria-hidden="true" viewBox="0 0 400 150" preserveAspectRatio="none" class="galeria__grafico-2">
                       <path
                         d="M248 22 C 134 4, 34 24, 22 66 C 12 108, 128 130, 232 122 C 336 114, 388 82, 372 48 C 356 18, 246 8, 162 26"
@@ -911,7 +745,8 @@
                 </h2>
               </div>
               <p data-anim="up" data-d="1" class="galeria__texto">
-                Uma volta pelas prateleiras: o que está exposto hoje, com gramatura, ponta e acabamento anotados.
+                Conheça alguns dos produtos disponíveis em nossa loja e descubra opções para estudo, organização,
+                criatividade e presentes.
               </p>
             </div>
 
@@ -931,14 +766,28 @@
                 <figcaption class="galeria__legenda">
                   <div>
                     <h3 class="galeria__nome">Canetas técnicas</h3>
-                    <p class="galeria__texto-2">0.1 · 0.3 · 0.5 · 0.8</p>
+                    <p class="galeria__texto-2">Ponta 0.1 a 0.8 · traço uniforme</p>
+                    <p class="galeria__texto-2">Preço sob consulta</p>
                   </div>
-                  <span data-dot="1" class="galeria__card-seta">
-                    <svg width="14" height="9" fill="none" aria-hidden="true" viewBox="0 0 18 10">
-                      <path d="M1 5h15M12 1l4 4-4 4" stroke="#14100E" stroke-width="1.8" stroke-linecap="round"></path>
-                    </svg>
-                  </span>
+                                      <span data-dot="1" class="galeria__interesse">Tenho interesse</span>
+                    <span data-dot="1" class="galeria__card-seta">
+                      <svg width="14" height="9" fill="none" aria-hidden="true" viewBox="0 0 18 10">
+                        <path
+                          d="M1 5h15M12 1l4 4-4 4"
+                          stroke="#14100E"
+                          stroke-width="1.8"
+                          stroke-linecap="round"
+                        ></path>
+                      </svg>
+                    </span>
                 </figcaption>
+                <a
+                  href="https://wa.me/5591991032292?text=Ol%C3%A1!%20Vi%20o%20produto%20Canetas%20t%C3%A9cnicas%20no%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20ele."
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="Tenho interesse em Canetas técnicas"
+                  class="galeria__card-link"
+                ></a>
               </figure>
               <figure data-card="1" class="galeria__card-2">
                 <div data-media="1" class="galeria__card-media">
@@ -956,13 +805,27 @@
                   <div>
                     <h3 class="galeria__nome">Cadernos pontilhados</h3>
                     <p class="galeria__texto-2">96g · costura aparente</p>
+                    <p class="galeria__texto-2">Preço sob consulta</p>
                   </div>
-                  <span data-dot="1" class="galeria__card-seta">
-                    <svg width="14" height="9" fill="none" aria-hidden="true" viewBox="0 0 18 10">
-                      <path d="M1 5h15M12 1l4 4-4 4" stroke="#14100E" stroke-width="1.8" stroke-linecap="round"></path>
-                    </svg>
-                  </span>
+                                      <span data-dot="1" class="galeria__interesse">Tenho interesse</span>
+                    <span data-dot="1" class="galeria__card-seta">
+                      <svg width="14" height="9" fill="none" aria-hidden="true" viewBox="0 0 18 10">
+                        <path
+                          d="M1 5h15M12 1l4 4-4 4"
+                          stroke="#14100E"
+                          stroke-width="1.8"
+                          stroke-linecap="round"
+                        ></path>
+                      </svg>
+                    </span>
                 </figcaption>
+                <a
+                  href="https://wa.me/5591991032292?text=Ol%C3%A1!%20Vi%20o%20produto%20Cadernos%20pontilhados%20no%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20ele."
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="Tenho interesse em Cadernos pontilhados"
+                  class="galeria__card-link"
+                ></a>
               </figure>
               <figure data-card="1" class="galeria__card-3">
                 <div data-media="1" class="galeria__card-media">
@@ -979,14 +842,28 @@
                 <figcaption class="galeria__legenda">
                   <div>
                     <h3 class="galeria__nome">Aquarela &amp; papel 300g</h3>
-                    <p class="galeria__texto-2">algodão · grão fino</p>
+                    <p class="galeria__texto-2">Algodão · grão fino · 20 folhas</p>
+                    <p class="galeria__texto-2">Preço sob consulta</p>
                   </div>
-                  <span data-dot="1" class="galeria__card-seta">
-                    <svg width="14" height="9" fill="none" aria-hidden="true" viewBox="0 0 18 10">
-                      <path d="M1 5h15M12 1l4 4-4 4" stroke="#14100E" stroke-width="1.8" stroke-linecap="round"></path>
-                    </svg>
-                  </span>
+                                      <span data-dot="1" class="galeria__interesse">Tenho interesse</span>
+                    <span data-dot="1" class="galeria__card-seta">
+                      <svg width="14" height="9" fill="none" aria-hidden="true" viewBox="0 0 18 10">
+                        <path
+                          d="M1 5h15M12 1l4 4-4 4"
+                          stroke="#14100E"
+                          stroke-width="1.8"
+                          stroke-linecap="round"
+                        ></path>
+                      </svg>
+                    </span>
                 </figcaption>
+                <a
+                  href="https://wa.me/5591991032292?text=Ol%C3%A1!%20Vi%20o%20produto%20Aquarela%20e%20papel%20300g%20no%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20ele."
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="Tenho interesse em Aquarela e papel 300g"
+                  class="galeria__card-link"
+                ></a>
               </figure>
               <figure data-card="1" class="galeria__card-3">
                 <div data-media="1" class="galeria__card-media">
@@ -1004,13 +881,27 @@
                   <div>
                     <h3 class="galeria__nome">Planners e agendas</h3>
                     <p class="galeria__texto-2">2026 · semanal e diário</p>
+                    <p class="galeria__texto-2">Preço sob consulta</p>
                   </div>
-                  <span data-dot="1" class="galeria__card-seta">
-                    <svg width="14" height="9" fill="none" aria-hidden="true" viewBox="0 0 18 10">
-                      <path d="M1 5h15M12 1l4 4-4 4" stroke="#14100E" stroke-width="1.8" stroke-linecap="round"></path>
-                    </svg>
-                  </span>
+                                      <span data-dot="1" class="galeria__interesse">Tenho interesse</span>
+                    <span data-dot="1" class="galeria__card-seta">
+                      <svg width="14" height="9" fill="none" aria-hidden="true" viewBox="0 0 18 10">
+                        <path
+                          d="M1 5h15M12 1l4 4-4 4"
+                          stroke="#14100E"
+                          stroke-width="1.8"
+                          stroke-linecap="round"
+                        ></path>
+                      </svg>
+                    </span>
                 </figcaption>
+                <a
+                  href="https://wa.me/5591991032292?text=Ol%C3%A1!%20Vi%20o%20produto%20Planners%20e%20agendas%20no%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20ele."
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="Tenho interesse em Planners e agendas"
+                  class="galeria__card-link"
+                ></a>
               </figure>
               <figure data-card="1" class="galeria__card-3">
                 <div data-media="1" class="galeria__card-media">
@@ -1026,95 +917,208 @@
                 <span class="galeria__indice">05</span>
                 <figcaption class="galeria__legenda">
                   <div>
-                    <h3 class="galeria__nome">Mesa de teste</h3>
-                    <p class="galeria__texto-2">risque antes de levar</p>
+                    <h3 class="galeria__nome">Kits para presente</h3>
+                    <p class="galeria__texto-2">Montados na hora · caderno e caneta</p>
+                    <p class="galeria__texto-2">Preço sob consulta</p>
                   </div>
-                  <span data-dot="1" class="galeria__card-seta">
-                    <svg width="14" height="9" fill="none" aria-hidden="true" viewBox="0 0 18 10">
-                      <path d="M1 5h15M12 1l4 4-4 4" stroke="#14100E" stroke-width="1.8" stroke-linecap="round"></path>
-                    </svg>
-                  </span>
+                                      <span data-dot="1" class="galeria__interesse">Tenho interesse</span>
+                    <span data-dot="1" class="galeria__card-seta">
+                      <svg width="14" height="9" fill="none" aria-hidden="true" viewBox="0 0 18 10">
+                        <path
+                          d="M1 5h15M12 1l4 4-4 4"
+                          stroke="#14100E"
+                          stroke-width="1.8"
+                          stroke-linecap="round"
+                        ></path>
+                      </svg>
+                    </span>
                 </figcaption>
+                <a
+                  href="https://wa.me/5591991032292?text=Ol%C3%A1!%20Vi%20o%20produto%20Kits%20para%20presente%20no%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20ele."
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="Tenho interesse em Kits para presente"
+                  class="galeria__card-link"
+                ></a>
               </figure>
             </div>
 
             <div data-anim="fade" class="galeria__acoes">
-              <span class="galeria__manuscrito">tem muito mais na prateleira ↓</span>
-              <a
-                href="https://www.instagram.com/rabisco_papelaria_pgm"
-                target="_blank"
-                rel="noopener"
-                data-magnetic="1"
-                class="galeria__magnetico"
-              >
-                Ver mais no Instagram
-                <svg width="18" height="10" fill="none" aria-hidden="true" viewBox="0 0 18 10">
-                  <path d="M1 5h15M12 1l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
-                </svg>
-              </a>
+              <div class="galeria__chamada">
+                <span class="galeria__manuscrito">Gostou de algum produto?</span>
+                <p class="galeria__texto">
+                  Temos muito mais opções disponíveis na loja. Entre em contato pelo WhatsApp ou venha nos visitar.
+                </p>
+              </div>
+              <div class="galeria__acoes-par">
+                <a
+                  href="https://wa.me/5591991032292"
+                  target="_blank"
+                  rel="noopener"
+                  data-magnetic="1"
+                  class="galeria__magnetico"
+                >
+                  Falar no WhatsApp
+                  <svg width="18" height="10" fill="none" aria-hidden="true" viewBox="0 0 18 10">
+                    <path
+                      d="M1 5h15M12 1l4 4-4 4"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                    ></path>
+                  </svg>
+                </a>
+                <a href="#loja" data-magnetic="1" class="galeria__magnetico galeria__magnetico--vazado">
+                  Como chegar
+                  <svg width="18" height="10" fill="none" aria-hidden="true" viewBox="0 0 18 10">
+                    <path
+                      d="M1 5h15M12 1l4 4-4 4"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                    ></path>
+                  </svg>
+                </a>
+              </div>
             </div>
           </div>
         </section>
 
         <section id="loja" class="loja">
-          <div data-stack="1" class="loja__grade">
-            <div>
+          <div aria-hidden="true" class="loja__grade"></div>
+          <svg
+            aria-hidden="true"
+            focusable="false"
+            viewBox="0 0 1600 1100"
+            preserveAspectRatio="xMidYMid slice"
+            class="loja__rabiscos"
+          >
+            <path
+              data-scribble="1"
+              d="M-60 210 C 240 120, 500 280, 800 200 C 1060 130, 1320 250, 1680 160"
+              pathLength="1"
+              class="loja__traco"
+            ></path>
+            <circle
+              data-scribble="1"
+              data-sd="2"
+              cx="1420"
+              cy="118"
+              r="112"
+              pathLength="1"
+              class="loja__traco loja__traco--ink"
+            ></circle>
+            <circle
+              data-scribble="1"
+              data-sd="3"
+              cx="96"
+              cy="1034"
+              r="176"
+              pathLength="1"
+              class="loja__traco"
+            ></circle>
+            <path
+              data-scribble="1"
+              data-sd="5"
+              d="M180 1044 C 520 1000, 980 1072, 1560 1008"
+              pathLength="1"
+              class="loja__traco loja__traco--ink"
+            ></path>
+          </svg>
+
+          <div class="loja__topo">
+            <div class="loja__titulos">
               <div data-anim="fade" class="u-eyebrow">
                 <span class="u-rotulo">Como chegar</span>
                 <span data-anim="line" class="loja__regua"></span>
               </div>
-              <h2 data-anim="up" class="loja__titulo">Rua Sete de<br />Setembro, 36</h2>
-              <p data-anim="up" data-d="1" class="loja__texto">Centro · Paragominas — PA</p>
-
-              <div data-anim="up" data-d="2" class="loja__lista">
-                <div class="loja__linha">
-                  <span class="loja__rotulo">Seg — Sex</span>
-                  <span class="loja__destaque">08h — 18h</span>
-                </div>
-                <div class="loja__linha">
-                  <span class="loja__rotulo">Sábado</span>
-                  <span class="loja__destaque">08h — 13h</span>
-                </div>
-                <div class="loja__linha-2">
-                  <span class="loja__rotulo">Instagram</span>
-                  <a
-                    href="https://www.instagram.com/rabisco_papelaria_pgm"
-                    target="_blank"
-                    rel="noopener"
-                    class="loja__link"
-                    >@rabisco_papelaria_pgm</a
-                  >
-                </div>
-              </div>
-
-              <div data-anim="up" data-d="3" class="loja__acoes">
-                <a
-                  href="https://www.google.com/maps/search/?api=1&query=-2.99689229059232%2C-47.35176811287142"
-                  target="_blank"
-                  rel="noopener"
-                  data-magnetic="1"
-                  class="loja__magnetico"
-                  >Abrir no Google Maps</a
-                >
-                <a href="https://wa.me/5591991032292" target="_blank" rel="noopener" class="loja__link-2"
-                  >Chamar no WhatsApp</a
-                >
-              </div>
+              <h2 data-anim="up" class="loja__titulo">Rua Sete de Setembro, 36</h2>
+              <p data-anim="up" data-d="1" class="loja__local">
+                Centro · Paragominas — PA
+                <span data-loja-estado="1" hidden class="loja__estado">
+                  <span aria-hidden="true" class="loja__ponto"></span>
+                  <span data-loja-estado-texto="1"></span>
+                </span>
+              </p>
             </div>
 
-            <div data-anim="scale" class="u-camada">
-              <div class="loja__moldura">
-                <div class="loja__moldura-2">
-                  <iframe
-                    title="Mapa da Rabisco Papelaria"
-                    loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade"
-                    src="https://www.google.com/maps?q=-2.99689229059232,-47.35176811287142&amp;z=17&amp;hl=pt-BR&amp;output=embed"
-                    class="loja__mapa"
-                  ></iframe>
-                </div>
-              </div>
+            <div data-anim="up" data-d="2" class="loja__acoes">
+              <a
+                href="https://www.google.com/maps/search/?api=1&query=-2.99689229059232%2C-47.35176811287142"
+                target="_blank"
+                rel="noopener"
+                data-magnetic="1"
+                class="loja__botao"
+              >
+                Traçar rota
+                <svg width="15" height="10" fill="none" aria-hidden="true" focusable="false" viewBox="0 0 15 10">
+                  <path
+                    d="M1 5h12M9.5 1 13.5 5l-4 4"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+              </a>
+              <a
+                href="https://wa.me/5591991032292"
+                target="_blank"
+                rel="noopener"
+                class="loja__botao loja__botao--vazado"
+                >Chamar no WhatsApp</a
+              >
             </div>
+          </div>
+
+          <div data-anim="scale" class="loja__mapa-caixa">
+            <iframe
+              title="Mapa com a localização da Rabisco Papelaria na Rua Sete de Setembro, 36"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              src="https://www.google.com/maps?q=-2.99689229059232,-47.35176811287142&amp;z=16&amp;hl=pt-BR&amp;output=embed"
+              class="loja__mapa"
+            ></iframe>
+          </div>
+
+          <div data-anim="up" data-d="3" class="loja__blocos">
+            <section class="loja__bloco">
+              <h3 class="loja__bloco-titulo">Horários</h3>
+              <dl class="loja__horarios">
+                <div class="loja__linha">
+                  <dt class="loja__rotulo">Seg — Sex</dt>
+                  <dd class="loja__valor">08h — 18h</dd>
+                </div>
+                <div class="loja__linha">
+                  <dt class="loja__rotulo">Sábado</dt>
+                  <dd class="loja__valor">08h — 13h</dd>
+                </div>
+                <div class="loja__linha">
+                  <dt class="loja__rotulo">Domingo</dt>
+                  <dd class="loja__valor loja__valor--apagado">Fechado</dd>
+                </div>
+              </dl>
+            </section>
+
+            <section class="loja__bloco">
+              <h3 class="loja__bloco-titulo">Fale com a gente</h3>
+              <a href="https://wa.me/5591991032292" target="_blank" rel="noopener" class="loja__destaque"
+                >(91) 99103-2292</a
+              >
+              <p class="loja__nota">WhatsApp · orçamento e reserva de material</p>
+            </section>
+
+            <section class="loja__bloco">
+              <h3 class="loja__bloco-titulo">Instagram</h3>
+              <a
+                href="https://www.instagram.com/rabisco_papelaria_pgm"
+                target="_blank"
+                rel="noopener"
+                class="loja__destaque"
+                >@rabisco_papelaria_pgm</a
+              >
+              <p class="loja__nota">Novidades e chegadas da semana</p>
+            </section>
           </div>
         </section>
 
@@ -1170,10 +1174,9 @@
           </div>
           <div class="rodape__coluna">
             <span class="rodape__rotulo">Navegue</span>
-            <a href="#manifesto" class="rodape__link">Manifesto</a>
-            <a href="#curadoria" class="rodape__link">Curadoria</a>
-            <a href="#servicos" class="rodape__link">Serviços</a>
-            <a href="#presentes" class="rodape__link">Presentes</a>
+            <a href="#categorias" class="rodape__link">Categorias</a>
+            <a href="#produtos" class="rodape__link">Produtos</a>
+            <a href="#loja" class="rodape__link">A Loja</a>
           </div>
           <div class="rodape__coluna">
             <span class="rodape__rotulo">Visite</span>

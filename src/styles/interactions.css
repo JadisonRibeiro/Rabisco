@@ -25,24 +25,8 @@
   transform: scaleX(1);
 }
 
-/* Chips de categoria. */
-[data-chip]:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 28px 44px -22px rgb(var(--ink-rgb) / 62%);
-}
-
-[data-chip]:active {
-  transform: translateY(-3px);
-}
-
-[data-chip]:hover [data-chipimg] {
-  transform: scale(1.055);
-  box-shadow: 0 0 0 1.5px rgb(var(--ink-rgb) / 22%);
-}
-
-[data-chip]:hover [data-chiptxt] {
-  color: var(--ink);
-}
+/* Os chips de categoria saíram: o carrossel agora é disco + nome, e o estado
+   de hover mora junto do componente em components/rail.css. */
 
 /* Botão flutuante de WhatsApp. */
 [data-wafab]:hover {

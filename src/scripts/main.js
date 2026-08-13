@@ -5,13 +5,13 @@
  */
 import { createListenerScope } from './lib/listeners.js';
 import { initNavCondense } from './modules/nav-condense.js';
-import { initRail } from './modules/rail.js';
 import { initMobileMenu } from './modules/mobile-menu.js';
 import { initPointerEffects } from './modules/pointer-effects.js';
+import { initLojaEstado } from './modules/loja-estado.js';
 
 const scope = createListenerScope();
 
-for (const init of [initNavCondense, initRail, initMobileMenu, initPointerEffects]) {
+for (const init of [initNavCondense, initMobileMenu, initPointerEffects, initLojaEstado]) {
   init(scope);
 }
 

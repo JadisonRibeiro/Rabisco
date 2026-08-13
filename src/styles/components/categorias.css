@@ -1,0 +1,343 @@
+/* Vitrine de categorias */
+
+/*
+ * Fica entre o hero e a galeria, dois blocos de peso: um ocupa a tela inteira,
+ * o outro é laranja cheio. Esta faixa é o respiro entre eles, então o padding
+ * é menor que o das seções vizinhas — ela informa e passa, não se instala.
+ *
+ * O padding de cima embute a altura da onda, senão a primeira linha de
+ * conteúdo entraria por baixo dela.
+ *
+ * Embaixo ele é bem menor, e não por descuido: a onda daquela emenda mora na
+ * galeria e é de papel, então ela já acrescenta uns 40px de branco depois que
+ * esta seção termina. Medir os dois lados pelo mesmo número deixaria a base
+ * com quase o dobro do respiro visível que o topo tem.
+ */
+.categorias {
+  position: relative;
+  padding: clamp(100px, 12vh, 168px) var(--gutter) clamp(34px, 4.5vh, 76px);
+  background: var(--paper);
+  overflow: hidden;
+}
+
+/*
+ * As bordas onduladas. Cada onda é preenchida com a cor da seção vizinha —
+ * creme em cima, laranja embaixo — então a emenda não é uma faixa decorativa
+ * entre dois blocos: é o próprio bloco de cima descendo e o de baixo subindo.
+ *
+ * preserveAspectRatio="none" deixa a onda esticar com a largura da tela em
+ * vez de manter proporção e sobrar; a altura quem manda é o CSS.
+ *
+ * O -1px cobre a fresta que o arredondamento subpixel abre entre o topo do
+ * SVG e a borda da seção em certos zooms.
+ */
+/*
+ * 200% de largura é o que sobra para a deriva correr: a metade excedente fica
+ * fora da seção, aparada pelo overflow, e entra em quadro conforme a peça
+ * anda. Sem isso o deslocamento abriria um vazio na borda direita.
+ *
+ * data-float no SVG (e não uma media query aqui) para que o bloco geral de
+ * animations.css desligue a deriva junto com os outros movimentos ociosos:
+ * onda que anda sozinha e nunca para é o caso exato da preferência.
+ */
+.categorias__onda {
+  position: absolute;
+  left: 0;
+  display: block;
+  width: 200%;
+  height: clamp(30px, 4.4vw, 66px);
+  pointer-events: none;
+  animation: rabOnda 28s linear infinite;
+}
+
+.categorias__onda--topo {
+  top: -1px;
+}
+
+/* O rabisco de fundo é da marca, não do conteúdo: fica em laranja rebaixado
+   para não competir com as oito fotos, que já são coloridas. */
+.categorias__grafico {
+  position: absolute;
+  top: 4%;
+  right: -8%;
+  width: 44%;
+  opacity: 0.14;
+  pointer-events: none;
+}
+
+.categorias__grade {
+  text-align: center;
+  margin-bottom: clamp(38px, 5.5vh, 64px);
+}
+
+/*
+ * Centralizado, o rótulo ganha régua dos dois lados. Com uma só, como nas
+ * outras seções, o eixo do conjunto deixa de ser o eixo do texto e o bloco
+ * inteiro parece mal centralizado — o olho mede pelo desenho, não pela caixa.
+ * As duas vêm de pseudo-elementos: são traço, não conteúdo.
+ */
+.categorias__eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 26px;
+}
+
+.categorias__eyebrow::before,
+.categorias__eyebrow::after {
+  content: '';
+  display: block;
+  width: clamp(28px, 7vw, 110px);
+  height: 1px;
+  background: rgb(var(--ink-rgb) / 22%);
+}
+
+.categorias__rotulo {
+  font-size: 10.5px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+
+.categorias__titulo {
+  font-weight: 800;
+  font-stretch: 78%;
+  text-transform: uppercase;
+  font-size: clamp(32px, 4.6vw, 76px);
+  line-height: 0.9;
+  letter-spacing: -0.025em;
+}
+
+.categorias__realce {
+  position: relative;
+  z-index: 2;
+}
+
+/* A galeria já circula uma palavra do título com um laço fechado. Aqui o
+   traço passa por baixo: mesma mão, gesto diferente, senão as duas seções
+   contam a mesma piada seguidas. */
+.categorias__grafico-2 {
+  position: absolute;
+  left: -4%;
+  bottom: -30%;
+  width: 108%;
+  height: 42%;
+  overflow: visible;
+  z-index: 1;
+}
+
+.categorias__traco {
+  stroke-dasharray: 1200;
+  stroke-dashoffset: 1200;
+}
+
+/* ── As oito ─────────────────────────────────────────────────────────────── */
+
+.categorias__lista {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: clamp(12px, 1.6vw, 28px);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/*
+ * Cascata de entrada da fileira, em vez da escada global de data-d.
+ *
+ * Aquela escada foi medida para blocos altos: a última faixa termina em
+ * `cover 56%`. Estes itens têm ~180px numa seção curta perto do topo da
+ * página, e com faixa longa a animação não chega ao fim antes de o item sair
+ * da tela — cada peça ficava parada 1 a 2px abaixo do lugar, para sempre,
+ * brigando justamente com o desnível de repouso logo abaixo. Terminando tudo
+ * até `cover 39%` cada item conclui a entrada com folga.
+ *
+ * O passo curto também serve ao gesto: oito peças pequenas lado a lado pedem
+ * um estalo da esquerda para a direita, não uma fila que demora a formar.
+ */
+.categorias__celula {
+  animation-range: entry 2% cover 18%;
+}
+.categorias__celula:nth-child(2) {
+  animation-range: entry 2% cover 21%;
+}
+.categorias__celula:nth-child(3) {
+  animation-range: entry 2% cover 24%;
+}
+.categorias__celula:nth-child(4) {
+  animation-range: entry 2% cover 27%;
+}
+.categorias__celula:nth-child(5) {
+  animation-range: entry 2% cover 30%;
+}
+.categorias__celula:nth-child(6) {
+  animation-range: entry 2% cover 33%;
+}
+.categorias__celula:nth-child(7) {
+  animation-range: entry 2% cover 36%;
+}
+.categorias__celula:nth-child(8) {
+  animation-range: entry 2% cover 39%;
+}
+
+/*
+ * O desnível de repouso vem de --desnivel, definido item a item logo abaixo,
+ * e o hover soma uma subida fixa por cima dele — daí o calc, e não um valor
+ * pronto: um `translate: 0 -8px` no hover levaria cada peça para a mesma
+ * altura, achatando justamente o desalinho que a seção quer ter.
+ *
+ * A primeira versão desta seção girava cada disco alguns graus. Não dava para
+ * ver: círculo girado é o mesmo círculo. O desalinho aqui é vertical porque é
+ * a dimensão em que um disco denuncia que foi posto à mão.
+ */
+.categorias__item {
+  display: grid;
+  justify-items: center;
+  gap: clamp(10px, 1vw, 16px);
+  text-align: center;
+  color: var(--ink);
+  translate: 0 var(--desnivel, 0px);
+  transition: translate 0.45s var(--ease);
+}
+
+/*
+ * O anel mora no box-shadow, e não numa borda: borda entra na caixa e
+ * empurraria o recorte da foto a cada hover. Em sombra ele cresce por fora,
+ * sem tocar no layout. São dois — o de papel abre a folga que faz o laranja
+ * ler como anel solto, não como contorno grudado na foto.
+ *
+ * O giro de repouso vem de --giro, definido item a item logo abaixo.
+ */
+.categorias__disco {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: var(--r-circulo);
+  overflow: hidden;
+  background: rgb(var(--ink-rgb) / 8%);
+  box-shadow:
+    0 0 0 3px var(--paper),
+    0 0 0 5px rgb(var(--accent-rgb) / 0%),
+    0 18px 30px -22px rgb(var(--ink-rgb) / 55%);
+  transition:
+    box-shadow 0.45s ease,
+    scale 0.45s var(--ease);
+}
+
+/*
+ * Oito discos na mesma linha de base viram uma tabela. Em alturas levemente
+ * diferentes, viram oito fotos que alguém espalhou na mesa — que é o que uma
+ * papelaria de bairro é. Os valores não seguem progressão: ordem reconhecível
+ * aqui devolveria o alinhamento que se quer perder.
+ *
+ * A amplitude para em 7px de propósito. Acima disso deixa de ler como mão e
+ * passa a ler como grade quebrada, que é defeito, não gesto.
+ */
+.categorias__celula:nth-child(8n + 1) {
+  --desnivel: -6px;
+}
+.categorias__celula:nth-child(8n + 2) {
+  --desnivel: 4px;
+}
+.categorias__celula:nth-child(8n + 3) {
+  --desnivel: -2px;
+}
+.categorias__celula:nth-child(8n + 4) {
+  --desnivel: 7px;
+}
+.categorias__celula:nth-child(8n + 5) {
+  --desnivel: -5px;
+}
+.categorias__celula:nth-child(8n + 6) {
+  --desnivel: 3px;
+}
+.categorias__celula:nth-child(8n + 7) {
+  --desnivel: -7px;
+}
+.categorias__celula:nth-child(8n + 8) {
+  --desnivel: 5px;
+}
+
+.categorias__item:hover .categorias__disco,
+.categorias__item:focus-visible .categorias__disco {
+  scale: 1.03;
+  box-shadow:
+    0 0 0 3px var(--paper),
+    0 0 0 5px var(--accent),
+    0 26px 42px -24px rgb(var(--ink-rgb) / 65%);
+}
+
+/*
+ * Aproximar é o gesto: a peça vem à frente das outras para ser vista. Mas é
+ * deslocamento de verdade, então só acontece para quem aceita movimento — o
+ * anel e a cor do rótulo respondem em qualquer caso, e são eles que garantem
+ * o retorno ao ponteiro quando o movimento está desligado.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .categorias__item:hover,
+  .categorias__item:focus-visible {
+    translate: 0 calc(var(--desnivel, 0px) - 8px);
+  }
+
+  .categorias__item:hover .categorias__disco,
+  .categorias__item:focus-visible .categorias__disco {
+    scale: 1.06;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .categorias__item {
+    transition: none;
+  }
+
+  .categorias__disco {
+    transition:
+      box-shadow 0.14s linear,
+      scale 0.14s linear;
+  }
+}
+
+.categorias__nome {
+  font-weight: 700;
+  font-stretch: 84%;
+  text-transform: uppercase;
+  font-size: clamp(11px, 0.82vw, 13.5px);
+  letter-spacing: 0.06em;
+  line-height: 1.3;
+  transition: color 0.35s ease;
+}
+
+.categorias__item:hover .categorias__nome,
+.categorias__item:focus-visible .categorias__nome {
+  color: var(--accent);
+}
+
+.categorias__manuscrito {
+  display: block;
+  margin-top: clamp(28px, 4vh, 46px);
+  text-align: center;
+  font-family: Caveat, cursive;
+  font-size: clamp(20px, 1.7vw, 26px);
+  color: rgb(var(--ink-rgb) / 72%);
+}
+
+/* ── Quebras ─────────────────────────────────────────────────────────────── */
+
+/*
+ * Oito colunas só cabem enquanto o disco não fica menor que o rótulo que ele
+ * carrega: abaixo de ~1040px "Marca-textos" já quebra em três linhas e a
+ * fileira desalinha. Duas fileiras de quatro preservam o disco legível.
+ */
+@media (max-width: 1040px) {
+  .categorias__lista {
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(18px, 3vw, 32px);
+  }
+}
+
+@media (max-width: 560px) {
+  .categorias__lista {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

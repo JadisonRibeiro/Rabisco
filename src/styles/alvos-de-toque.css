@@ -21,7 +21,7 @@
  * do absoluto e ele voltaria ao fluxo, deslocando a grade do hero inteira.
  */
 .rodape__link,
-.loja__link,
+.loja__destaque,
 .menu__link {
   position: relative;
 }
@@ -29,7 +29,7 @@
 .nav__link::after,
 .nav__link-2::after,
 .rodape__link::after,
-.loja__link::after,
+.loja__destaque::after,
 .hero__so-desktop::after,
 .menu__link::after {
   content: '';

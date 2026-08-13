@@ -13,10 +13,7 @@
 @import './components/nav.css';
 @import './components/menu.css';
 @import './components/hero.css';
-@import './components/rail.css';
-@import './components/manifesto.css';
-@import './components/servicos.css';
-@import './components/presentes.css';
+@import './components/categorias.css';
 @import './components/galeria.css';
 @import './components/loja.css';
 @import './components/cta.css';

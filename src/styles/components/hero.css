@@ -166,28 +166,122 @@
   color: rgb(var(--ink-rgb) / 66%);
 }
 
+/*
+ * A imagem do hero é um card de publicação que já traz a própria moldura
+ * branca, cantos arredondados e sombra. A moldura que existia aqui — borda,
+ * raio, sombra e fundo areia — emoldurava um card já emoldurado, e o
+ * aspect-ratio 1/1 sobrava nas laterais de uma arte 1100×1219. Restou só o
+ * position, de que os elementos flutuantes dependem.
+ */
 .hero__moldura {
   position: relative;
-  border-radius: var(--r-xl);
-  overflow: hidden;
-  box-shadow:
-    0 60px 90px -50px rgb(var(--ink-rgb) / 55%),
-    0 10px 30px -18px rgb(var(--ink-rgb) / 28%);
-  border: 1px solid rgb(var(--cream-rgb) / 60%);
 }
 
+/*
+ * A imagem inteira é o link para o Instagram. No hover o card gira de leve,
+ * com o eixo lá embaixo, como uma foto apoiada na mesa que alguém empurra
+ * pelo canto — girar pelo centro daria uma volta de roda, não de papel.
+ *
+ * rotate/scale/translate como propriedades próprias, e não um `transform`
+ * só: assim o repouso é a ausência de valor, sem precisar reescrever a
+ * cadeia inteira em cada estado.
+ */
+/*
+ * O repouso anima em `transform`; o hover, em rotate/scale/translate. Não é
+ * duplicação: são cadeias separadas que o navegador compõe (translate, rotate,
+ * scale e só então transform), então o giro do hover entra por cima do respiro
+ * sem interrompê-lo nem precisar reescrevê-lo quadro a quadro. É a mesma razão
+ * que levou o hover às propriedades individuais, agora rendendo juros.
+ *
+ * 13s contra os 9s do bilhete ao lado: os ciclos só se reencontram a cada
+ * 117s, então as duas peças quase nunca sobem juntas. Períodos iguais colariam
+ * as duas num bloco só, e o que se quer é profundidade entre elas.
+ *
+ * O atraso espera a entrada (0,46s de `data-id=4` + 1,2s de rabBlur) terminar.
+ * Balançar durante o desfoque de entrada embaralha os dois movimentos.
+ */
 .hero__moldura-2 {
   position: relative;
+  display: block;
   width: 100%;
-  aspect-ratio: 1/1;
+  aspect-ratio: 1100/1219;
   min-height: 320px;
-  background: var(--sand);
+  transform-origin: 50% 88%;
+  animation: rabHeroFloat 13s ease-in-out 1.7s infinite;
+  transition:
+    rotate var(--t-md-2) var(--ease),
+    scale var(--t-md-2) var(--ease),
+    translate var(--t-md-2) var(--ease);
+}
+
+/*
+ * O deslocamento lateral é o que faz o movimento ser percebido. Só o giro,
+ * com o eixo embaixo, move pouco o corpo do card — o que anda é o topo, e
+ * num card alto isso lê como acomodar, não como virar. O translate no eixo x
+ * empurra a peça inteira para o mesmo lado do giro.
+ */
+/*
+ * Sem media query de hover, de propósito. `(hover: hover)` responde pela
+ * entrada PRIMÁRIA do sistema: num notebook com tela sensível ao toque o
+ * Windows elege o toque como primária e a consulta dá falso mesmo havendo
+ * mouse e trackpad ligados — o giro simplesmente nunca aplicava nessas
+ * máquinas. Aqui não há o que proteger: o card é um link que abre outra
+ * aba, então nem hover grudado depois do toque é problema.
+ */
+.hero__moldura-2:hover,
+.hero__moldura-2:focus-visible {
+  rotate: -3.5deg;
+  scale: 1.03;
+  translate: -14px -10px;
+}
+
+/*
+ * O respiro contínuo morre sozinho no bloco geral de animations.css, que zera
+ * `animation` e `transform` de quem tem data-float — daí o atributo no link.
+ * É exatamente o que a preferência pede: movimento autônomo, que ninguém
+ * pediu e não para, é o que causa desconforto vestibular.
+ *
+ * O giro de hover fica, e de propósito. Este card é um link: a inclinação é
+ * a única resposta que ele dá ao ponteiro, e sem ela uma peça clicável passa
+ * por decoração. Retorno a um gesto deliberado do usuário, sobre uma área
+ * pequena, não é o que `reduce` combate — só o excesso é. Então o gesto
+ * continua, em dose menor e num tempo curto o bastante para ler como resposta
+ * e não como percurso.
+ *
+ * Sem isso, quem desliga animações no sistema (Windows: Acessibilidade →
+ * Efeitos visuais → Efeitos de animação) via o card completamente inerte.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .hero__moldura-2 {
+    transition:
+      rotate 0.14s linear,
+      scale 0.14s linear,
+      translate 0.14s linear;
+  }
+
+  .hero__moldura-2:hover,
+  .hero__moldura-2:focus-visible {
+    rotate: -1.6deg;
+    scale: 1.015;
+    translate: -6px -4px;
+  }
+}
+
+/* A arte tem transparência de propósito em volta do card (é onde a sombra
+   dele cai). O cinza de carregamento do .foto apareceria ali como um
+   retângulo atrás da peça. */
+.hero__moldura-2 .foto {
+  background: none;
 }
 
 .hero__flutuante {
   position: absolute;
   left: -42px;
-  bottom: -30px;
+  /* A base branca do card está a 12,7% da altura da arte — abaixo dela é só a
+     sombra, transparente. Com o bilhete em 0 ele encosta no canto inferior
+     esquerdo do card sem alcançar a fileira de ícones da publicação, que fica
+     a ~20% da base. */
+  bottom: 0;
   padding: 16px 20px;
   border-radius: var(--r-sm);
   background: rgb(var(--cream-rgb) / 82%);
@@ -204,26 +298,9 @@
   display: block;
 }
 
-.hero__flutuante-2 {
-  position: absolute;
-  right: -26px;
-  top: -30px;
-  width: 76px;
-  height: 76px;
-  border-radius: var(--r-circulo);
-  background: var(--accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: rabFloatB 11s ease-in-out infinite;
-  box-shadow: 0 20px 40px -18px rgb(var(--glow-rgb) / 80%);
-}
-
-.hero__foto-2 {
-  width: 38px;
-  height: 38px;
-  object-fit: contain;
-}
+/* O selo redondo com o R que flutuava no canto superior direito da imagem
+   saiu junto com a troca da arte do hero. A animação rabFloatB continua em
+   uso pelos flutuantes da seção CTA. */
 
 .hero__so-desktop {
   position: absolute;
