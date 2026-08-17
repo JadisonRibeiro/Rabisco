@@ -13,22 +13,22 @@
     "format:check": "prettier --check .",
     "verify:visual": "node tools/verify-visual.mjs"
   },
+  "//devDependencies": "axe-core, pixelmatch, playwright-core, pngjs e sharp só servem às ferramentas de tools/, e sharp sozinho traz ~30 MB de binário nativo que o deploy não usa. Ainda assim ficam aqui: `npm ci --omit=optional` não é seletivo — ele também descarta as binárias de plataforma que o rolldown do Vite publica como optionalDependencies, e o build morre sem elas. Separar de verdade pede um package.json próprio em tools/.",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "axe-core": "^4.12.1",
     "eslint": "^10.8.0",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.8.0",
-    "prettier": "^3.9.6",
-    "vite": "^8.2.0"
-  },
-  "//optionalDependencies": "Só as ferramentas de tools/ usam estas. sharp traz binário nativo de ~30 MB e playwright-core baixa navegador; o job de deploy só roda lint e build, e instala com `npm ci --omit=optional` para não pagar por elas em todo push. Localmente use `npm install` sem a flag.",
-  "optionalDependencies": {
-    "axe-core": "^4.12.1",
-    "node-html-parser": "^9.0.1",
     "pixelmatch": "^6.0.0",
     "playwright-core": "^1.49.0",
     "pngjs": "^7.0.0",
-    "sharp": "^0.35.3"
+    "prettier": "^3.9.6",
+    "sharp": "^0.35.3",
+    "vite": "^8.2.0"
+  },
+  "dependencies": {
+    "node-html-parser": "^9.0.1"
   },
   "engines": {
     "node": ">=22"

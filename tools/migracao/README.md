@@ -24,9 +24,11 @@ migração, se houver, começa daqui em vez de do zero.
 ## Dependências
 
 As bibliotecas pesadas que estes scripts usam — `sharp`, `playwright-core`,
-`pixelmatch`, `pngjs`, `axe-core`, `node-html-parser` — estão em
-`optionalDependencies`. O CI instala com `npm ci --omit=optional` e pula todas:
-o job só roda `lint` e `build`, que precisam de `eslint` e `vite`.
+`pixelmatch`, `pngjs`, `axe-core`, `node-html-parser` — entram junto com todo o
+resto no `npm install`. Nenhuma serve ao site, só a estas ferramentas.
 
-Para rodar qualquer ferramenta daqui localmente, instale tudo com `npm install`
-sem a flag.
+Elas chegaram a ficar em `optionalDependencies`, para o CI pular o download com
+`npm ci --omit=optional`. Não funciona: a flag não escolhe quais optional
+descartar, e o rolldown do Vite entrega a binária de plataforma exatamente por
+esse canal — sem ela o `build` não roda. Separar de verdade pede um
+`package.json` próprio aqui dentro.

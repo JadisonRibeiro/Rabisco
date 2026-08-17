@@ -28,11 +28,12 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
 
-      # --omit=optional pula sharp (binário nativo de ~30 MB), playwright-core e
-      # o resto das ferramentas de tools/. Este job só roda lint e build, que
-      # precisam de eslint e vite — instalar o kit de auditoria custava dezenas
-      # de segundos por deploy, para sempre.
-      - run: npm ci --omit=optional
+      # Instala tudo, inclusive o kit de tools/ que este job nao usa. Chegou a
+      # rodar com --omit=optional para pular sharp e playwright-core, e o build
+      # quebrou: a flag nao e seletiva, ela derruba tambem as binarias de
+      # plataforma que o rolldown do Vite publica como optionalDependencies.
+      # O cache do setup-node ja absorve a maior parte do custo.
+      - run: npm ci
 
       - run: npm run lint
 
