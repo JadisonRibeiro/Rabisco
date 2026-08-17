@@ -94,10 +94,9 @@ img {
   border-radius: var(--r-xs);
 }
 
-/* Sobre creme e papel a lógica se inverte. */
+/* Sobre creme e papel a lógica se inverte. (.manifesto e .presentes estavam
+   nesta lista e são seções que o site não tem mais.) */
 .hero :focus-visible,
-.manifesto :focus-visible,
-.presentes :focus-visible,
 .loja :focus-visible {
   outline-color: var(--ink);
   box-shadow: 0 0 0 4px rgb(var(--cream-rgb) / 90%);

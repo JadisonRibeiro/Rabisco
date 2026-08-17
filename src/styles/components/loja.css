@@ -203,6 +203,76 @@
      arredondado sozinho basta para a peça se ler como recortada. */
 }
 
+/*
+ * Fachada do mapa. Ocupa a mesma caixa que o iframe ocuparia, então a troca no
+ * clique não muda a altura da seção nem empurra o que está abaixo.
+ */
+.loja__mapa-fachada {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+  text-align: center;
+
+  /* Sem grade própria: a seção já tem a dela em .loja__grade, e a segunda por
+     cima só embaralhava as duas. A areia da caixa basta para a peça se ler
+     como um lugar reservado ao mapa. */
+}
+
+.loja__mapa-pino {
+  color: var(--accent);
+}
+
+.loja__mapa-endereco {
+  margin: 0;
+  font-size: clamp(14px, 1.2vw, 16px);
+  font-weight: 700;
+  font-stretch: 88%;
+  color: var(--ink);
+}
+
+.loja__mapa-botao {
+  padding: 12px 22px;
+  border: 1.5px solid var(--ink);
+  border-radius: var(--r-pilula);
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background 0.35s var(--ease),
+    color 0.35s var(--ease);
+}
+
+.loja__mapa-botao:hover {
+  background: var(--ink);
+  color: var(--cream);
+}
+
+/* 62% de tinta sobre a areia passa a AA — é aviso de privacidade, e aviso que
+   não se lê não avisa nada. */
+.loja__mapa-nota {
+  margin: 0;
+  max-width: 34ch;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: rgb(var(--ink-rgb) / 62%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loja__mapa-botao {
+    transition: none;
+  }
+}
+
 .loja__mapa {
   position: absolute;
   inset: 0;

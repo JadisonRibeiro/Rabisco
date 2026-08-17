@@ -10,13 +10,26 @@
  *
  * 2. O conteúdo atrás nunca é escondido — a cortina só cobre. Nada de
  *    display:none na página: as fontes, as imagens e o texto seguem
- *    carregando durante os 3s, de modo que a espera é usada, não perdida.
+ *    carregando durante os 4s, de modo que a espera é usada, não perdida.
  *
- * 3. Quem já viu não vê de novo. O atributo em <html> é escrito por um script
- *    inline no <head>, antes da primeira pintura, senão a cortina apareceria
- *    por um quadro antes de ser retirada — que é pior que não ter.
+ * 3. A cortina roda em toda visita. Não há memória de sessão: quatro segundos
+ *    foram julgados curtos o bastante para a marca valer a repetição. Quem
+ *    não quiser esperar pula com um toque ou uma tecla.
  */
 
+/*
+ * A linha do tempo inteira, em um lugar só. Quem for mexer nos tempos mexe
+ * aqui e não caça seis números espalhados pelo arquivo.
+ *
+ *   0,00 – 0,90  a cena chega (aproxima e aparece)
+ *   0,20 – 1,80  o contorno do R é traçado
+ *   1,30 – 2,10  o primeiro rabisco
+ *   1,55 – 2,35  a tinta alcança o contorno
+ *   1,62 – 2,42  o segundo rabisco
+ *   2,10 – 2,80  o nome, com a entreletra assentando
+ *   3,15         o hero começa a subir atrás da cortina
+ *   3,30 – 4,00  a cena avança e a cortina dissolve
+ */
 .abertura {
   position: fixed;
   inset: 0;
@@ -25,10 +38,43 @@
   z-index: 90;
   display: grid;
   place-items: center;
-  background: var(--cream);
 
-  /* A saída é o último ato: 2,72s de desenho, 0,62s de dissolução. */
-  animation: rabAberturaSai 0.62s var(--ease) 2.72s both;
+  /*
+   * Não é creme chapado: um halo de --paper atrás da marca, dissolvido no
+   * creme antes de chegar às bordas. Dá profundidade ao vazio e ancora o olho
+   * no centro antes de o traço começar — de graça, sem mais um elemento.
+   *
+   * Os raios são vmin, não porcentagem da caixa. Em porcentagem o halo media
+   * a tela em vez da marca: num monitor de 1920 os 112% viravam um raio de
+   * 2150px, diluído a ponto de não existir, justamente onde há mais vazio
+   * para ocupar. vmin acompanha a mesma dimensão que dimensiona a cena, então
+   * o halo continua vestindo a marca em qualquer largura.
+   *
+   * A parada final é creme com alfa zero em 100%, não `transparent` em 66%.
+   * Duas correções em uma. Terminando em 66% o degradê encontrava o creme
+   * chapado antes do fim da elipse e a emenda aparecia como um anel fantasma
+   * em volta da marca — visível nas telas grandes, onde a elipse é maior.
+   * E `transparent` é preto com alfa zero: onde a interpolação não for
+   * pré-multiplicada, ele suja a dissolução com um cinza que não existe na
+   * paleta. Zerar o alfa da própria cor de destino não tem nenhum dos dois
+   * problemas.
+   */
+  background:
+    radial-gradient(72vmin 56vmin at 50% 44%, var(--paper) 0%, rgb(var(--cream-rgb) / 0) 100%),
+    var(--cream);
+
+  /*
+   * A saída é o último ato: 3,3s de desenho, 0,7s de dissolução.
+   *
+   * A curva não é --ease aqui, e a exceção é medida. --ease é um ease-out
+   * forte (0.16, 0.84, 0.24, 1): a 150ms dos 700 a opacidade já tinha caído
+   * uns dois terços, o site aparecia de supetão e os últimos 400ms corriam
+   * com um véu invisível na frente — tempo cobrado do visitante sem nada
+   * acontecendo. Um ease-in-out simétrico distribui a dissolução pelos 700ms
+   * inteiros, e é durante ela que a marca avança: os dois se sobrepõem em vez
+   * de um terminar antes de o outro ser visto.
+   */
+  animation: rabAberturaSai 0.7s cubic-bezier(0.4, 0, 0.6, 1) 3.3s both;
 }
 
 /*
@@ -52,11 +98,81 @@
   }
 }
 
-/* Deixa de interceptar o toque assim que começa a sair. */
+/*
+ * A cena tem dois movimentos próprios, e eles são o que faz a abertura ler
+ * como passagem em vez de tela de espera.
+ *
+ * Na chegada ela se aproxima de 0,94 a 1: o traço não começa sobre um vazio
+ * parado, começa sobre algo que acabou de assentar.
+ *
+ * Na saída ela avança além de 1 enquanto a cortina dissolve. É esse par que
+ * cria a sensação de atravessar a marca e cair no site — uma cortina que só
+ * some deixa o site aparecer; uma que é ultrapassada leva o olho junto.
+ *
+ * `forwards` no segundo, e não `both`: com `both` ele preencheria para trás
+ * desde o tempo zero e, por vir depois na lista, venceria o `transform` da
+ * chegada — a aproximação inicial simplesmente não aconteceria.
+ */
 .abertura__cena {
   position: relative;
-  width: min(58vw, 260px);
+
+  /*
+   * Três limites, e cada um manda numa faixa de tela diferente.
+   *
+   * 58vw governa o celular, e é ele que dá à abertura a presença que ela tem
+   * lá: a marca ocupa 58% da largura e não sobra vazio ao redor.
+   *
+   * Os outros dois já foram 42vh e 360px, e eram eles que faziam a abertura
+   * ler como duas animações diferentes. Num monitor de 1440x900 quem vencia
+   * era o teto de 360px: a marca caía para 25% da largura e boiava num campo
+   * de creme vazio, enquanto no celular ocupava 58%. Não era outra animação —
+   * era a mesma, com um quarto da presença.
+   *
+   * 54vh é o limite que importa nas telas largas. A cena é ~1,32x mais alta
+   * que larga, então quem restringe no monitor é a altura, não a largura —
+   * amarrar em vh é amarrar na dimensão que de fato aperta, e isso protege
+   * sozinho as janelas baixas e o celular deitado. 54vh de largura dá uma cena
+   * de ~71vh de altura: a mesma sensação de quadro preenchido que o celular
+   * tem, no limite do que uma tela deitada comporta.
+   *
+   * Igualar os 58% de largura do celular no monitor é impossível, e vale dizer
+   * por quê: 58vw de 1440 são 835px, que pedem uma cena de ~1100px de altura
+   * numa janela de 900. As proporções de retrato e paisagem são opostas — o
+   * que dá para igualar é a densidade, não o número.
+   *
+   * 760px é só uma trava de sanidade para tela absurda, e não mais um teto de
+   * verdade: ele solta 54vh governar até janelas de 1440px de altura, que é o
+   * fim do que existe na prática. O medo antigo era o traço engrossar e deixar
+   * de parecer caneta, mas a espessura mora dentro do viewBox e escala junto —
+   * a razão traço/letra é a mesma em 226px e em 760px. O que muda é o tamanho
+   * do desenho, que é justamente o que se quer igualar.
+   */
+  width: min(58vw, 54vh, 760px);
+
+  /* Nunca intercepta o toque: quem quiser pular toca a cortina, que é quem
+     escuta o pointerdown. */
   pointer-events: none;
+  animation:
+    rabAberturaCena 0.9s var(--ease) both,
+    rabAberturaCenaSai 0.7s cubic-bezier(0.4, 0, 1, 1) 3.3s forwards;
+}
+
+@keyframes rabAberturaCena {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes rabAberturaCenaSai {
+  to {
+    opacity: 0;
+    transform: scale(1.08);
+  }
 }
 
 .abertura__marca {
@@ -87,7 +203,13 @@
   stroke-linejoin: round;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
-  animation: rabAberturaTraco 1.35s ease-in-out 0.34s both;
+
+  /*
+   * 1,6s para um caminho deste tamanho é a velocidade de quem desenha, não a
+   * de quem preenche um formulário. O ease-in-out é o que separa as duas: a
+   * mão sai devagar, ganha corpo no meio da letra e freia ao fechar.
+   */
+  animation: rabAberturaTraco 1.6s ease-in-out 0.2s both;
 }
 
 @keyframes rabAberturaTraco {
@@ -101,7 +223,7 @@
 .abertura__miolo {
   fill: var(--accent);
   opacity: 0;
-  animation: rabAberturaMiolo 0.72s var(--ease) 1.32s both;
+  animation: rabAberturaMiolo 0.8s var(--ease) 1.55s both;
 }
 
 @keyframes rabAberturaMiolo {
@@ -128,15 +250,20 @@
   stroke-linecap: round;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
-  animation: rabAberturaTraco 0.78s ease-in-out both;
+  animation: rabAberturaTraco 0.8s ease-in-out both;
 }
 
+/*
+ * O primeiro entra antes de a tinta chegar, o segundo depois. Cruzar os três
+ * eventos é de propósito: em fila eles viram uma lista de coisas acontecendo;
+ * sobrepostos viram um gesto só, que é como a mão de fato trabalha.
+ */
 .abertura__rabisco--um {
-  animation-delay: 1.06s;
+  animation-delay: 1.3s;
 }
 
 .abertura__rabisco--dois {
-  animation-delay: 1.4s;
+  animation-delay: 1.62s;
   opacity: 0.5;
 }
 
@@ -148,38 +275,66 @@
   letter-spacing: 0.42em;
   text-transform: uppercase;
   color: rgb(var(--ink-rgb) / 62%);
-
-  /* O deslocamento é de 8px: o suficiente para o olho ler "chegou", pouco o
-     bastante para não virar mais um movimento numa tela que já teve três. */
-  animation: rabAberturaNome 0.62s var(--ease) 1.86s both;
+  animation: rabAberturaNome 0.7s var(--ease) 2.1s both;
 }
 
+/*
+ * O nome não sobe: ele fecha. A entreletra parte de 0,62em e assenta nos
+ * 0,42em da regra acima, de modo que as letras se recolhem para a palavra em
+ * vez de deslizarem como um bloco.
+ *
+ * A escolha é sobre repetição. Nesta tela já houve um traço correndo, uma
+ * tinta subindo, dois rabiscos e uma cena se aproximando — mais um translateY
+ * seria o quinto movimento na mesma direção e o olho pararia de distinguir os
+ * eventos. O ajuste de entreletra é o único gesto tipográfico do conjunto, e
+ * por ser o único ele é lido.
+ *
+ * Custa um relayout do parágrafo por quadro; são doze caracteres em uma linha
+ * dentro de uma cortina onde nada mais está sendo disposto.
+ */
 @keyframes rabAberturaNome {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    letter-spacing: 0.62em;
   }
   to {
     opacity: 1;
-    transform: none;
+    letter-spacing: 0.42em;
   }
 }
 
 /*
- * Quem já viu nesta aba não vê de novo, e quem pede menos movimento não vê
- * nunca. Nos dois casos a cortina não chega a existir: `display: none` em vez
- * de opacidade zero, para não deixar uma camada de tela cheia no caminho do
- * toque nem no leitor de tela.
+ * Duas saídas antecipadas: quem pulou nesta carga, e quem pede menos
+ * movimento. Nos dois casos a cortina deixa de existir de vez — `display:
+ * none` em vez de opacidade zero, para não deixar uma camada de tela cheia no
+ * caminho do toque nem no leitor de tela.
+ *
+ * O atributo é escrito pelo JS ao encerrar e vale só para esta carga; ele não
+ * é mais lido no início de nenhuma visita.
  */
 html[data-abertura='vista'] .abertura {
   display: none;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .abertura {
-    display: none;
-  }
-}
+/*
+ * A cortina NÃO respeita prefers-reduced-motion, e isso é decisão de produto,
+ * não descuido. Havia aqui um `display: none` sob essa preferência.
+ *
+ * Quem assina o site pediu a abertura para todo visitante, ciente do que isso
+ * significa: no Windows a preferência vem ligada por "Efeitos de animação"
+ * desligado — muita gente a tem sem nunca ter pedido nada — mas ela também é o
+ * que alguém com vertigem vestibular ou enxaqueca usa para se proteger, e para
+ * essa pessoa os 4s de traço, escala e avanço passam a acontecer sem saída.
+ *
+ * O que sobrou de mitigação, e que não deve ser removido junto: a cortina
+ * continua pulável a qualquer gesto depois de 900ms, e o resto da página
+ * segue respeitando a preferência — o hero não sobe, os rabiscos não correm
+ * em laço e as ondas não derivam. Ver o bloco no fim de animations.css.
+ *
+ * Se um dia isto for reconsiderado, o caminho de volta não é só ressuscitar o
+ * `display: none`: uma abertura de opacidade pura, sem transformação, entrega
+ * o momento de marca sem o movimento que a norma evita.
+ */
 
 /*
  * Enquanto a cortina está na frente, a entrada do hero espera por ela. Sem
@@ -187,9 +342,11 @@ html[data-abertura='vista'] .abertura {
  * cortina se abriria sobre uma página parada — a transição prometida vira um
  * corte seco.
  *
- * 2,55s começa a subida um pouco antes de a cortina terminar de sair (2,72s a
- * 3,34s): os dois movimentos se cruzam, que é o que faz um parecer causa do
- * outro em vez de dois eventos em fila.
+ * 3,15s começa a subida logo antes de a cortina começar a sair (3,30s a
+ * 4,00s): os dois movimentos se cruzam, que é o que faz um parecer causa do
+ * outro em vez de dois eventos em fila. Combinado com a cena que avança, o
+ * hero já está em movimento quando fica visível — o site não é revelado
+ * parado, é alcançado.
  *
  * Quando o visitante pula a abertura, o atributo passa a 'vista', esta regra
  * deixa de valer e os atrasos voltam a zero — as animações retomam do ponto
@@ -197,5 +354,5 @@ html[data-abertura='vista'] .abertura {
  * existe mais.
  */
 html:not([data-abertura='vista']) {
-  --entrada-atraso: 2.55s;
+  --entrada-atraso: 3.15s;
 }

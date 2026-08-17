@@ -14,7 +14,22 @@ const IMA_X = 12;
 const IMA_Y = 9;
 const IMA_ESCALA = 1.035;
 
-/** Orbs do hero perseguindo o ponteiro com atraso. */
+/*
+ * Abaixo deste resto a interpolação já não move pixel nenhum: a amplitude maior
+ * é 46px, então 0,0005 de diferença vale 0,02px. Continuar iterando a partir
+ * daqui é gastar um quadro para escrever o mesmo valor.
+ */
+const REPOUSO = 0.0005;
+
+/**
+ * Orbs do hero perseguindo o ponteiro com atraso.
+ *
+ * O laço não é permanente. Antes ele chamava requestAnimationFrame para sempre,
+ * mesmo com o ponteiro parado e mesmo com o hero fora da tela — e cada quadro
+ * escrevia `style.translate` em duas camadas de 720px com desfoque, que é das
+ * coisas mais caras que a página faz. Agora ele roda enquanto há distância a
+ * percorrer, dorme ao alcançar o alvo, e acorda no próximo movimento.
+ */
 function initOrbs({ on, add }) {
   const orbs = [...document.querySelectorAll('[data-orb]')];
   if (!orbs.length) return;
@@ -22,15 +37,37 @@ function initOrbs({ on, add }) {
   const alvo = { x: 0, y: 0 };
   const atual = { x: 0, y: 0 };
   let frame = 0;
+  // O hero começa na tela; se não houver observer, fica valendo sempre.
+  let visivel = true;
 
-  const passo = () => {
-    atual.x += (alvo.x - atual.x) * SUAVIZACAO;
-    atual.y += (alvo.y - atual.y) * SUAVIZACAO;
+  const pintar = () => {
     orbs.forEach((orb, i) => {
       const fator = i === 0 ? 1 : CONTRA_ORB;
       orb.style.translate = `${atual.x * AMPLITUDE_X * fator}px ${atual.y * AMPLITUDE_Y * fator}px`;
     });
+  };
+
+  const passo = () => {
+    const dx = alvo.x - atual.x;
+    const dy = alvo.y - atual.y;
+
+    // Chegou: encosta no alvo, pinta o quadro final uma vez e solta o laço.
+    if (Math.abs(dx) < REPOUSO && Math.abs(dy) < REPOUSO) {
+      atual.x = alvo.x;
+      atual.y = alvo.y;
+      pintar();
+      frame = 0;
+      return;
+    }
+
+    atual.x += dx * SUAVIZACAO;
+    atual.y += dy * SUAVIZACAO;
+    pintar();
     frame = requestAnimationFrame(passo);
+  };
+
+  const acordar = () => {
+    if (!frame && visivel) frame = requestAnimationFrame(passo);
   };
 
   on(
@@ -39,12 +76,39 @@ function initOrbs({ on, add }) {
     (e) => {
       alvo.x = (e.clientX / window.innerWidth) * 2 - 1;
       alvo.y = (e.clientY / window.innerHeight) * 2 - 1;
+      acordar();
     },
     { passive: true },
   );
 
-  frame = requestAnimationFrame(passo);
-  add(() => cancelAnimationFrame(frame));
+  /*
+   * Fora da tela o laço nem chega a acordar: um paralaxe que ninguém vê não
+   * vale um quadro. Ao voltar, o orb reencontra o ponteiro suavemente, porque
+   * `alvo` continuou sendo atualizado pelo listener.
+   */
+  if ('IntersectionObserver' in window) {
+    const hero = orbs[0].closest('section');
+    if (hero) {
+      const observer = new IntersectionObserver(
+        ([entrada]) => {
+          visivel = entrada.isIntersecting;
+          if (visivel) acordar();
+          else if (frame) {
+            cancelAnimationFrame(frame);
+            frame = 0;
+          }
+        },
+        { rootMargin: '10% 0px 10% 0px' },
+      );
+      observer.observe(hero);
+      add(() => observer.disconnect());
+    }
+  }
+
+  add(() => {
+    if (frame) cancelAnimationFrame(frame);
+    frame = 0;
+  });
 }
 
 /** Botões [data-magnetic] inclinam na direção do ponteiro. */

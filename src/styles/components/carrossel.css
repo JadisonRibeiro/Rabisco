@@ -1,9 +1,12 @@
-/* Trilho horizontal com encaixe — usado pelas categorias e pela galeria */
+/* Trilho horizontal com encaixe — usado pelas categorias */
 
 /*
- * Só existe abaixo de 900px. No desktop as duas seções continuam sendo as
- * grades que sempre foram: o trilho resolve um problema que é do polegar, não
- * do mouse, e a grade de oito discos lado a lado é parte do desenho lá.
+ * O comentário dizia "categorias e galeria". A galeria nunca chegou a usar o
+ * trilho: no celular ela vira vitrine de duas colunas, que é outra solução.
+ *
+ * Só existe abaixo de 900px. No desktop a seção continua sendo a grade que
+ * sempre foi: o trilho resolve um problema que é do polegar, não do mouse, e a
+ * grade de oito discos lado a lado é parte do desenho lá.
  *
  * A rolagem é nativa — `overflow-x: auto` com `scroll-snap`. O JS só
  * acrescenta as setas e o indicador; sem ele o trilho continua deslizando ao

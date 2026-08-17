@@ -1,10 +1,10 @@
 /**
  * Escada de descontos.
  *
- * Este módulo escreve três números na seção e sai: onde a fita do carrossel
- * está, o degrau atual e o avanço contínuo da rolagem. Todo o resto — a fita
- * andando, o realce mudando de cartão, a escada acendendo, o halo
- * esquentando, a explosão — é CSS reagindo a esses três.
+ * Este módulo escreve quatro números na seção e sai: as duas rodas do
+ * odômetro, o degrau atual e o avanço contínuo da rolagem. Todo o resto — as
+ * rodas girando, a escada acendendo, o halo esquentando, a explosão — é CSS
+ * reagindo a esses quatro.
  *
  * O avanço é MEDIDO na própria trilha, não inferido da janela: uma leitura de
  * `getBoundingClientRect` por quadro diz quanto dela já passou da linha em que
@@ -22,10 +22,15 @@
  * frente e para trás. Medido na trilha, o avanço não tem como saber que a
  * barra existe.
  *
- * Sem JS a seção não fica quebrada: o HTML nasce com o último degrau, e o que
- * se perde é a descoberta, não a informação.
+ * Sem JS a seção não fica quebrada: as reservas do CSS deixam as rodas em 5 e
+ * 0, e o que se perde é a descoberta, não a informação.
  */
 
+/* A faixa que o número percorre. O odômetro vai de 10 a 50, então são 40 de
+   curso — e é este par que define tudo o mais, inclusive quantos degraus a
+   escada tem. */
+const INICIO = 10;
+const FIM = 50;
 const PASSOS = 5;
 
 /*
@@ -36,18 +41,31 @@ const PASSOS = 5;
 const GRAO = 0.02;
 
 /*
- * Quanto de cada faixa a fita passa ANDANDO. O resto ela passa parada, com o
- * cartão no meio da janela.
+ * Quanto de cada UNIDADE a roda passa pousada, antes de girar para a próxima.
  *
- * Uma fita puramente linear é ilegível: o número fica entre dois valores a
- * maior parte do tempo e não há nada para ler. Um terço de deslize e dois de
- * repouso dá o compasso de carrossel — cada desconto pousa, é lido, e só então
- * o próximo entra.
+ * A fita que existia antes tinha um repouso parecido, mas por DEZENA: ela
+ * andava no último terço de cada faixa e ficava parada nos outros dois. Como só
+ * havia cinco faixas em toda a seção, o resultado eram cinco saltos com nada
+ * entre eles — a troca seca que esta reescrita veio desfazer.
+ *
+ * Aqui o mesmo compasso vale por unidade, e são quarenta delas: cerca de 41px
+ * de rolagem cada, num monitor. O olho não tem como ler quarenta pousos como
+ * uma escada — lê como um contador mecânico preciso, que é o efeito.
+ *
+ * O repouso não é enfeite, é legibilidade. Sem ele o mapa fica puramente linear
+ * e, ao parar a rolagem, metade das posições cai no meio de um giro: o número
+ * mostra meio dígito sobre meio dígito. Um odômetro de carro pode fazer isso; um
+ * "50% OFF" de vitrine, não. Com 0,55 de repouso, parar quase sempre pousa num
+ * número inteiro e legível, e os 0,45 restantes entregam a virada.
+ *
+ * O que NÃO muda com isso: a peça continua amarrada 1:1 à posição da rolagem,
+ * sem inércia e sem animação correndo por conta própria. Subir a página desfaz
+ * o giro pelo mesmo caminho, na mesma velocidade.
  */
-const DESLIZE = 0.34;
+const REPOUSO = 0.55;
 
-/* Aceleração e freio do deslize, sem depender de nenhuma curva do CSS: a fita
-   é posicionada a cada quadro, então a suavidade tem de estar na conta. */
+/* Aceleração e freio do giro, sem depender de nenhuma curva do CSS: as rodas
+   são posicionadas a cada quadro, então a suavidade tem de estar na conta. */
 const suavizar = (t) => t * t * (3 - 2 * t);
 
 export function initDescontos({ on, add }) {
@@ -59,22 +77,41 @@ export function initDescontos({ on, add }) {
   if (!trilha || !palco) return;
 
   /*
-   * As duas medidas que não dependem da rolagem: onde o palco gruda — o mesmo
-   * `top` que o CSS declara, lido de lá — e quanto ele ocupa. Guardadas, para
-   * que o quadro precise ler só a caixa da trilha.
+   * As medidas que não dependem da rolagem: onde o palco gruda — o mesmo `top`
+   * que o CSS declara, lido de lá —, quanto ele ocupa, e que fatia do curso é
+   * de contagem. Guardadas, para que o quadro precise ler só a caixa da trilha.
    */
   let linha = 0;
   let alturaPalco = 0;
+  let util = 1;
 
   const medir = () => {
     linha = parseFloat(getComputedStyle(palco).top) || 0;
     alturaPalco = palco.offsetHeight;
+
+    /*
+     * A fatia do curso em que o número ainda está subindo.
+     *
+     * O CSS monta a trilha com `passos + remate` degraus de altura: os cinco
+     * primeiros contam de 10 a 50, o último segura o 50 em cena antes de a peça
+     * soltar. Aqui os dois números vêm DE LÁ, e não repetidos como constante —
+     * são propriedades sem unidade, então o valor computado é o próprio número.
+     *
+     * É o mesmo princípio que já governava `linha` e `alturaPalco`: quem
+     * desenha a seção é o CSS, e este módulo só lê. Alguém que decida segurar o
+     * 50% por dois passos mexe num lugar e as duas pontas acompanham.
+     */
+    const estilo = getComputedStyle(secao);
+    const passos = parseFloat(estilo.getPropertyValue('--passos')) || PASSOS;
+    const remate = parseFloat(estilo.getPropertyValue('--remate')) || 0;
+    util = passos / (passos + remate);
   };
 
   let quadro = 0;
   let passoEscrito = 0;
   let avancoEscrito = -1;
-  let posicaoEscrita = '';
+  let dezenaEscrita = '';
+  let unidadeEscrita = '';
 
   const aplicar = () => {
     quadro = 0;
@@ -95,30 +132,73 @@ export function initDescontos({ on, add }) {
     const curso = caixa.height - alturaPalco;
     if (curso < 1) return;
 
-    const avanco = Math.min(1, Math.max(0, (linha - caixa.top) / curso));
-
     /*
-     * Onde a fita está, em cartões: 0 no 10% e 4 no 50%.
+     * O avanço da CONTAGEM, e não o da seção: dividir por `util` faz o número
+     * chegar a 1 ao fim dos cinco degraus, e o `min` o segura ali durante o
+     * remate — que é rolagem real, com o palco ainda preso, mostrando 50%.
      *
-     * O curso é cortado em cinco faixas iguais. Dentro de cada uma a fita
-     * espera os dois primeiros terços e desliza no último, então o número fica
-     * parado e legível a maior parte do caminho e a troca acontece de uma vez.
-     * A última faixa não tem para onde deslizar — é o 50% já em cena, e o
-     * `min` a segura ali enquanto os fogos acontecem.
+     * O halo usa este mesmo valor de propósito: ele fecha no máximo junto com o
+     * número e fica aceso durante a espera, em vez de continuar esquentando
+     * depois que já não há o que contar.
      */
-    const escala = avanco * PASSOS;
-    const cartao = Math.min(PASSOS - 1, Math.floor(escala));
-    const dentro = escala - cartao;
-    const deslize = dentro <= 1 - DESLIZE ? 0 : (dentro - (1 - DESLIZE)) / DESLIZE;
-    const posicao = Math.min(PASSOS - 1, cartao + suavizar(deslize));
+    const avanco = Math.min(1, Math.max(0, (linha - caixa.top) / curso / util));
+
+    /* O valor cru, linear: 10,000 na entrada e 50,000 no fim. */
+    const cru = INICIO + avanco * (FIM - INICIO);
 
     /*
-     * O degrau é o cartão mais perto do meio da janela, e não a faixa da
-     * rolagem: assim o realce, a escada e o clímax trocam quando o número novo
-     * CHEGA ao centro, na metade do deslize, e não quando ele começa a andar
-     * lá da borda.
+     * O mesmo valor, com o compasso de pouso e giro aplicado por unidade. A
+     * curva é aplicada UMA vez, aqui, e tudo o que vem depois — as duas rodas e
+     * o degrau — deriva deste número: assim a dezena não tem como sair de
+     * sincronia com a unidade, que seria o defeito clássico de suavizar cada
+     * roda por conta própria.
      */
-    const passo = Math.round(posicao) + 1;
+    const inteiro = Math.floor(cru);
+    const fracao = cru - inteiro;
+    const giro = fracao <= REPOUSO ? 0 : (fracao - REPOUSO) / (1 - REPOUSO);
+    const valor = Math.min(FIM, inteiro + suavizar(giro));
+
+    /*
+     * A dezena corrente e o quanto já se andou dentro dela.
+     *
+     * `base` vai de 1 a 5 e `dentro` de 0 a quase 10. No exato 50 os dois
+     * pousam em 5 e 0, que é o estado final — e é o mesmo par que as reservas
+     * do CSS entregam quando não há JS.
+     */
+    const base = Math.floor(valor / 10);
+    const dentro = valor - base * 10;
+
+    /*
+     * A roda das unidades gira a casa inteira: 0 a 9, e a décima primeira casa
+     * da tira é outro 0.
+     *
+     * É esse 0 repetido que faz a virada funcionar. Sem ele, ao sair do 19 a
+     * roda teria de voltar do 9 até o 0 percorrendo os dez dígitos ao
+     * contrário — um rebobinado visível bem no momento em que a dezena troca.
+     * Com ele, `dentro` chega a 9,99 sobre o último 0 e recomeça no 0 do topo,
+     * que é o mesmo desenho: a emenda não existe para o olho.
+     */
+    const unidade = dentro;
+
+    /*
+     * A dezena não acompanha o valor — ela vira SÓ enquanto a unidade
+     * atravessa o 9.
+     *
+     * Amarrá-la a `valor / 10` faria a roda da esquerda deslizar o tempo todo,
+     * e um contador cuja dezena nunca pousa não lê como contador: lê como duas
+     * listas escorregando. `max(0, dentro - 9)` a deixa parada em nove décimos
+     * do percurso e entrega a virada inteira no décimo restante, encaixada
+     * exatamente na passagem do 9 para o 0 ao lado. É o que a engrenagem de um
+     * odômetro mecânico faz, e o motivo de ele parecer preciso.
+     */
+    const dezena = base - 1 + Math.max(0, dentro - 9);
+
+    /*
+     * O degrau é a dezena inteira já alcançada: 1 no 10%, 5 quando o 50 fecha.
+     * Continua sendo ele quem acende a escada, esquenta o halo e dispara a
+     * explosão — nada disso mudou de contrato ao trocar a fita pelas rodas.
+     */
+    const passo = Math.min(PASSOS, Math.max(1, base));
 
     /*
      * Só escreve o que mudou. Reescrever o mesmo valor não repintaria nada,
@@ -137,15 +217,21 @@ export function initDescontos({ on, add }) {
     }
 
     /*
-     * A fita, ao contrário do halo, precisa do valor cheio: ela anda uma
-     * janela inteira por cartão, e arredondar aqui viraria degrau visível no
-     * meio do deslize. Três casas bastam para o passo ficar abaixo do pixel em
-     * qualquer tela.
+     * As rodas, ao contrário do halo, precisam do valor cheio: elas andam uma
+     * casa inteira por dígito, e arredondar aqui viraria degrau visível no meio
+     * do giro. Três casas bastam para o passo ficar abaixo do pixel em qualquer
+     * tela.
      */
-    const casas = posicao.toFixed(3);
-    if (casas !== posicaoEscrita) {
-      posicaoEscrita = casas;
-      secao.style.setProperty('--carrossel', casas);
+    const d = dezena.toFixed(3);
+    if (d !== dezenaEscrita) {
+      dezenaEscrita = d;
+      secao.style.setProperty('--dezena', d);
+    }
+
+    const u = unidade.toFixed(3);
+    if (u !== unidadeEscrita) {
+      unidadeEscrita = u;
+      secao.style.setProperty('--unidade', u);
     }
   };
 

@@ -200,10 +200,6 @@
 [data-anim='fade'] {
   animation-name: rabFade;
 }
-[data-anim='blur'] {
-  animation-name: rabBlur;
-  animation-duration: 1.3s;
-}
 [data-anim='scale'] {
   animation-name: rabScale;
   animation-duration: 1.2s;
@@ -278,11 +274,9 @@
 [data-id='5'] {
   animation-delay: calc(var(--entrada-atraso, 0s) + 0.62s);
 }
+/* O 6 é dos botões do hero. O 7 saiu: a escada não chega até lá. */
 [data-id='6'] {
   animation-delay: calc(var(--entrada-atraso, 0s) + 0.8s);
-}
-[data-id='7'] {
-  animation-delay: calc(var(--entrada-atraso, 0s) + 1s);
 }
 
 /* ── Rabiscos que se desenham em laço ────────────────────────────────────── */
@@ -314,6 +308,29 @@
 
 [data-wapulse] {
   animation: rabPulse 3.6s var(--ease-pulso) infinite both;
+}
+
+/* ── Seção fora da tela: as animações em laço param ──────────────────────── */
+
+/*
+ * `data-ocioso` vem do módulo anim-viewport, que só observa seções e não sabe
+ * o nome de animação nenhuma. A escolha de quem para mora aqui, ao lado das
+ * animações, e alcança só as que giram para sempre: as de entrada conduzidas
+ * por `view()` ficam de fora de propósito — pausar uma delas fora da tela
+ * congelaria o quadro exato em que o visitante fosse encontrá-la.
+ *
+ * O FAB do WhatsApp também fica de fora: ele é fixo, está sempre na tela, e
+ * nunca chega a pertencer a uma seção ociosa.
+ *
+ * `animation-play-state` e não `animation: none`: retomar de onde parou é o
+ * que mantém a onda sem emenda e o rabisco no meio do traço. Zerar e recomeçar
+ * daria um salto visível toda vez que a seção voltasse.
+ */
+[data-ocioso] [data-scribble],
+[data-ocioso] [data-float],
+[data-ocioso] [data-orb],
+[data-ocioso] .hero__cursor {
+  animation-play-state: paused;
 }
 
 /* ── Movimento reduzido ──────────────────────────────────────────────────── */

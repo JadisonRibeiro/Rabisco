@@ -39,6 +39,84 @@ function arquivosDeIndexacao(siteUrl) {
 }
 
 /**
+ * Página de erro do GitHub Pages.
+ *
+ * Sem um 404.html na raiz do dist, qualquer endereço errado cai na página
+ * genérica do GitHub — fundo branco, mascote e nenhuma menção à Rabisco. Quem
+ * digitou o link errado não tem por onde voltar.
+ *
+ * Sai daqui pelo mesmo motivo do manifest: o caminho de volta para a home
+ * depende do `base`, que só existe em tempo de build. Em public/ o arquivo
+ * seria copiado literal e o link quebraria sob o /Rabisco/ do Pages.
+ *
+ * É deliberadamente autossuficiente — estilo embutido, sem fonte externa, sem
+ * JS. Uma página de erro que depende do bundle é uma página de erro que falha
+ * junto com ele.
+ */
+function paginaDeErro(base) {
+  return {
+    name: 'rabisco-404',
+    apply: 'build',
+    generateBundle() {
+      this.emitFile({
+        type: 'asset',
+        fileName: '404.html',
+        source: `<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Página não encontrada — Rabisco Papelaria</title>
+    <style>
+      :root { color-scheme: light; }
+      body {
+        margin: 0;
+        min-height: 100svh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        padding: 32px;
+        text-align: center;
+        background: #faf6f0;
+        color: #14100e;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      }
+      h1 { margin: 0; font-size: clamp(30px, 7vw, 52px); line-height: 1.05; letter-spacing: -0.02em; }
+      p { margin: 0; max-width: 44ch; font-size: 16px; line-height: 1.6; color: rgb(20 16 14 / 66%); }
+      a {
+        margin-top: 8px;
+        padding: 15px 28px;
+        border-radius: 999px;
+        background: #14100e;
+        color: #faf6f0;
+        font-size: 12.5px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        text-decoration: none;
+      }
+      a:hover { background: #c7300c; }
+    </style>
+  </head>
+  <body>
+    <h1>Esta página não existe</h1>
+    <p>
+      O endereço que você abriu não leva a lugar nenhum — mas a loja continua na Rua Sete de Setembro, 36, no Centro de
+      Paragominas.
+    </p>
+    <a href="${base}">Voltar para o início</a>
+  </body>
+</html>
+`,
+      });
+    },
+  };
+}
+
+/**
  * O manifest aponta para ícones e para a raiz do app com caminhos absolutos.
  * Em public/ ele seria copiado literalmente e esses caminhos quebrariam sob
  * um subcaminho — como o /Rabisco/ do GitHub Pages. Emiti-lo aqui deixa base
@@ -111,7 +189,12 @@ export default defineConfig(({ mode }) => {
     root: 'src',
     publicDir: '../public',
     base,
-    plugins: [urlNoHtml(siteUrl, base), arquivosDeIndexacao(siteUrl), manifesto(base)],
+    plugins: [
+      urlNoHtml(siteUrl, base),
+      arquivosDeIndexacao(siteUrl),
+      manifesto(base),
+      paginaDeErro(base),
+    ],
     build: {
       outDir: '../dist',
       emptyOutDir: true,

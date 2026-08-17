@@ -166,6 +166,65 @@
   color: rgb(var(--ink-rgb) / 66%);
 }
 
+/* ── Chamadas do hero ────────────────────────────────────────────────────── */
+
+/*
+ * As duas conversões da loja: mandar mensagem agora, ou atravessar a cidade.
+ * Ficam lado a lado e quebram para pilha quando não couberem — em telas
+ * estreitas dois pills apertados na mesma linha viram dois alvos ruins.
+ */
+.hero__acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: clamp(24px, 3.2vh, 36px);
+}
+
+.hero__botao {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 26px;
+  border: 1.5px solid var(--ink);
+  border-radius: var(--r-pilula);
+  background: var(--ink);
+  color: var(--cream);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+
+  /* O ímã do ponteiro escreve em `transform`; a transição fica em outras
+     propriedades para não brigar com ele quadro a quadro. */
+  transition:
+    background 0.35s var(--ease),
+    color 0.35s var(--ease);
+}
+
+.hero__botao:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* O secundário é vazado: as duas ações são reais, mas só uma é a principal. */
+.hero__botao--vazado {
+  background: transparent;
+  color: var(--ink);
+}
+
+.hero__botao--vazado:hover {
+  background: var(--ink);
+  color: var(--cream);
+  border-color: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__botao {
+    transition: none;
+  }
+}
+
 /*
  * A imagem do hero é um card de publicação que já traz a própria moldura
  * branca, cantos arredondados e sombra. A moldura que existia aqui — borda,
@@ -318,11 +377,14 @@
   text-decoration: none;
 }
 
+/* 0.45 dava 2,69:1 de tinta sobre creme — bem abaixo dos 4,5:1 da AA, e não
+   num enfeite: é o rótulo de um link real, na primeira tela. 0.62 chega a
+   4,8:1 e o rótulo continua secundário diante do título. */
 .hero__rotulo {
   font-size: 10.5px;
   letter-spacing: 0.34em;
   text-transform: uppercase;
-  opacity: 0.45;
+  opacity: 0.62;
 }
 
 .hero__cursor {

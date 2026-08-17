@@ -44,9 +44,6 @@
   /* ── Ritmo vertical e gutters ─────────────────────────────────────────── */
   --gutter: clamp(20px, 4vw, 64px);
   --gutter-nav: clamp(96px, 9vw, 146px);
-  --gap-md: clamp(16px, 3vw, 48px);
-  --gap-sm: clamp(14px, 2vw, 28px);
-  --pad-linha: clamp(22px, 3vw, 44px);
 
   /*
    * Altura da barra fixa, medida. Existe como token porque três coisas
@@ -54,11 +51,12 @@
    * scroll-padding que impede a âncora de parar embaixo da barra, o topo do
    * menu em tela cheia e o piso da abertura.
    *
-   * A aba "Pedido" desce 18px além da barra; quem se posiciona por baixo dela
-   * usa --nav-sombra, não --nav-h.
+   * --nav-sombra vivia aqui ao lado, comentado como se alguém o usasse para se
+   * posicionar por baixo da aba "Pedido". Ninguém usava — nem aqui nem na
+   * media query lá embaixo. Saiu com os três tokens de espaçamento que também
+   * eram declaração sem consumo.
    */
   --nav-h: 76px;
-  --nav-sombra: 94px;
 
   /* ── Raios ────────────────────────────────────────────────────────────── */
   --r-xs: 2px;
@@ -84,6 +82,5 @@
 @media (min-width: 1041px) {
   :root {
     --nav-h: 66px;
-    --nav-sombra: 98px;
   }
 }

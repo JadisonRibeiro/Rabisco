@@ -10,7 +10,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const ROOT = path.resolve(import.meta.dirname, '..');
+const ROOT = path.resolve(import.meta.dirname, '../..');
 const body = fs.readFileSync(path.join(ROOT, '.work/body.html'), 'utf8');
 
 /** Indenta um bloco já formatado para encaixar no documento. */

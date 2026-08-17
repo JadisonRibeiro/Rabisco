@@ -109,10 +109,12 @@
   color: var(--ink);
 }
 
+/* Mesmo caso do .galeria__manuscrito: tinta sobre laranja dava 3,47:1, e aqui
+   nem a saída do tamanho existia — 22px é fixo. --cream leva a 5,06:1. */
 .menu__manuscrito {
   position: relative;
   margin-top: 22px;
   font-family: Caveat, cursive;
   font-size: 22px;
-  color: var(--ink);
+  color: var(--cream);
 }

@@ -9,7 +9,7 @@ Página única, estática, sem framework de runtime.
 
 | Camada        | Escolha                                                        |
 | ------------- | -------------------------------------------------------------- |
-| Build         | Vite 7                                                         |
+| Build         | Vite 8                                                         |
 | Markup        | HTML semântico                                                 |
 | Estilo        | CSS puro, BEM-lite, custom properties                          |
 | Comportamento | JavaScript de módulos ES, sem dependências                     |
@@ -41,6 +41,26 @@ npm run preview    # serve o dist/ gerado
 | `npm run format`        | Prettier, escrevendo                                       |
 | `npm run format:check`  | Prettier, só conferindo                                    |
 | `npm run verify:visual` | compara o build com a referência visual do export original |
+
+### A abertura
+
+A cortina de abertura roda **em toda visita**, e leva 4,0s. Não há memória de
+sessão: recarregar a traz de volta, que é o comportamento pedido — quatro
+segundos foram julgados curtos o bastante para a marca valer a repetição.
+
+Quem não quiser esperar pula com um toque na tela ou qualquer tecla, mas só
+depois de uma carência de 900ms. A carência existe porque a cortina cobre a
+tela inteira: sem ela, clicar na janela do navegador para lhe dar foco, ou
+teclar para rolar — reflexos do primeiro segundo, sobretudo no desktop —
+matavam a abertura inteira por acidente.
+
+**Rolar é a exceção e não passa pela carência.** Girar a roda ou arrastar o
+dedo para cima encerra a cortina na hora, em qualquer momento. Não é gesto
+reflexo: é dizer "quero o conteúdo" — e era justamente ele que a trava de
+rolagem engolia, deixando a página parecendo travada em vez de cinematográfica.
+
+Com `prefers-reduced-motion: reduce` a cortina não aparece, e o hero entra
+sem atraso.
 
 ## Variáveis de ambiente
 
@@ -93,7 +113,9 @@ src/
     lib/listeners.js    escopo único de listeners
     modules/            um arquivo por comportamento
 public/                 favicons, og-image, manifest — copiados sem alteração
-tools/                  migração e auditoria; não entram no build
+tools/                  auditoria e geração de assets; não entram no build
+  marca/                o "R" em PNG, fonte dos favicons e da imagem OG
+  migracao/             scripts de uso único da migração, já concluída
 ```
 
 ## Decisões arquiteturais
@@ -117,8 +139,9 @@ resolvia em tempo de execução passou para tempo de build:
 
 A página passou a renderizar sem JavaScript e o JS caiu de 271 KB para 4 KB.
 
-A conversão está em `tools/unbundle.mjs`, `tools/transpile.mjs` e
-`tools/assemble.mjs`. São scripts de migração de uso único, versionados como
+A conversão está em `tools/migracao/unbundle.mjs`,
+`tools/migracao/transpile.mjs` e `tools/migracao/assemble.mjs`. São scripts de
+migração de uso único, versionados como
 prova de que `src/` deriva do export sem retoque manual escondido — não fazem
 parte do build e não devem ser executados de novo.
 
@@ -207,19 +230,36 @@ foto arbitrária sob um véu em gradiente. A ferramenta captura a região com o
 texto em `color: transparent` — assim os pseudo-elementos que garantem o
 contraste seguem pintados — e mede o pior pixel de fundo real.
 
-## Fora do escopo desta entrega
+## Pendências
 
-Performance e deploy não foram executados. O `dist/` é estático e serve em
-qualquer hospedagem, mas falta:
+O que a auditoria apontou e ainda depende de decisão ou de material da loja:
 
-- converter as imagens para AVIF/WebP com fallback, declarar `width`/`height`
-  e marcar o LCP com `fetchpriority="high"`;
-- reduzir os subsets de fonte (hoje carrega cirílico e vietnamita num site em
-  português);
-- redimensionar `logo-rabisco.png` — 532 KB para um ícone de 19 px na nav;
-- configurar o provedor de hospedagem e os headers de segurança (CSP,
-  X-Content-Type-Options, Referrer-Policy).
+- **Os cinco serviços de balcão não aparecem na página.** Impressão,
+  encadernação, personalização, plotagem e carimbos estão no `<title>`, na meta
+  description e no JSON-LD — três menções cada — e nenhuma vez no corpo. Quem
+  chega por "encadernar TCC Paragominas" encontra uma vitrine de cadernos e
+  volta para o Google. Uma faixa desses serviços abaixo do hero chegou a ser
+  construída e foi retirada por decisão de produto; se um dia voltar, o lugar é
+  esse, porque quem procura serviço tem prazo e não rola procurando.
 
-As fotos de produtos e galeria ainda são de banco de imagens, e algumas não
-correspondem ao rótulo que o site dá a elas. A lista está no relatório de
-entrega.
+- **As 8 fotos de categoria são banco de imagens com marca d'água e licença
+  NonCommercial.** `NC` proíbe literalmente o uso num site que vende, e
+  `cat-escritorio` mostra uma pessoa real identificável descrita como
+  atendente da Rabisco — direito de imagem, além da licença. **Não publicar com
+  as atuais.** Uma manhã na loja com o celular resolve as oito, e resolve
+  melhor: 1200×1200 recortado quadrado, produto no expositor real.
+- **Preço nos 5 produtos em destaque.** Os cinco repetem "sob consulta". Uma
+  âncora — "a partir de R$ 8,90" — resolve sem amarrar estoque. O comentário
+  em `src/index.html`, junto do primeiro card, diz onde mexer.
+- **Faixa e validade da promoção.** A linha de condições já está no ar e é
+  defensável; falta nomear a faixa de produtos e datar. Ver o comentário na
+  seção `#descontos`.
+- **Analytics.** Os 22 links de WhatsApp já carregam `utm_source` com a origem
+  do clique, mas ninguém está lendo. Falta um script sem cookie (Plausible,
+  Umami ou Cloudflare Web Analytics, ~1 KB) — sem cookie evita o banner de
+  consentimento que o Google Analytics exigiria.
+- **Prova social.** Nota do Google Meu Negócio e dois ou três depoimentos.
+  Para comércio local é o sinal de confiança de maior peso e o mais fácil de
+  obter.
+- **Headers de segurança** (CSP, X-Content-Type-Options, Referrer-Policy) —
+  dependem do provedor de hospedagem.

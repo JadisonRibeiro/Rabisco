@@ -11,6 +11,8 @@ import { initLojaEstado } from './modules/loja-estado.js';
 import { initCarrossel } from './modules/carrossel.js';
 import { initAbertura } from './modules/abertura.js';
 import { initDescontos } from './modules/descontos.js';
+import { initAnimViewport } from './modules/anim-viewport.js';
+import { initMapa } from './modules/mapa.js';
 
 const scope = createListenerScope();
 
@@ -22,6 +24,8 @@ for (const init of [
   initLojaEstado,
   initCarrossel,
   initDescontos,
+  initAnimViewport,
+  initMapa,
 ]) {
   init(scope);
 }

@@ -19,7 +19,7 @@ import {
   tokenizeGlobalCss,
 } from './lib/emit.mjs';
 
-const ROOT = path.resolve(import.meta.dirname, '..');
+const ROOT = path.resolve(import.meta.dirname, '../..');
 const WORK = path.join(ROOT, '.work');
 
 /** Valores das props resolvidos em build-time (o runtime fazia isto no cliente). */

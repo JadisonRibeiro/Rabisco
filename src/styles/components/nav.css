@@ -72,11 +72,15 @@
   flex: 0 0 auto;
 }
 
+/* Era um <img> de 1254×1254 e 520 KB para preencher estes 19 pixels. Agora é o
+   <use> do caminho da marca, e a cor sai do token em vez de vir queimada no
+   arquivo. --glow, e não --accent: o laranja claro é o que o PNG trazia, e ele
+   está sobre o disco creme, onde contraste de texto não se aplica. */
 .nav__foto {
   width: 19px;
   height: 19px;
-  object-fit: contain;
   display: block;
+  fill: rgb(var(--glow-rgb));
 }
 
 .nav__identidade {

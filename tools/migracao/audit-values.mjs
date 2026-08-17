@@ -3,7 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const t = fs.readFileSync(path.resolve(import.meta.dirname, '../.work/template.html'), 'utf8');
+const t = fs.readFileSync(path.resolve(import.meta.dirname, '../../.work/template.html'), 'utf8');
 
 const tally = (label, re, transform = (m) => m[0]) => {
   const counts = {};

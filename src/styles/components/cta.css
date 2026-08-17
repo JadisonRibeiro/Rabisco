@@ -9,8 +9,18 @@
   text-align: center;
 }
 
-.cta__flutuante {
+/* aspect-ratio explícito porque estes dois substituíram <img> quadrados: o
+   viewBox já daria a proporção, mas declará-la evita que uma folha futura com
+   `height` herdado deforme o "R". */
+.cta__flutuante,
+.cta__flutuante-2 {
   position: absolute;
+  height: auto;
+  aspect-ratio: 1;
+  fill: var(--cream);
+}
+
+.cta__flutuante {
   left: -8%;
   bottom: -18%;
   width: 38%;
@@ -19,7 +29,6 @@
 }
 
 .cta__flutuante-2 {
-  position: absolute;
   right: -6%;
   top: -16%;
   width: 26%;

@@ -15,19 +15,20 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "axe-core": "^4.12.1",
     "eslint": "^10.8.0",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.8.0",
+    "prettier": "^3.9.6",
+    "vite": "^8.2.0"
+  },
+  "//optionalDependencies": "Só as ferramentas de tools/ usam estas. sharp traz binário nativo de ~30 MB e playwright-core baixa navegador; o job de deploy só roda lint e build, e instala com `npm ci --omit=optional` para não pagar por elas em todo push. Localmente use `npm install` sem a flag.",
+  "optionalDependencies": {
+    "axe-core": "^4.12.1",
+    "node-html-parser": "^9.0.1",
     "pixelmatch": "^6.0.0",
     "playwright-core": "^1.49.0",
     "pngjs": "^7.0.0",
-    "prettier": "^3.9.6",
-    "sharp": "^0.35.3",
-    "vite": "^8.2.0"
-  },
-  "dependencies": {
-    "node-html-parser": "^9.0.1"
+    "sharp": "^0.35.3"
   },
   "engines": {
     "node": ">=22"

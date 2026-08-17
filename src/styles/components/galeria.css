@@ -268,6 +268,22 @@
   color: var(--cream);
 }
 
+/*
+ * Linha de preço. Herda o corpo da descrição mas ganha peso: preço é o dado
+ * que decide a visita, e ler igual à ficha técnica o esconde no meio dela.
+ *
+ * Existe como classe própria — e não como um segundo .galeria__texto-2 — para
+ * que trocar "sob consulta" por uma faixa real seja mexer num lugar só, com um
+ * seletor que diz o que a linha é.
+ */
+.galeria__preco {
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.45;
+  color: var(--cream);
+}
+
 .galeria__card-seta {
   flex: 0 0 auto;
   width: 34px;
@@ -301,10 +317,21 @@
   gap: 18px;
 }
 
+/*
+ * Era --ink sobre o laranja: 3,47:1, abaixo dos 4,5:1 da AA. No desktop a
+ * fonte chega a 27px e passaria pela regra de texto grande, mas no celular
+ * trava em 21px e reprova — e contar com a isenção de tamanho usando uma
+ * cursiva de altura-x baixa é cumprir a letra da norma contra o espírito dela.
+ *
+ * --cream dá 5,06:1 e é a cor que a própria seção já declara para texto, então
+ * passa em qualquer tamanho. Custa o contraste de tom que o manuscrito escuro
+ * tinha; se ele fizer falta, o outro caminho é voltar a --ink e subir o piso
+ * do clamp para 25px.
+ */
 .galeria__manuscrito {
   font-family: Caveat, cursive;
   font-size: clamp(21px, 1.8vw, 27px);
-  color: var(--ink);
+  color: var(--cream);
 }
 
 .galeria__magnetico {
@@ -513,7 +540,8 @@
     line-height: 1.12;
   }
 
-  .galeria__texto-2 {
+  .galeria__texto-2,
+  .galeria__preco {
     margin-top: 5px;
     font-size: 11px;
     line-height: 1.35;

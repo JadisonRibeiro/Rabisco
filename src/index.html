@@ -35,8 +35,14 @@
       content="Toda grande ideia começa com um rabisco — Rabisco Papelaria, Paragominas, PA"
     />
 
-    <!-- Twitter/X: summary_large_image reaproveita as tags og:* acima -->
+    <!-- Twitter/X: summary_large_image reaproveita as tags og:* acima. O alt é a
+         exceção: o X não lê og:image:alt e sem esta linha o card vai sem texto
+         alternativo. -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:image:alt"
+      content="Toda grande ideia começa com um rabisco — Rabisco Papelaria, Paragominas, PA"
+    />
 
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -59,24 +65,11 @@
     <script type="module" src="/scripts/main.js"></script>
 
     <!--
-      A abertura só roda uma vez por aba. Esta decisão precisa estar tomada
-      antes da primeira pintura: em main.js, que é módulo e portanto adiado, a
-      cortina já teria aparecido por alguns quadros antes de ser retirada — um
-      piscar que é pior do que não ter animação nenhuma.
-
-      Inline e minúsculo justamente por bloquear o parser: é uma leitura de
-      sessionStorage e uma escrita de atributo.
-
-      O try existe porque sessionStorage lança em contextos com cookies de
-      terceiros bloqueados; ali a abertura simplesmente roda toda vez, que é a
-      falha mais branda possível.
+      Aqui havia um script inline que lia o sessionStorage antes da primeira
+      pintura para decidir se a cortina já tinha sido vista nesta aba. A
+      abertura passou a rodar em toda visita, então não há mais decisão a
+      tomar: não há o que ler, e o parser não precisa mais parar para isso.
     -->
-    <script>
-      try {
-        if (sessionStorage.getItem('rabisco:abertura'))
-          document.documentElement.dataset.abertura = 'vista';
-      } catch {}
-    </script>
 
     <script type="application/ld+json">
       {
@@ -117,6 +110,7 @@
           }
         ],
         "sameAs": ["https://www.instagram.com/rabisco_papelaria_pgm"],
+        "hasMap": "https://www.google.com/maps/search/?api=1&query=-2.99689229059232%2C-47.35176811287142",
         "hasOfferCatalog": {
           "@type": "OfferCatalog",
           "name": "Serviços de balcão",
@@ -168,6 +162,33 @@
   </head>
   <body>
     <a class="pular-para-conteudo" href="#conteudo">Pular para o conteúdo</a>
+
+    <!--
+      Marca "R", uma vez só.
+      O caminho estava escrito por extenso em três lugares (miolo e contorno da
+      abertura, mais o "R" do hero) e existia ainda uma quarta vez como PNG de
+      1254×1254 e 520 KB — que era 71% do peso do site e aparecia com 19px na
+      barra. Aqui ele é um <defs> único e todo o resto é <use>: a marca passa a
+      ter um lugar só para mudar, e o PNG deixou de existir.
+
+      pathLength="1" mora no caminho porque o contorno da abertura desenha por
+      stroke-dasharray normalizado; quem só preenche ignora o atributo.
+
+      O viewBox "-194 -54 1254 1254" que os usos quadrados repetem não é
+      arbitrário: é exatamente a caixa que o PNG tinha, medida nele. Sem essa
+      folga o "R" cresceria dentro do disco da barra e a troca apareceria.
+    -->
+    <svg class="u-sprite" aria-hidden="true" focusable="false" width="0" height="0">
+      <defs>
+        <path
+          id="marca-r"
+          pathLength="1"
+          fill-rule="evenodd"
+          d="M856 1114L728 1114L730 1094L730 1093L730 1075L732 1074L732 993L730 992L730 977L730 976L728 943L726 942L726 935L726 934L726 927L722 906L722 900L714 865L712 861L706 831L686 778L668 739L658 722L648 707L628 683L609 662L595 650L570 668L525 698L493 716L426 748L378 766L333 782L289 794L238 804L212 806L211 806L196 806L195 808L169 808L168 806L154 806L153 806L138 804L110 798L85 790L67 780L46 766L26 745L12 720L4 697L2 681L0 680L0 669L0 668L0 645L2 644L2 633L12 602L20 588L28 574L40 559L61 538L76 526L97 512L126 496L154 484L183 474L220 464L224 464L243 460L248 460L253 458L283 454L284 452L298 452L299 450L329 448L330 448L405 446L406 448L438 450L439 450L463 454L517 466L549 478L571 486L586 494L589 494L608 474L622 455L632 437L652 397L664 360L670 328L672 306L674 305L674 267L672 266L672 259L668 240L662 221L654 208L642 192L631 180L620 172L603 160L581 150L568 146L565 144L545 138L521 132L498 130L497 130L481 130L480 128L460 128L459 130L444 130L443 130L424 132L423 132L417 132L385 138L365 144L337 152L317 160L290 174L248 200L215 226L180 261L162 283L146 306L132 330L126 343L123 344L120 344L6 299L6 30L127 30L128 32L129 136L160 106L197 78L229 58L269 38L305 24L350 12L386 4L408 2L409 2L419 2L420 0L432 0L433 0L498 0L499 0L530 2L531 4L544 4L575 10L617 22L649 36L663 42L691 60L717 80L746 109L762 133L778 161L788 190L794 212L798 238L800 239L800 256L802 257L802 273L802 274L802 312L800 313L800 329L794 361L788 384L776 417L766 441L750 473L732 505L702 547L686 564L686 566L710 589L728 610L748 637L768 669L784 701L784 703L800 737L822 797L834 842L834 846L836 851L836 855L838 860L842 885L842 890L848 915L848 929L850 930L852 962L854 963L854 973L854 974L854 983L856 984L856 999L856 1000L856 1021L858 1022L858 1099L856 1100ZM204 679L231 676L232 676L237 676L269 670L304 660L337 650L370 636L393 626L410 618L412 618L449 598L472 585L469 584L451 580L432 578L431 576L423 576L422 576L412 576L411 574L356 574L355 576L319 578L318 578L283 582L228 594L207 602L204 602L174 612L154 622L143 630L134 637L128 647L128 655L130 662L136 670L145 674L155 678L168 678L169 680Z"
+        ></path>
+      </defs>
+    </svg>
+
     <!--
       Cortina de abertura. Fica fora de .pagina__raiz para que a página atrás
       continue intacta — ela cobre, não substitui.
@@ -181,8 +202,8 @@
           class="abertura__marca"
         >
           <!-- O miolo vem antes do contorno no DOM: tinta por baixo da linha. -->
-          <path fill-rule="evenodd" d="M856 1114L728 1114L730 1094L730 1093L730 1075L732 1074L732 993L730 992L730 977L730 976L728 943L726 942L726 935L726 934L726 927L722 906L722 900L714 865L712 861L706 831L686 778L668 739L658 722L648 707L628 683L609 662L595 650L570 668L525 698L493 716L426 748L378 766L333 782L289 794L238 804L212 806L211 806L196 806L195 808L169 808L168 806L154 806L153 806L138 804L110 798L85 790L67 780L46 766L26 745L12 720L4 697L2 681L0 680L0 669L0 668L0 645L2 644L2 633L12 602L20 588L28 574L40 559L61 538L76 526L97 512L126 496L154 484L183 474L220 464L224 464L243 460L248 460L253 458L283 454L284 452L298 452L299 450L329 448L330 448L405 446L406 448L438 450L439 450L463 454L517 466L549 478L571 486L586 494L589 494L608 474L622 455L632 437L652 397L664 360L670 328L672 306L674 305L674 267L672 266L672 259L668 240L662 221L654 208L642 192L631 180L620 172L603 160L581 150L568 146L565 144L545 138L521 132L498 130L497 130L481 130L480 128L460 128L459 130L444 130L443 130L424 132L423 132L417 132L385 138L365 144L337 152L317 160L290 174L248 200L215 226L180 261L162 283L146 306L132 330L126 343L123 344L120 344L6 299L6 30L127 30L128 32L129 136L160 106L197 78L229 58L269 38L305 24L350 12L386 4L408 2L409 2L419 2L420 0L432 0L433 0L498 0L499 0L530 2L531 4L544 4L575 10L617 22L649 36L663 42L691 60L717 80L746 109L762 133L778 161L788 190L794 212L798 238L800 239L800 256L802 257L802 273L802 274L802 312L800 313L800 329L794 361L788 384L776 417L766 441L750 473L732 505L702 547L686 564L686 566L710 589L728 610L748 637L768 669L784 701L784 703L800 737L822 797L834 842L834 846L836 851L836 855L838 860L842 885L842 890L848 915L848 929L850 930L852 962L854 963L854 973L854 974L854 983L856 984L856 999L856 1000L856 1021L858 1022L858 1099L856 1100ZM204 679L231 676L232 676L237 676L269 670L304 660L337 650L370 636L393 626L410 618L412 618L449 598L472 585L469 584L451 580L432 578L431 576L423 576L422 576L412 576L411 574L356 574L355 576L319 578L318 578L283 582L228 594L207 602L204 602L174 612L154 622L143 630L134 637L128 647L128 655L130 662L136 670L145 674L155 678L168 678L169 680Z" class="abertura__miolo"></path>
-          <path fill-rule="evenodd" d="M856 1114L728 1114L730 1094L730 1093L730 1075L732 1074L732 993L730 992L730 977L730 976L728 943L726 942L726 935L726 934L726 927L722 906L722 900L714 865L712 861L706 831L686 778L668 739L658 722L648 707L628 683L609 662L595 650L570 668L525 698L493 716L426 748L378 766L333 782L289 794L238 804L212 806L211 806L196 806L195 808L169 808L168 806L154 806L153 806L138 804L110 798L85 790L67 780L46 766L26 745L12 720L4 697L2 681L0 680L0 669L0 668L0 645L2 644L2 633L12 602L20 588L28 574L40 559L61 538L76 526L97 512L126 496L154 484L183 474L220 464L224 464L243 460L248 460L253 458L283 454L284 452L298 452L299 450L329 448L330 448L405 446L406 448L438 450L439 450L463 454L517 466L549 478L571 486L586 494L589 494L608 474L622 455L632 437L652 397L664 360L670 328L672 306L674 305L674 267L672 266L672 259L668 240L662 221L654 208L642 192L631 180L620 172L603 160L581 150L568 146L565 144L545 138L521 132L498 130L497 130L481 130L480 128L460 128L459 130L444 130L443 130L424 132L423 132L417 132L385 138L365 144L337 152L317 160L290 174L248 200L215 226L180 261L162 283L146 306L132 330L126 343L123 344L120 344L6 299L6 30L127 30L128 32L129 136L160 106L197 78L229 58L269 38L305 24L350 12L386 4L408 2L409 2L419 2L420 0L432 0L433 0L498 0L499 0L530 2L531 4L544 4L575 10L617 22L649 36L663 42L691 60L717 80L746 109L762 133L778 161L788 190L794 212L798 238L800 239L800 256L802 257L802 273L802 274L802 312L800 313L800 329L794 361L788 384L776 417L766 441L750 473L732 505L702 547L686 564L686 566L710 589L728 610L748 637L768 669L784 701L784 703L800 737L822 797L834 842L834 846L836 851L836 855L838 860L842 885L842 890L848 915L848 929L850 930L852 962L854 963L854 973L854 974L854 983L856 984L856 999L856 1000L856 1021L858 1022L858 1099L856 1100ZM204 679L231 676L232 676L237 676L269 670L304 660L337 650L370 636L393 626L410 618L412 618L449 598L472 585L469 584L451 580L432 578L431 576L423 576L422 576L412 576L411 574L356 574L355 576L319 578L318 578L283 582L228 594L207 602L204 602L174 612L154 622L143 630L134 637L128 647L128 655L130 662L136 670L145 674L155 678L168 678L169 680Z" pathLength="1" class="abertura__contorno"></path>
+          <use href="#marca-r" class="abertura__miolo"></use>
+          <use href="#marca-r" class="abertura__contorno"></use>
 
           <path
             d="M-96 1246 C 170 1176, 470 1292, 742 1212 C 838 1184, 918 1220, 986 1198"
@@ -206,7 +227,19 @@
 
         <a href="#top" class="nav__link">
           <span class="nav">
-            <img src="/assets/images/logo-rabisco.png" alt="Rabisco" class="nav__foto" />
+            <!--
+              aria-hidden de propósito: o nome acessível do link vem dos dois
+              spans ao lado ("Rabisco" + "Papelaria"). O alt="Rabisco" que
+              estava aqui fazia o leitor de tela anunciar a marca duas vezes.
+            -->
+            <svg
+              aria-hidden="true"
+              focusable="false"
+              viewBox="-194 -54 1254 1254"
+              class="nav__foto"
+            >
+              <use href="#marca-r"></use>
+            </svg>
           </span>
           <span class="nav__identidade">
             <span class="nav__marca">Rabisco</span>
@@ -231,7 +264,7 @@
         </nav>
 
         <a
-          href="https://wa.me/5591991032292"
+          href="https://wa.me/5591991032292?utm_source=nav"
           target="_blank"
           rel="noopener"
           aria-label="Fazer pedido"
@@ -299,7 +332,7 @@
           ></a>
           <span class="menu__regua"></span>
         </nav>
-        <a href="https://wa.me/5591991032292" target="_blank" rel="noopener" class="menu__link-2">
+        <a href="https://wa.me/5591991032292?utm_source=menu" target="_blank" rel="noopener" class="menu__link-2">
           <svg width="17" height="17" fill="none" aria-hidden="true" viewBox="0 0 24 24">
             <path
               d="M3 4h2.2l1 3m0 0 2.1 8.1h9.3L20 7H6.2Z"
@@ -400,10 +433,7 @@
                     <span class="hero__manuscrito-2"
                       ><span class="hero__sem-espaco">R</span
                       ><svg aria-hidden="true" focusable="false" viewBox="0 0 858 1115" class="hero__grafico-2">
-                        <path
-                          fill-rule="evenodd"
-                          d="M856 1114L728 1114L730 1094L730 1093L730 1075L732 1074L732 993L730 992L730 977L730 976L728 943L726 942L726 935L726 934L726 927L722 906L722 900L714 865L712 861L706 831L686 778L668 739L658 722L648 707L628 683L609 662L595 650L570 668L525 698L493 716L426 748L378 766L333 782L289 794L238 804L212 806L211 806L196 806L195 808L169 808L168 806L154 806L153 806L138 804L110 798L85 790L67 780L46 766L26 745L12 720L4 697L2 681L0 680L0 669L0 668L0 645L2 644L2 633L12 602L20 588L28 574L40 559L61 538L76 526L97 512L126 496L154 484L183 474L220 464L224 464L243 460L248 460L253 458L283 454L284 452L298 452L299 450L329 448L330 448L405 446L406 448L438 450L439 450L463 454L517 466L549 478L571 486L586 494L589 494L608 474L622 455L632 437L652 397L664 360L670 328L672 306L674 305L674 267L672 266L672 259L668 240L662 221L654 208L642 192L631 180L620 172L603 160L581 150L568 146L565 144L545 138L521 132L498 130L497 130L481 130L480 128L460 128L459 130L444 130L443 130L424 132L423 132L417 132L385 138L365 144L337 152L317 160L290 174L248 200L215 226L180 261L162 283L146 306L132 330L126 343L123 344L120 344L6 299L6 30L127 30L128 32L129 136L160 106L197 78L229 58L269 38L305 24L350 12L386 4L408 2L409 2L419 2L420 0L432 0L433 0L498 0L499 0L530 2L531 4L544 4L575 10L617 22L649 36L663 42L691 60L717 80L746 109L762 133L778 161L788 190L794 212L798 238L800 239L800 256L802 257L802 273L802 274L802 312L800 313L800 329L794 361L788 384L776 417L766 441L750 473L732 505L702 547L686 564L686 566L710 589L728 610L748 637L768 669L784 701L784 703L800 737L822 797L834 842L834 846L836 851L836 855L838 860L842 885L842 890L848 915L848 929L850 930L852 962L854 963L854 973L854 974L854 983L856 984L856 999L856 1000L856 1021L858 1022L858 1099L856 1100ZM204 679L231 676L232 676L237 676L269 670L304 660L337 650L370 636L393 626L410 618L412 618L449 598L472 585L469 584L451 580L432 578L431 576L423 576L422 576L412 576L411 574L356 574L355 576L319 578L318 578L283 582L228 594L207 602L204 602L174 612L154 622L143 630L134 637L128 647L128 655L130 662L136 670L145 674L155 678L168 678L169 680Z"
-                        ></path></svg
+                        <use href="#marca-r"></use></svg
                       >abisco</span
                     >
                     <svg aria-hidden="true" viewBox="0 0 620 40" preserveAspectRatio="none" class="hero__grafico-3">
@@ -426,6 +456,38 @@
                 Uma curadoria de papéis, canetas e cadernos para quem pensa com as mãos. Entre, folheie, teste a ponta
                 na folha de rascunho — aqui o primeiro traço é bem-vindo.
               </p>
+
+              <!--
+                As duas conversões reais da página, na primeira tela. Antes o
+                único destino clicável do hero era a foto da fachada, que leva
+                ao Instagram — ou seja, para fora do site.
+              -->
+              <div data-in="up" data-id="6" class="hero__acoes">
+                <a
+                  href="https://wa.me/5591991032292?text=Oi!%20Vim%20pelo%20site.&amp;utm_source=hero"
+                  target="_blank"
+                  rel="noopener"
+                  data-magnetic="1"
+                  class="hero__botao"
+                >
+                  Falar no WhatsApp
+                  <svg width="18" height="10" fill="none" aria-hidden="true" viewBox="0 0 18 10">
+                    <path
+                      d="M1 5h15M12 1l4 4-4 4"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                    ></path>
+                  </svg>
+                </a>
+                <a
+                  href="https://www.google.com/maps/search/?api=1&amp;query=-2.99689229059232%2C-47.35176811287142"
+                  target="_blank"
+                  rel="noopener"
+                  class="hero__botao hero__botao--vazado"
+                  >Como chegar</a
+                >
+              </div>
             </div>
 
             <div class="u-camada">
@@ -566,17 +628,17 @@
               <ul data-trilho class="categorias__lista carrossel__trilho">
                 <li data-anim="up" class="categorias__celula carrossel__item">
                 <a
-                  href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20as%20canetas."
+                  href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20as%20canetas.&amp;utm_source=categoria-canetas"
                   target="_blank"
                   rel="noopener"
                   class="categorias__item"
                 >
                   <span class="categorias__disco">
                     <img
-                      src="/assets/images/cat-canetas.jpg"
+                      src="/assets/images/cat-canetas.webp"
                       alt="Canetas coloridas em pé num porta-lápis de tela metálica"
-                      width="600"
-                      height="600"
+                      width="320"
+                      height="320"
                       loading="lazy"
                       decoding="async"
                       class="foto foto--cover u-foto"
@@ -587,17 +649,17 @@
               </li>
                 <li data-anim="up" class="categorias__celula carrossel__item">
                 <a
-                  href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20os%20cadernos."
+                  href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20os%20cadernos.&amp;utm_source=categoria-cadernos"
                   target="_blank"
                   rel="noopener"
                   class="categorias__item"
                 >
                   <span class="categorias__disco">
                     <img
-                      src="/assets/images/cat-cadernos.jpg"
+                      src="/assets/images/cat-cadernos.webp"
                       alt="Caderno espiral aberto em folha lisa ao lado de três lápis"
-                      width="600"
-                      height="600"
+                      width="320"
+                      height="320"
                       loading="lazy"
                       decoding="async"
                       class="foto foto--cover u-foto"
@@ -608,17 +670,17 @@
               </li>
                 <li data-anim="up" class="categorias__celula carrossel__item">
                 <a
-                  href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20os%20marca-textos."
+                  href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20os%20marca-textos.&amp;utm_source=categoria-marca-textos"
                   target="_blank"
                   rel="noopener"
                   class="categorias__item"
                 >
                   <span class="categorias__disco">
                     <img
-                      src="/assets/images/cat-marca-textos.jpg"
+                      src="/assets/images/cat-marca-textos.webp"
                       alt="Marca-textos e canetas expostos na vitrine de vidro da loja"
-                      width="600"
-                      height="600"
+                      width="320"
+                      height="320"
                       loading="lazy"
                       decoding="async"
                       class="foto foto--cover u-foto"
@@ -629,17 +691,17 @@
               </li>
                 <li data-anim="up" class="categorias__celula carrossel__item">
                 <a
-                  href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20o%20material%20de%20arte%20fina."
+                  href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20o%20material%20de%20arte%20fina.&amp;utm_source=categoria-arte-fina"
                   target="_blank"
                   rel="noopener"
                   class="categorias__item"
                 >
                   <span class="categorias__disco">
                     <img
-                      src="/assets/images/cat-arte-fina.jpg"
+                      src="/assets/images/cat-arte-fina.webp"
                       alt="Pincéis guardados em potes de vidro sobre a bancada"
-                      width="600"
-                      height="600"
+                      width="320"
+                      height="320"
                       loading="lazy"
                       decoding="async"
                       class="foto foto--cover u-foto"
@@ -650,17 +712,17 @@
               </li>
                 <li data-anim="up" class="categorias__celula carrossel__item">
                 <a
-                  href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20os%20planners."
+                  href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20os%20planners.&amp;utm_source=categoria-planners"
                   target="_blank"
                   rel="noopener"
                   class="categorias__item"
                 >
                   <span class="categorias__disco">
                     <img
-                      src="/assets/images/cat-planners.jpg"
+                      src="/assets/images/cat-planners.webp"
                       alt="Gato de pedra deitado no muro de uma calçada arborizada"
-                      width="600"
-                      height="600"
+                      width="320"
+                      height="320"
                       loading="lazy"
                       decoding="async"
                       class="foto foto--cover u-foto"
@@ -671,17 +733,17 @@
               </li>
                 <li data-anim="up" class="categorias__celula carrossel__item">
                 <a
-                  href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20o%20material%20escolar."
+                  href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20o%20material%20escolar.&amp;utm_source=categoria-escolar"
                   target="_blank"
                   rel="noopener"
                   class="categorias__item"
                 >
                   <span class="categorias__disco">
                     <img
-                      src="/assets/images/cat-escolar.jpg"
+                      src="/assets/images/cat-escolar.webp"
                       alt="Lápis de ponta nova enfileirados, com as borrachas viradas para a frente"
-                      width="600"
-                      height="600"
+                      width="320"
+                      height="320"
                       loading="lazy"
                       decoding="async"
                       class="foto foto--cover u-foto"
@@ -692,17 +754,17 @@
               </li>
                 <li data-anim="up" class="categorias__celula carrossel__item">
                 <a
-                  href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20o%20material%20de%20escrit%C3%B3rio."
+                  href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20o%20material%20de%20escrit%C3%B3rio.&amp;utm_source=categoria-escritorio"
                   target="_blank"
                   rel="noopener"
                   class="categorias__item"
                 >
                   <span class="categorias__disco">
                     <img
-                      src="/assets/images/cat-escritorio.jpg"
+                      src="/assets/images/cat-escritorio.webp"
                       alt="Atendente sorrindo atrás do balcão, com um caderno aberto nas mãos"
-                      width="600"
-                      height="600"
+                      width="320"
+                      height="320"
                       loading="lazy"
                       decoding="async"
                       class="foto foto--cover u-foto"
@@ -713,17 +775,17 @@
               </li>
                 <li data-anim="up" class="categorias__celula carrossel__item">
                 <a
-                  href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20as%20novidades."
+                  href="https://wa.me/5591991032292?text=Oi!%20Quero%20ver%20as%20novidades.&amp;utm_source=categoria-novidades"
                   target="_blank"
                   rel="noopener"
                   class="categorias__item"
                 >
                   <span class="categorias__disco">
                     <img
-                      src="/assets/images/cat-novidades.jpg"
+                      src="/assets/images/cat-novidades.webp"
                       alt="Flores de papel recortadas e um cavalinho de madeira sobre cartão colorido"
-                      width="600"
-                      height="600"
+                      width="320"
+                      height="320"
                       loading="lazy"
                       decoding="async"
                       class="foto foto--cover u-foto"
@@ -861,6 +923,8 @@
                   <img
                     src="/assets/images/canetas.webp"
                     alt="Canetas esferográficas coloridas ao lado das embalagens com 8 e 12 unidades"
+                    width="900"
+                    height="565"
                     loading="lazy"
                     decoding="async"
                     class="foto foto--contain u-foto"
@@ -871,7 +935,28 @@
                   <div>
                     <h3 class="galeria__nome">Canetas</h3>
                     <p class="galeria__texto-2">Esferográfica 0.7 mm · cores sortidas</p>
-                    <p class="galeria__texto-2">Preço sob consulta</p>
+                    <!--
+                      ┌─────────────────────────────────────────────────────┐
+                      │ EDITAR ANTES DE PUBLICAR — preço dos 5 destaques    │
+                      └─────────────────────────────────────────────────────┘
+
+                      As cinco linhas de preço da galeria usam .galeria__preco
+                      e hoje repetem a mesma frase. O visitante sai sem saber se
+                      um caderno custa R$ 15 ou R$ 60 — e é essa conta que
+                      decide se ele atravessa a cidade. Preço ausente não cria
+                      curiosidade: cria atrito, e joga no WhatsApp uma pergunta
+                      que a página responderia sozinha.
+
+                      Não precisa de tabela nem de estoque digitalizado. Uma
+                      âncora resolve, e não amarra você a valor exato:
+
+                        <p class="galeria__preco">a partir de R$ 8,90</p>
+
+                      Se nem faixa for viável, ao menos varie a frase entre os
+                      cinco — cinco "sob consulta" idênticos leem como campo que
+                      ninguém preencheu, não como política de preço.
+                    -->
+                    <p class="galeria__preco">Preço sob consulta</p>
                   </div>
                                       <span data-dot="1" class="galeria__interesse">Tenho interesse</span>
                     <span data-dot="1" class="galeria__card-seta">
@@ -886,7 +971,7 @@
                     </span>
                 </figcaption>
                 <a
-                  href="https://wa.me/5591991032292?text=Ol%C3%A1!%20Vi%20o%20produto%20Canetas%20no%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20ele."
+                  href="https://wa.me/5591991032292?text=Ol%C3%A1!%20Vi%20o%20produto%20Canetas%20no%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20ele.&amp;utm_source=produto-canetas"
                   target="_blank"
                   rel="noopener"
                   aria-label="Tenho interesse em Canetas"
@@ -898,6 +983,8 @@
                   <img
                     src="/assets/images/estojo.webp"
                     alt="Dois estojos de zíper, um rosa com estampa floral e outro de plástico transparente"
+                    width="720"
+                    height="443"
                     loading="lazy"
                     decoding="async"
                     class="foto foto--contain u-foto"
@@ -908,7 +995,7 @@
                   <div>
                     <h3 class="galeria__nome">Estojo</h3>
                     <p class="galeria__texto-2">Tecido floral ou PVC transparente</p>
-                    <p class="galeria__texto-2">Preço sob consulta</p>
+                    <p class="galeria__preco">Preço sob consulta</p>
                   </div>
                                       <span data-dot="1" class="galeria__interesse">Tenho interesse</span>
                     <span data-dot="1" class="galeria__card-seta">
@@ -923,7 +1010,7 @@
                     </span>
                 </figcaption>
                 <a
-                  href="https://wa.me/5591991032292?text=Ol%C3%A1!%20Vi%20o%20produto%20Estojo%20no%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20ele."
+                  href="https://wa.me/5591991032292?text=Ol%C3%A1!%20Vi%20o%20produto%20Estojo%20no%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20ele.&amp;utm_source=produto-estojo"
                   target="_blank"
                   rel="noopener"
                   aria-label="Tenho interesse em Estojo"
@@ -935,6 +1022,8 @@
                   <img
                     src="/assets/images/caderno.webp"
                     alt="Oito cadernos universitários de espiral com capas ilustradas variadas"
+                    width="600"
+                    height="385"
                     loading="lazy"
                     decoding="async"
                     class="foto foto--contain u-foto"
@@ -945,7 +1034,7 @@
                   <div>
                     <h3 class="galeria__nome">Caderno</h3>
                     <p class="galeria__texto-2">Espiral universitário · capas variadas</p>
-                    <p class="galeria__texto-2">Preço sob consulta</p>
+                    <p class="galeria__preco">Preço sob consulta</p>
                   </div>
                                       <span data-dot="1" class="galeria__interesse">Tenho interesse</span>
                     <span data-dot="1" class="galeria__card-seta">
@@ -960,7 +1049,7 @@
                     </span>
                 </figcaption>
                 <a
-                  href="https://wa.me/5591991032292?text=Ol%C3%A1!%20Vi%20o%20produto%20Caderno%20no%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20ele."
+                  href="https://wa.me/5591991032292?text=Ol%C3%A1!%20Vi%20o%20produto%20Caderno%20no%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20ele.&amp;utm_source=produto-caderno"
                   target="_blank"
                   rel="noopener"
                   aria-label="Tenho interesse em Caderno"
@@ -972,6 +1061,8 @@
                   <img
                     src="/assets/images/kitpresente.webp"
                     alt="Kit com caderno de discos estampado de borboletas, bloco de anotações, caneta e três marca-textos"
+                    width="600"
+                    height="456"
                     loading="lazy"
                     decoding="async"
                     class="foto foto--contain u-foto"
@@ -982,7 +1073,7 @@
                   <div>
                     <h3 class="galeria__nome">Kit presente</h3>
                     <p class="galeria__texto-2">Caderno de discos, bloco e marca-textos</p>
-                    <p class="galeria__texto-2">Preço sob consulta</p>
+                    <p class="galeria__preco">Preço sob consulta</p>
                   </div>
                                       <span data-dot="1" class="galeria__interesse">Tenho interesse</span>
                     <span data-dot="1" class="galeria__card-seta">
@@ -997,7 +1088,7 @@
                     </span>
                 </figcaption>
                 <a
-                  href="https://wa.me/5591991032292?text=Ol%C3%A1!%20Vi%20o%20produto%20Kit%20presente%20no%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20ele."
+                  href="https://wa.me/5591991032292?text=Ol%C3%A1!%20Vi%20o%20produto%20Kit%20presente%20no%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20ele.&amp;utm_source=produto-kit-presente"
                   target="_blank"
                   rel="noopener"
                   aria-label="Tenho interesse em Kit presente"
@@ -1009,6 +1100,8 @@
                   <img
                     src="/assets/images/agenda.webp"
                     alt="Agendas 2027 de espiral com capas variadas, entre elas uma de margaridas e uma de papel kraft"
+                    width="576"
+                    height="484"
                     loading="lazy"
                     decoding="async"
                     class="foto foto--contain u-foto"
@@ -1019,7 +1112,7 @@
                   <div>
                     <h3 class="galeria__nome">Agenda</h3>
                     <p class="galeria__texto-2">2027 · espiral · capas variadas</p>
-                    <p class="galeria__texto-2">Preço sob consulta</p>
+                    <p class="galeria__preco">Preço sob consulta</p>
                   </div>
                                       <span data-dot="1" class="galeria__interesse">Tenho interesse</span>
                     <span data-dot="1" class="galeria__card-seta">
@@ -1034,7 +1127,7 @@
                     </span>
                 </figcaption>
                 <a
-                  href="https://wa.me/5591991032292?text=Ol%C3%A1!%20Vi%20o%20produto%20Agenda%20no%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20ele."
+                  href="https://wa.me/5591991032292?text=Ol%C3%A1!%20Vi%20o%20produto%20Agenda%20no%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20ele.&amp;utm_source=produto-agenda"
                   target="_blank"
                   rel="noopener"
                   aria-label="Tenho interesse em Agenda"
@@ -1052,7 +1145,7 @@
               </div>
               <div class="galeria__acoes-par">
                 <a
-                  href="https://wa.me/5591991032292"
+                  href="https://wa.me/5591991032292?utm_source=galeria"
                   target="_blank"
                   rel="noopener"
                   data-magnetic="1"
@@ -1095,17 +1188,6 @@
           direto ao 50% — perde a descoberta, nunca a informação.
         -->
         <section id="descontos" data-descontos data-passo="5" class="descontos">
-          <svg
-            aria-hidden="true"
-            viewBox="0 0 2880 70"
-            preserveAspectRatio="none"
-            data-float="1"
-            class="descontos__onda descontos__onda--topo"
-          >
-            <!-- Preenchida com o laranja da galeria: é o bloco de cima
-                 escorrendo para dentro deste, não uma faixa entre os dois. -->
-            <path d="M0 38 C120 56 240 56 360 38 C480 20 600 20 720 38 C840 56 960 56 1080 38 C1200 20 1320 20 1440 38 C1560 56 1680 56 1800 38 C1920 20 2040 20 2160 38 C2280 56 2400 56 2520 38 C2640 20 2760 20 2880 38 V0 H0 Z" fill="var(--accent)"></path>
-          </svg>
 
           <div data-descontos-trilha class="descontos__trilha">
             <div data-descontos-palco class="descontos__palco">
@@ -1359,24 +1441,57 @@
                       ></circle>
                     </svg>
 
-                    <span class="descontos__janela">
-                      <span data-descontos-fita class="descontos__fita">
-                        <span class="descontos__valor"
-                          >10<span class="descontos__pct">%</span></span
-                        >
-                        <span class="descontos__valor"
-                          >20<span class="descontos__pct">%</span></span
-                        >
-                        <span class="descontos__valor"
-                          >30<span class="descontos__pct">%</span></span
-                        >
-                        <span class="descontos__valor"
-                          >40<span class="descontos__pct">%</span></span
-                        >
-                        <span class="descontos__valor"
-                          >50<span class="descontos__pct">%</span></span
-                        >
+                    <!--
+                      Odômetro de duas rodas.
+
+                      Aqui havia uma fita horizontal de cinco cartões — 10, 20,
+                      30, 40, 50 — que andava um cartão por degrau. Ela passava
+                      dois terços de cada faixa parada e o último terço
+                      deslizando, de propósito, para o número pousar e ser lido.
+                      O efeito colateral era a troca seca: cinco saltos, e entre
+                      eles nada acontecendo.
+
+                      Estas duas rodas giram como as de um contador mecânico. A
+                      da direita corre o tempo todo, 0 a 9 e de novo a 0; a da
+                      esquerda só vira enquanto a da direita passa do 9 para o
+                      0. O valor é contínuo entre 10 e 50 e vem direto da
+                      posição da rolagem, então não existe salto nenhum: subir
+                      ou descer a página é girar as rodas para frente ou para
+                      trás.
+
+                      A unidade tem um 0 a mais no fim. Ela é o mesmo glifo do
+                      0 do começo, e é o que faz a virada da dezena acontecer
+                      sem a roda voltar correndo pelos dez dígitos.
+
+                      Sem JS as rodas ficam onde o CSS as deixa — 5 e 0 — que é
+                      o "50%" que o resto da seção anuncia.
+                    -->
+                    <span class="descontos__contador">
+                      <span class="descontos__roda">
+                        <span class="descontos__tira descontos__tira--dezena">
+                          <b class="descontos__digito">1</b>
+                          <b class="descontos__digito">2</b>
+                          <b class="descontos__digito">3</b>
+                          <b class="descontos__digito">4</b>
+                          <b class="descontos__digito">5</b>
+                        </span>
                       </span>
+                      <span class="descontos__roda">
+                        <span class="descontos__tira descontos__tira--unidade">
+                          <b class="descontos__digito">0</b>
+                          <b class="descontos__digito">1</b>
+                          <b class="descontos__digito">2</b>
+                          <b class="descontos__digito">3</b>
+                          <b class="descontos__digito">4</b>
+                          <b class="descontos__digito">5</b>
+                          <b class="descontos__digito">6</b>
+                          <b class="descontos__digito">7</b>
+                          <b class="descontos__digito">8</b>
+                          <b class="descontos__digito">9</b>
+                          <b class="descontos__digito">0</b>
+                        </span>
+                      </span>
+                      <span class="descontos__pct">%</span>
                     </span>
                   </span>
 
@@ -1394,7 +1509,37 @@
 
                 <p class="descontos__manuscrito">Encontre sua próxima oportunidade.</p>
 
-                <a href="https://wa.me/5591991032292?text=Oi!%20Quero%20saber%20quais%20produtos%20est%C3%A3o%20com%20desconto." target="_blank" rel="noopener" class="descontos__botao">
+                <!--
+                  ┌───────────────────────────────────────────────────────────┐
+                  │ EDITAR ANTES DE PUBLICAR — condições da promoção          │
+                  └───────────────────────────────────────────────────────────┘
+
+                  Pelo CDC (arts. 30 e 31) a oferta veiculada vincula a loja e
+                  precisa informar suas condições. "Descontos de até 50%" sem
+                  dizer em quê, até quando e sob que regra é oferta sem
+                  condição — e, na prática do balcão, é pior que o jurídico: o
+                  cliente chega cobrando 50% de tudo, ouve "é só em alguns
+                  itens" e a promessa vira frustração onde a venda acontece.
+
+                  A frase abaixo é o mínimo que fecha essa lacuna sem inventar
+                  dado nenhum: diz que a faixa é por item e manda consultar. Ela
+                  está correta e pode ir ao ar como está.
+
+                  O que ELA AINDA NÃO TEM, e você precisa preencher:
+                    · a faixa de produtos — trocar "itens selecionados" por
+                      algo como "itens selecionados de escolar e escritório";
+                    · a validade — acrescentar "até 30 de setembro de 2026".
+
+                  Sem data, a afirmação envelhece sozinha e ninguém lembra de
+                  tirá-la. Se a promoção mudar de tempos em tempos, esta linha é
+                  o lugar único de edição.
+                -->
+                <p class="descontos__condicao">
+                  Percentual variável por item, em itens selecionados. Consulte as condições e a validade da promoção
+                  pelo WhatsApp ou na loja.
+                </p>
+
+                <a href="https://wa.me/5591991032292?text=Oi!%20Quero%20saber%20quais%20produtos%20est%C3%A3o%20com%20desconto.&amp;utm_source=descontos" target="_blank" rel="noopener" class="descontos__botao">
                   Aproveitar descontos
                   <svg width="18" height="10" fill="none" aria-hidden="true" viewBox="0 0 18 10">
                     <path
@@ -1409,17 +1554,6 @@
             </div>
           </div>
 
-          <svg
-            aria-hidden="true"
-            viewBox="0 0 2880 70"
-            preserveAspectRatio="none"
-            data-float="1"
-            class="descontos__onda descontos__onda--base"
-          >
-            <!-- Fechada em V70: preenche para baixo, e é o papel da loja
-                 subindo por baixo desta seção. -->
-            <path d="M0 38 C120 56 240 56 360 38 C480 20 600 20 720 38 C840 56 960 56 1080 38 C1200 20 1320 20 1440 38 C1560 56 1680 56 1800 38 C1920 20 2040 20 2160 38 C2280 56 2400 56 2520 38 C2640 20 2760 20 2880 38 V70 H0 Z" fill="var(--paper)"></path>
-          </svg>
         </section>
 
         <section id="loja" class="loja">
@@ -1465,7 +1599,7 @@
           </svg>
 
           <div class="loja__topo">
-            <div class="loja__titulos">
+            <div>
               <div data-anim="fade" class="u-eyebrow">
                 <span class="u-rotulo">Como chegar</span>
                 <span data-anim="line" class="loja__regua"></span>
@@ -1500,7 +1634,7 @@
                 </svg>
               </a>
               <a
-                href="https://wa.me/5591991032292"
+                href="https://wa.me/5591991032292?utm_source=loja-botao"
                 target="_blank"
                 rel="noopener"
                 class="loja__botao loja__botao--vazado"
@@ -1509,18 +1643,48 @@
             </div>
           </div>
 
+          <!--
+            O mapa só carrega quando alguém pede.
+
+            O loading="lazy" que estava aqui adiava o pedido até a seção chegar
+            perto da tela, e isso estava certo — mas quem rola até o fim da
+            página acaba pagando de qualquer jeito: o embed do Google puxa entre
+            700 KB e 1 MB de JavaScript e grava cookies de terceiro, sozinho
+            mais que todo o resto do site somado. Sob LGPD, cookie de terceiro
+            sem consentimento é ponto de atenção.
+
+            A fachada abaixo mostra o endereço e oferece o mapa. Quem quiser
+            navegar de verdade vai para o app de mapas do celular pelo botão
+            "Traçar rota" logo acima — que é melhor experiência que um iframe
+            apertado — e quem quiser só olhar clica aqui e aceita o custo.
+
+            Sem JS a fachada continua legível e o botão "Traçar rota" continua
+            funcionando: o mapa embutido é o extra, não o caminho.
+          -->
           <div data-anim="scale" class="loja__mapa-caixa">
-            <iframe
-              title="Mapa com a localização da Rabisco Papelaria na Rua Sete de Setembro, 36"
-              loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"
-              src="https://www.google.com/maps?q=-2.99689229059232,-47.35176811287142&amp;z=16&amp;hl=pt-BR&amp;output=embed"
-              class="loja__mapa"
-            ></iframe>
+            <div
+              data-mapa
+              data-mapa-src="https://www.google.com/maps?q=-2.99689229059232,-47.35176811287142&amp;z=16&amp;hl=pt-BR&amp;output=embed"
+              data-mapa-titulo="Mapa com a localização da Rabisco Papelaria na Rua Sete de Setembro, 36"
+              class="loja__mapa-fachada"
+            >
+              <svg width="26" height="26" fill="none" aria-hidden="true" viewBox="0 0 24 24" class="loja__mapa-pino">
+                <path
+                  d="M12 21.5s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linejoin="round"
+                ></path>
+                <circle cx="12" cy="10.2" r="2.6" stroke="currentColor" stroke-width="1.6"></circle>
+              </svg>
+              <p class="loja__mapa-endereco">Rua Sete de Setembro, 36 — Centro, Paragominas</p>
+              <button type="button" data-mapa-abrir hidden class="loja__mapa-botao">Ver o mapa aqui</button>
+              <p class="loja__mapa-nota">Carrega o Google Maps, que grava cookies próprios.</p>
+            </div>
           </div>
 
           <div data-anim="up" data-d="3" class="loja__blocos">
-            <section class="loja__bloco">
+            <div class="loja__bloco">
               <h3 class="loja__bloco-titulo">Horários</h3>
               <dl class="loja__horarios">
                 <div class="loja__linha">
@@ -1536,17 +1700,17 @@
                   <dd class="loja__valor loja__valor--apagado">Fechado</dd>
                 </div>
               </dl>
-            </section>
+            </div>
 
-            <section class="loja__bloco">
+            <div class="loja__bloco">
               <h3 class="loja__bloco-titulo">Fale com a gente</h3>
-              <a href="https://wa.me/5591991032292" target="_blank" rel="noopener" class="loja__destaque"
+              <a href="https://wa.me/5591991032292?utm_source=loja-telefone" target="_blank" rel="noopener" class="loja__destaque"
                 >(91) 99103-2292</a
               >
               <p class="loja__nota">WhatsApp · orçamento e reserva de material</p>
-            </section>
+            </div>
 
-            <section class="loja__bloco">
+            <div class="loja__bloco">
               <h3 class="loja__bloco-titulo">Instagram</h3>
               <a
                 href="https://www.instagram.com/rabisco_papelaria_pgm"
@@ -1556,13 +1720,29 @@
                 >@rabisco_papelaria_pgm</a
               >
               <p class="loja__nota">Novidades e chegadas da semana</p>
-            </section>
+            </div>
           </div>
         </section>
 
         <section class="cta">
-          <img src="/assets/images/r-marca.png" alt data-float="1" class="cta__flutuante" />
-          <img src="/assets/images/r-marca.png" alt data-float="1" class="cta__flutuante-2" />
+          <svg
+            aria-hidden="true"
+            focusable="false"
+            viewBox="-194 -54 1254 1254"
+            data-float="1"
+            class="cta__flutuante"
+          >
+            <use href="#marca-r"></use>
+          </svg>
+          <svg
+            aria-hidden="true"
+            focusable="false"
+            viewBox="-194 -54 1254 1254"
+            data-float="1"
+            class="cta__flutuante-2"
+          >
+            <use href="#marca-r"></use>
+          </svg>
           <div class="cta__container">
             <span data-anim="fade" class="cta__manuscrito">e a sua próxima ideia?</span>
             <h2 data-anim="up" class="cta__titulo">Comece pelo<br />rabisco</h2>
@@ -1579,7 +1759,7 @@
             </svg>
             <div data-anim="up" data-d="2" class="cta__acoes">
               <a
-                href="https://wa.me/5591991032292"
+                href="https://wa.me/5591991032292?utm_source=cta"
                 target="_blank"
                 rel="noopener"
                 data-magnetic="1"
@@ -1602,7 +1782,15 @@
         <div data-stack="1" class="rodape__grade">
           <div>
             <div class="rodape__grupo">
-              <img src="/assets/images/r-marca.png" alt="Rabisco Papelaria" class="rodape__foto" />
+              <!-- Decorativo: o texto "Rabisco" ao lado já nomeia a marca. -->
+              <svg
+                aria-hidden="true"
+                focusable="false"
+                viewBox="-194 -54 1254 1254"
+                class="rodape__foto"
+              >
+                <use href="#marca-r"></use>
+              </svg>
               <span class="rodape__marca">Rabisco</span>
             </div>
             <p class="rodape__texto">
@@ -1634,7 +1822,7 @@
         </div>
       </footer>
       <a
-        href="https://wa.me/5591991032292"
+        href="https://wa.me/5591991032292?utm_source=fab"
         target="_blank"
         rel="noopener"
         data-wafab="1"
@@ -1648,7 +1836,6 @@
           fill="currentColor"
           aria-hidden="true"
           viewBox="0 0 24 24"
-          class="manifesto__bloco"
         >
           <path
             d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.46-2.39-1.48-.89-.79-1.48-1.76-1.66-2.06-.17-.3-.02-.46.13-.6.14-.14.3-.35.44-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.22 3.07c.15.2 2.1 3.2 5.08 4.49.7.3 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2-1.42.25-.69.25-1.29.18-1.41-.08-.13-.28-.2-.57-.35M12.05 21.79h-.01c-1.77 0-3.51-.48-5.03-1.38l-.36-.22-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.89 9.89-9.89 2.64 0 5.12 1.03 6.99 2.9a9.83 9.83 0 0 1 2.89 6.99c0 5.45-4.43 9.89-9.88 9.89m8.41-18.3A11.82 11.82 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.69 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.16-3.48-8.41"

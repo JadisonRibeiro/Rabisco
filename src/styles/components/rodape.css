@@ -23,7 +23,8 @@
 .rodape__foto {
   width: 34px;
   height: 34px;
-  object-fit: contain;
+  flex: 0 0 auto;
+  fill: var(--cream);
 }
 
 .rodape__marca {

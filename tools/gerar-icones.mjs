@@ -19,8 +19,8 @@ const PUBLIC = path.join(ROOT, 'public');
  * A regra é simples: fundo laranja pede o R creme, fundo creme pede o R
  * laranja. Ambas as combinações ficam em 5,06:1.
  */
-const MARCA_LARANJA = path.join(ROOT, 'src/assets/images/logo-rabisco.png');
-const MARCA_CREME = path.join(ROOT, 'src/assets/images/r-marca.png');
+const MARCA_LARANJA = path.join(ROOT, 'tools/marca/logo-rabisco.png');
+const MARCA_CREME = path.join(ROOT, 'tools/marca/r-marca.png');
 
 const CREME = { r: 250, g: 246, b: 240, alpha: 1 };
 const ACCENT = { r: 199, g: 48, b: 12, alpha: 1 };

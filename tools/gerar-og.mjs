@@ -79,7 +79,7 @@ const html = `<!doctype html>
 <body>
   <div class="textura"></div>
   <div class="halo"></div>
-  <img class="r" src="${asFileUrl('src/assets/images/logo-rabisco.png')}" alt="">
+  <img class="r" src="${asFileUrl('tools/marca/logo-rabisco.png')}" alt="">
   <div class="marca">Rabisco Papelaria</div>
   <h1>Toda grande ideia começa com um rabisco</h1>
   <p class="sub">

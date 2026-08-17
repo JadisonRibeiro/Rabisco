@@ -24,9 +24,11 @@
    * onde grudar e a peça volta a andar com a página — o conteúdo saía por
    * cima da tela e só a última linha aparecia.
    *
-   * Só no eixo x, que é onde as ondas de 200% de largura sangram. `clip`
-   * convive com `visible` no outro eixo (`hidden` não conviveria), então a
-   * explosão continua livre para passar da borda de cima e de baixo.
+   * Só no eixo x. Era ali que as ondas de 200% de largura sangravam; elas já
+   * não existem, mas a explosão do clímax também passa das laterais e continua
+   * precisando de quem a apare. `clip` convive com `visible` no outro eixo
+   * (`hidden` não conviveria), então ela segue livre para passar da borda de
+   * cima e de baixo, que é onde ela deve passar.
    */
   overflow-x: clip;
 
@@ -41,6 +43,26 @@
   --passo-h: 38svh;
   --passos: 5;
 
+  /*
+   * O remate: quantos passos o 50% fica em cena, parado, antes de a seção
+   * soltar o palco.
+   *
+   * Sem ele o quinto degrau terminava no exato quadro em que a peça se soltava
+   * — o número fechava em 50% e a seção já ia embora junto, sem tempo de ler o
+   * que a rolagem inteira veio construir. O clímax existia e ninguém via.
+   *
+   * Um passo, e não meio: é a mesma permanência que cada um dos outros cinco
+   * descontos tem, então o 50% não é lido como uma pausa estranha no fim, e sim
+   * como o sexto tempo de um compasso que já era de cinco. É também o tempo que
+   * a explosão precisa para acontecer inteira.
+   *
+   * Este número e o --passos ao lado são lidos por
+   * scripts/modules/descontos.js — a divisão entre contar e segurar sai daqui,
+   * de um lugar só. Aumentar o remate alonga a seção e o tempo de leitura sem
+   * mexer no ritmo da contagem.
+   */
+  --remate: 1;
+
   /* O palco ocupa a tela abaixo da barra fixa. */
   --palco-h: calc(100svh - var(--nav-h));
 }
@@ -48,39 +70,21 @@
 /* ── Emendas ─────────────────────────────────────────────────────────────── */
 
 /*
- * Mesma gramática das outras emendas do site: a onda é preenchida com a cor
- * da seção VIZINHA, de modo que seja o laranja da galeria escorrendo para
- * dentro do escuro, e o papel da loja subindo por baixo — e não uma faixa
- * decorativa colada entre dois blocos.
- */
-.descontos__onda {
-  position: absolute;
-  left: 0;
-  z-index: 3;
-  display: block;
-  width: 200%;
-  height: clamp(30px, 4.4vw, 66px);
-  pointer-events: none;
-  animation: rabOnda 32s linear infinite;
-}
-
-.descontos__onda--topo {
-  top: -1px;
-}
-
-/*
- * A de baixo é a mesma curva fechada para o outro lado (V70 em vez de V0), e
- * não a mesma peça girada: `rotate` e o `transform` da deriva se multiplicam
- * na ordem do espec, e a translação passaria a correr no espaço já virado —
- * o laço da onda deixaria de fechar onde deve. Duas letras no caminho custam
- * menos que depender dessa ordem.
+ * Esta seção NÃO tem emenda ondulada, e é a única do site assim.
  *
- * A deriva corre ao contrário para as duas emendas não arrastarem juntas.
+ * Havia duas ondas aqui, na mesma gramática das outras: preenchidas com a cor
+ * da seção VIZINHA — o laranja da galeria escorrendo por cima, o papel da loja
+ * subindo por baixo — de modo que a emenda fosse o bloco de cima descendo, e
+ * não uma faixa colada entre dois. Saíram a pedido: aqui o encontro é reto.
+ *
+ * O corte seco tem uma consequência que vale saber antes de estranhar. As ondas
+ * eram o que amaciava a entrada no único bloco quase-preto da página; sem elas,
+ * o laranja da galeria encosta no escuro numa linha dura. É o efeito pedido, e
+ * as seções vizinhas continuam com as ondas delas — a galeria ainda recebe o
+ * papel das categorias por cima, porque essa emenda mora naquela seção.
+ *
+ * `rabOnda` continua em animations.css: categorias e galeria ainda a usam.
  */
-.descontos__onda--base {
-  bottom: -1px;
-  animation-direction: reverse;
-}
 
 /* ── Trilha e palco ──────────────────────────────────────────────────────── */
 
@@ -96,7 +100,10 @@
  */
 .descontos__trilha {
   position: relative;
-  height: calc(var(--passos) * var(--passo-h) + var(--palco-h));
+
+  /* Os cinco degraus, mais o remate do 50%, mais o palco. A parcela do palco
+     não é folga — ver o comentário acima. */
+  height: calc((var(--passos) + var(--remate)) * var(--passo-h) + var(--palco-h));
 }
 
 /*
@@ -193,23 +200,30 @@
   color: rgb(var(--cream-rgb) / 88%);
 }
 
-/* ── O número: o carrossel ───────────────────────────────────────────────── */
+/* ── O número: o odômetro ────────────────────────────────────────────────── */
 
 /*
- * Os cinco valores são uma FITA que anda de lado, um cartão por degrau: o
- * número não troca de aparência no lugar, ele sai de cena para a esquerda
- * enquanto o próximo entra pela direita. É o mesmo gesto do carrossel de
- * produtos da página, com o dedo trocado pela rolagem.
+ * Duas rodas de dígitos girando na vertical, como as de um contador mecânico.
  *
- * Tudo aqui é medido em porcentagem da janela. Assim os cinco cartões, o
- * recuo que centraliza o primeiro e o passo da fita saem sempre da mesma
- * largura, seja ela a de um celular ou a de um monitor — e é por isso que a
- * animação é literalmente a mesma nos dois, sem variante para manter.
+ * Aqui havia uma FITA horizontal de cinco cartões, um por degrau, que passava
+ * dois terços de cada faixa parada e o último terço deslizando. O repouso era
+ * intencional — o número pousava para ser lido — mas o preço era a troca seca:
+ * a peça inteira eram cinco saltos com nada entre eles.
+ *
+ * O valor agora é contínuo de 10 a 50 e vem direto da posição da rolagem. A
+ * roda das unidades corre sem parar; a das dezenas só vira enquanto a unidade
+ * atravessa o 9. Não há transição declarada em lugar nenhum deste bloco, e é
+ * de propósito: a suavidade tem de vir do scroll, não de uma curva que corre
+ * por conta própria. Uma transição aqui atrasaria a roda em relação ao dedo, e
+ * é exatamente isso que faz um contador parecer genérico.
+ *
+ * Tudo desce de --num, o corpo do número, e de --alt, a altura de uma casa.
+ * Trocar o tamanho no celular continua sendo mexer num valor só.
  */
+
 /*
  * A cena centraliza os filhos pelo CONTEÚDO deles, então o título mede o que
- * carrega dentro. Sem esta largura ele encolheria para o texto e a janela do
- * carrossel viria junto, estreita demais para o número caber no cartão.
+ * carrega dentro. Sem esta largura ele encolheria para o texto.
  */
 .descontos__titulo {
   width: 100%;
@@ -222,134 +236,122 @@
 
   /*
    * O corpo do número, de onde tudo o mais desce. Uma origem só: a quebra do
-   * celular redefine este valor e o cartão acompanha sozinho.
+   * celular redefine este valor e as rodas acompanham sozinhas.
    */
   --num: clamp(120px, 36vw, 320px);
 
   /*
-   * Largura de um cartão. Medida no NÚMERO, e não na janela, porque é do
-   * número que ela precisa dar conta: "50%" ocupa cerca de 1,25 do corpo, e
-   * 1,62 deixa um vão folgado entre um desconto e o seguinte sem afastá-los
-   * tanto que sumam da tela.
+   * Altura de uma casa da roda, e portanto o passo do giro.
    *
-   * É esse vão que faz a peça ler como carrossel: o número anterior e o
-   * próximo ficam espiando nas bordas da janela, dissolvidos pela máscara.
-   * Amarrado à janela em vez de ao corpo, o cartão ficaria enorme no monitor
-   * — os vizinhos a um metro do centro — e a fita voltaria a parecer uma
-   * troca seca.
+   * 0,86 e não a caixa de 0,82 que a fita usava: a roda apara em cima e
+   * embaixo — é o que a faz ler como roda — e num box de 0,82 o topo do 8 e do
+   * 9 da Archivo encostava na aresta. 0,86 dá a folga sem afrouxar o bloco.
    */
-  --cartao: calc(1.62 * var(--num));
+  --alt: calc(var(--num) * 0.86);
 }
 
-/*
- * A janela apara a fita nas laterais.
- *
- * `clip`, e não `hidden`, pela mesma razão da seção inteira: `hidden` criaria
- * um contexto de rolagem aqui dentro. E `clip` é o único valor que convive com
- * `visible` no outro eixo — o que importa porque a linha do número tem
- * `line-height: 0.82` e as garrafas dos dígitos passam da caixa em cima e
- * embaixo. Aparar só onde precisa.
- */
-.descontos__janela {
-  display: block;
-  overflow-x: clip;
-  overflow-y: visible;
-
-  /*
-   * A janela mede o espaço que tem, não o que guarda.
-   *
-   * Sem isto a conta anda em círculo: a fita são cinco números lado a lado, o
-   * título cresce para caber os cinco, a janela herda essa largura e os
-   * cartões, que são fração dela, crescem também. Medido, dava uma janela de
-   * 2005px numa tela de 1440 — a seção inteira arrastada para fora do
-   * container. Contenção de tamanho em linha corta o laço na origem: a largura
-   * desce da cena para a fita, e nunca sobe.
-   */
-  contain: inline-size;
-
-  /*
-   * As bordas dissolvem em vez de cortar. Um corte reto denunciaria a janela e
-   * transformaria os vizinhos em pedaços de número; dissolvidos, eles leem
-   * como o que vem antes e o que vem depois.
-   */
-  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
-}
-
-.descontos__fita {
-  display: flex;
-
-  /*
-   * Duas parcelas. A primeira centraliza o cartão zero: sobra metade do vão
-   * entre o cartão e a janela. A segunda é o passo da rolagem, escrito por
-   * scripts/modules/descontos.js — 0 no 10%, 4 no 50%, e as frações do meio
-   * são a fita em movimento. A reserva 4 é o estado sem JS: a fita já parada
-   * no 50%, que é o que o HTML anuncia.
-   *
-   * A centralização mora aqui, e não num `padding`, porque padding encolheria
-   * a caixa de conteúdo da fita — e é contra ELA que os 76% do cartão são
-   * medidos. Os cartões sairiam a 76% de 76%, e nada pousaria no meio. Em
-   * `translate` as duas parcelas medem a mesma coisa: a largura da própria
-   * fita, que é a da janela.
-   *
-   * `translate` sozinho, que o compositor resolve sem tocar em layout.
-   */
-  translate: calc((100% - var(--cartao)) / 2 - var(--carrossel, 4) * var(--cartao));
-  will-change: transform;
-}
-
-.descontos__valor {
-  flex: 0 0 var(--cartao);
+.descontos__contador {
   display: flex;
   align-items: flex-start;
   justify-content: center;
 
+  /* Sem isto os dois dígitos ganhariam o espaço entre palavras do texto que os
+     envolve e o número apareceria rachado ao meio. */
+  gap: 0;
+}
+
+/*
+ * A janela de uma roda: mostra uma casa e apara o resto.
+ *
+ * `clip` e não `hidden` pela mesma razão da seção inteira — `hidden` criaria um
+ * contexto de rolagem aqui dentro. Aqui a aparagem é nos DOIS eixos, ao
+ * contrário da janela horizontal que existia antes: é o corte de cima e de
+ * baixo que transforma uma lista de dígitos numa roda.
+ */
+.descontos__roda {
+  display: block;
+  height: var(--alt);
+  overflow: clip;
+}
+
+.descontos__tira {
+  display: flex;
+  flex-direction: column;
+
+  /*
+   * O giro. --dezena e --unidade são escritas por
+   * scripts/modules/descontos.js em casas de dígito, com fração: 2.5 é a roda
+   * exatamente entre o 2 e o 3.
+   *
+   * As reservas são o estado sem JS — dezena na quinta casa, unidade na
+   * primeira — ou seja, o "50%" que o HTML anuncia e que a escada abaixo
+   * confirma.
+   *
+   * `translate` sozinho, que o compositor resolve sem tocar em layout. É o que
+   * mantém o giro fluido no celular fraco: por quadro, o navegador move duas
+   * camadas já rasterizadas e não recalcula nada.
+   */
+  will-change: transform;
+}
+
+.descontos__tira--dezena {
+  translate: 0 calc(var(--dezena, 4) * var(--alt) * -1);
+}
+
+.descontos__tira--unidade {
+  translate: 0 calc(var(--unidade, 0) * var(--alt) * -1);
+}
+
+.descontos__digito {
+  flex: 0 0 var(--alt);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /*
+   * A casa tem de medir --alt exatamente, porque --alt é também o passo do
+   * giro: se as duas medidas divergirem, cada volta acumula a diferença e as
+   * rodas saem de registro — o vizinho começa a aparecer na janela.
+   *
+   * E divergiam. `flex: 0 0 var(--alt)` sozinho não bastava: item de flex nasce
+   * com `min-height: auto` e não encolhe abaixo do próprio conteúdo, e o
+   * conteúdo aqui é uma linha de texto de --num, que é maior que os 0,86 de
+   * --alt. A casa ficava com 320px enquanto o giro andava de 275 em 275.
+   *
+   * Com `min-height: 0` o flex-basis manda. A linha de texto continua maior que
+   * a casa e transborda, mas só a entrelinha: a tinta do dígito tem cerca de
+   * 0,72 do corpo e sobra folga dos dois lados. O que passar, a roda apara.
+   */
+  min-height: 0;
+
   font-weight: 800;
   font-stretch: 78%;
   font-size: var(--num);
-  line-height: 0.82;
+  line-height: 1;
   letter-spacing: -0.045em;
   color: var(--cream);
-  white-space: nowrap;
 
   /*
-   * Tabular para o dígito das dezenas não dançar de largura entre 10, 20 e 30
-   * — o salto lateral denunciaria que são cinco peças diferentes passando, e
-   * não um número subindo.
+   * Tabular para as duas rodas terem exatamente a mesma largura em qualquer
+   * dígito. Sem isto a roda das unidades mudaria de largura ao girar e o
+   * número inteiro dançaria de lado a cada volta.
    */
   font-variant-numeric: tabular-nums;
 
-  /*
-   * Quem não está no centro fica apagado. É a única coisa da fita que responde
-   * ao DEGRAU e não ao avanço contínuo: o realce troca quando o cartão novo
-   * chega ao meio, no meio do deslize, e a transição curta cobre exatamente
-   * essa passagem.
-   *
-   * Só opacidade e cor. Escala e desfoque saíram desta seção uma vez por
-   * medida — escalar texto obriga o navegador a re-rasterizá-lo a cada passo,
-   * e nenhuma camada resolve um blur sobre cinco textos deste tamanho.
-   */
-  opacity: 0.22;
-  transition:
-    opacity 0.3s var(--ease),
-    color 0.5s ease;
+  /* Só a cor transita — é o clímax do 50% acendendo. A posição, nunca. */
+  transition: color 0.5s ease;
 }
 
 .descontos__pct {
-  font-size: 0.42em;
+  font-size: calc(var(--num) * 0.42);
   line-height: 1;
   margin-top: 0.14em;
   margin-left: 0.04em;
+  align-self: flex-start;
+  font-weight: 800;
+  font-stretch: 78%;
   color: rgb(var(--cream-rgb) / 60%);
   transition: color 0.6s ease;
-}
-
-/* O cartão que está no centro. */
-[data-passo='1'] .descontos__valor:nth-child(1),
-[data-passo='2'] .descontos__valor:nth-child(2),
-[data-passo='3'] .descontos__valor:nth-child(3),
-[data-passo='4'] .descontos__valor:nth-child(4),
-[data-passo='5'] .descontos__valor:nth-child(5) {
-  opacity: 1;
 }
 
 /*
@@ -358,11 +360,11 @@
  * contraste, e é a única vez que ela aparece em texto no site inteiro —
  * por isso lê como recompensa.
  */
-[data-passo='5'] .descontos__valor:nth-child(5) {
+[data-passo='5'] .descontos__digito {
   color: rgb(var(--ember-quente-rgb));
 }
 
-[data-passo='5'] .descontos__valor:nth-child(5) .descontos__pct {
+[data-passo='5'] .descontos__pct {
   color: rgb(var(--ember-quente-rgb) / 72%);
 }
 
@@ -413,11 +415,15 @@
   list-style: none;
 }
 
+/* 42% de creme sobre a tinta dava 3,62:1 e reprovava a AA — e estes números
+   são conteúdo, não enfeite: dizem quais faixas de desconto existem. 55% sobe
+   para 4,6:1 e o degrau inativo continua claramente mais apagado que o ativo,
+   que é creme cheio. */
 .descontos__degrau {
   font-size: clamp(11px, 1.5vw, 15px);
   font-weight: 700;
   letter-spacing: 0.14em;
-  color: rgb(var(--cream-rgb) / 42%);
+  color: rgb(var(--cream-rgb) / 55%);
   transition:
     color 0.45s ease,
     opacity 0.45s ease;
@@ -443,6 +449,22 @@
 
 [data-passo='5'] .descontos__degrau:nth-child(5) {
   color: rgb(var(--ember-quente-rgb));
+}
+
+/* ── Condições da oferta ─────────────────────────────────────────────────── */
+
+/*
+ * A letra miúda que faltava. Discreta de propósito — ela não disputa com o
+ * número, que é o que a seção veio dizer — mas legível de verdade: 72% de
+ * creme sobre a tinta dá 8,6:1, bem acima do mínimo, porque isto é informação
+ * que vincula a loja, não crédito de rodapé.
+ */
+.descontos__condicao {
+  max-width: 46ch;
+  margin: clamp(10px, 1.6vh, 16px) auto 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: rgb(var(--cream-rgb) / 72%);
 }
 
 /* ── Chamada ─────────────────────────────────────────────────────────────── */
@@ -686,74 +708,28 @@
 /* ── Movimento reduzido ──────────────────────────────────────────────────── */
 
 /*
- * Aqui a seção deixa de ser uma trilha e vira um bloco comum, já mostrando o
- * fim: 50% OFF e a escada inteira acesa. A informação que a rolagem revelaria
- * é justamente a que fica na tela desde o início — quem pediu menos movimento
- * não fica sabendo menos.
+ * A TRILHA CONTINUA VALENDO, e isso é decisão de produto, não descuido.
+ *
+ * Aqui a seção inteira se desmontava sob esta preferência: a trilha caía para
+ * `height: auto`, o palco largava o `sticky` e o curso de rolagem zerava. O
+ * resultado era um bloco parado mostrando 50% — e, com ele, o odômetro
+ * simplesmente não existia para quem tem a preferência ligada.
+ *
+ * Quem assina o site pediu a passagem de 10% a 50% pela rolagem para todo
+ * visitante, ciente do custo: no Windows esta preferência vem ligada por
+ * "Efeitos de animação" desligado, e muita gente a tem sem nunca ter pedido —
+ * mas ela também é o que alguém com vertigem vestibular usa para se proteger, e
+ * para essa pessoa a seção passa a ser 1710px de rolagem com o conteúdo presto
+ * na tela.
+ *
+ * O que se manteve suprimido, e não deve voltar junto numa remoção distraída:
+ * a explosão do clímax e a deriva das ondas. Os dois são movimento decorativo
+ * puro — não carregam informação nenhuma — e são justamente o tipo de coisa que
+ * a preferência existe para calar. A contagem carrega informação; eles não.
  */
 @media (prefers-reduced-motion: reduce) {
-  .descontos__trilha {
-    height: auto;
-  }
-
-  .descontos__palco {
-    position: static;
-    height: auto;
-    padding-block: clamp(72px, 12vh, 140px);
-  }
-
-  /*
-   * A fita se desfaz: sem carrossel não há o que aparar nem para onde
-   * deslizar, e o recuo que centralizava o primeiro cartão não tem mais
-   * função.
-   */
-  .descontos__janela {
-    mask-image: none;
-  }
-
-  .descontos__fita {
-    padding-inline: 0;
-    translate: none;
-    will-change: auto;
-  }
-
-  /* Só o quinto ocupa a linha; os outros saem do fluxo e a caixa encolhe para
-     o tamanho do que está visível. */
-  .descontos__valor {
-    display: none;
-  }
-
-  .descontos__valor:nth-child(5) {
-    display: flex;
-    flex-basis: 100%;
-    opacity: 1;
-    color: rgb(var(--ember-quente-rgb));
-    transition: none;
-  }
-
-  .descontos__valor:nth-child(5) .descontos__pct {
-    color: rgb(var(--ember-quente-rgb) / 72%);
-  }
-
-  .descontos__off {
-    color: rgb(var(--ember-quente-rgb));
-  }
-
-  .descontos__degrau {
-    color: var(--cream);
-    transition: none;
-  }
-
-  .descontos__degrau:nth-child(5) {
-    color: rgb(var(--ember-quente-rgb));
-  }
-
   .descontos__estouro,
   .descontos__clarao {
     display: none;
-  }
-
-  .descontos__onda {
-    animation: none;
   }
 }

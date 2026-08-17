@@ -1,5 +1,18 @@
 /* Regras reaproveitadas por mais de um bloco */
 
+/*
+ * Porta-caminhos da marca. O <defs> do topo do body não desenha nada sozinho,
+ * mas um <svg> sem dimensão ainda ocupa a caixa padrão de 300×150 e empurraria
+ * o primeiro bloco da página para baixo. width/height zero no atributo cuida do
+ * layout; o position: absolute tira qualquer resíduo do fluxo.
+ */
+.u-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
 .u-bloco {
   display: block;
 }
